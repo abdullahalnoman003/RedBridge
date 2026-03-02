@@ -7,6 +7,7 @@ export interface IUser extends Document {
   name: string;
   email: string;
   role: TRole;
+  password?: string;
   createdAt: Date;
 }
 
@@ -14,8 +15,14 @@ export interface ICreateUser {
   name: string;
   email: string;
   role?: TRole;
+  password?: string;
 }
 
 export interface IUpdateUserRole {
   role: TRole;
+}
+
+export interface IManualLogin {
+  email: string;
+  password: string;
 }

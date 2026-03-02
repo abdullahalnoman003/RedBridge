@@ -26,10 +26,21 @@ const userSchema = new Schema<IUser>(
       },
       default: 'requester',
     },
+    password: {
+      type: String,
+      minlength: [6, 'Password must be at least 6 characters'],
+      select: false,
+    },
   },
   {
     timestamps: { createdAt: true, updatedAt: false },
     versionKey: false,
+    toJSON: {
+      transform: (_doc, ret: Record<string, unknown>) => {
+        delete ret.password;
+        return ret;
+      },
+    },
   }
 );
 

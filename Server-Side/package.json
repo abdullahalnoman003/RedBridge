@@ -11,20 +11,29 @@
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts"
   },
-  "keywords": ["blood-donation", "healthcare", "api"],
+  "keywords": [
+    "blood-donation",
+    "healthcare",
+    "api"
+  ],
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
+    "firebase": "^12.10.0",
     "firebase-admin": "^13.0.2",
     "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.5"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.8",
     "@types/node": "^22.10.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
