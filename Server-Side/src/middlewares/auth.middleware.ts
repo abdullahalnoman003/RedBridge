@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { firebaseAuth } from '../config/firebase.js';
+import { getFirebaseAuth } from '../config/firebase.js';
 
 import { ApiError } from '../utils/ApiError.js';
 import { IUser } from '../modules/user/user.interface.js';
@@ -33,6 +33,7 @@ export const authMiddleware = async (
       throw new ApiError(401, 'Access denied. Invalid token format.');
     }
 
+    const firebaseAuth = getFirebaseAuth();
     const decodedToken = await firebaseAuth.verifyIdToken(token);
     const email = decodedToken.email;
 
@@ -54,6 +55,8 @@ export const authMiddleware = async (
   } catch (error) {
     if (error instanceof ApiError) {
       next(error);
+    } else if (error instanceof Error && error.message.includes('Firebase Admin SDK is not configured')) {
+      next(new ApiError(500, error.message));
     } else {
       next(new ApiError(401, 'Invalid or expired token.'));
     }
@@ -78,6 +81,7 @@ export const optionalAuth = async (
       return next();
     }
 
+    const firebaseAuth = getFirebaseAuth();
     const decodedToken = await firebaseAuth.verifyIdToken(token);
     const email = decodedToken.email;
 

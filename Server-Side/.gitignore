@@ -1,3 +1,8 @@
 node_modules/
 dist/
 *.js.map
+.env
+.env.*
+!.env.example
+.vercel
+.env*.local
