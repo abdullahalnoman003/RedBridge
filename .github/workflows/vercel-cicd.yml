@@ -113,7 +113,9 @@ jobs:
             });
 
       - name: Publish preview URL to summary
-        run: echo "### Preview Deployment\n- URL: ${{ steps.deploy_preview.outputs.preview_url }}" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo "### Preview Deployment" >> "$GITHUB_STEP_SUMMARY"
+          echo "- URL: ${{ steps.deploy_preview.outputs.preview_url }}" >> "$GITHUB_STEP_SUMMARY"
 
   deploy_preview_backend:
     name: Deploy Preview API (PR)
@@ -173,7 +175,9 @@ jobs:
             });
 
       - name: Publish API preview URL to summary
-        run: echo "### Preview API Deployment\n- URL: ${{ steps.deploy_preview_backend.outputs.preview_api_url }}" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo "### Preview API Deployment" >> "$GITHUB_STEP_SUMMARY"
+          echo "- URL: ${{ steps.deploy_preview_backend.outputs.preview_api_url }}" >> "$GITHUB_STEP_SUMMARY"
 
   deploy_production:
     name: Deploy Production (main)
@@ -221,7 +225,9 @@ jobs:
           echo "Production URL: $PROD_URL"
 
       - name: Publish production URL to summary
-        run: echo "### Production Deployment\n- URL: ${{ steps.deploy_production.outputs.prod_url }}" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo "### Production Deployment" >> "$GITHUB_STEP_SUMMARY"
+          echo "- URL: ${{ steps.deploy_production.outputs.prod_url }}" >> "$GITHUB_STEP_SUMMARY"
 
   deploy_production_backend:
     name: Deploy Production API (main)
@@ -269,4 +275,6 @@ jobs:
           echo "Production API URL: $PROD_API_URL"
 
       - name: Publish API production URL to summary
-        run: echo "### Production API Deployment\n- URL: ${{ steps.deploy_production_backend.outputs.prod_api_url }}" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo "### Production API Deployment" >> "$GITHUB_STEP_SUMMARY"
+          echo "- URL: ${{ steps.deploy_production_backend.outputs.prod_api_url }}" >> "$GITHUB_STEP_SUMMARY"
