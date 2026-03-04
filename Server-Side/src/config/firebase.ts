@@ -31,5 +31,5 @@ const getFirebaseApp = (): admin.app.App => {
   return firebaseApp;
 };
 
-export const getFirebaseAuth = () => getFirebaseApp().auth();
+export const getFirebaseAuth = (): admin.auth.Auth => getFirebaseApp().auth();
 export default getFirebaseApp;

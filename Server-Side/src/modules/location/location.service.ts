@@ -94,7 +94,6 @@ const getUpazilasByDistrict = async (
 
 export const LocationService = {
   getDivisions,
-  getDistricts,
   getDistrictsByDivision,
   getUpazilasByDistrict,
 };
