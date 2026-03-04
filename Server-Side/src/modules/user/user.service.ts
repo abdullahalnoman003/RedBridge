@@ -18,21 +18,6 @@ const getAllUsers = async (): Promise<IUser[]> => {
   return users;
 };
 
-const getUserById = async (id: string): Promise<IUser> => {
-  const user = await User.findById(id);
-
-  if (!user) {
-    throw new ApiError(404, 'User not found');
-  }
-
-  return user;
-};
-
-const getUserByEmail = async (email: string): Promise<IUser | null> => {
-  const user = await User.findOne({ email });
-  return user;
-};
-
 const updateUserRole = async (id: string, role: TRole): Promise<IUser> => {
   const validRoles: TRole[] = ['admin', 'donor'];
 
@@ -52,7 +37,5 @@ const updateUserRole = async (id: string, role: TRole): Promise<IUser> => {
 export const UserService = {
   createUser,
   getAllUsers,
-  getUserById,
-  getUserByEmail,
   updateUserRole,
 };

@@ -16,6 +16,4 @@ export interface ICreateUser {
   role?: TRole;
 }
 
-export interface IUpdateUserRole {
-  role: TRole;
-}
+
