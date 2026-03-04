@@ -1,202 +1,202 @@
 # RedBridge - Blood Donation Finder
 
-RedBridge is a full-stack blood donation platform where users can register, create donor profiles, search donors by location/blood group, and create blood requests.
+RedBridge is a full-stack blood donation platform where users can register as donors, search for donors by location and blood group, and admins can manage the approval workflow.
 
-## Project at a glance
+## Project at a Glance
 
 - **Frontend:** React + Vite (`Client-Side`)
 - **Backend:** Node.js + Express + TypeScript (`Server-Side`)
 - **Database:** MongoDB (Mongoose)
-- **Auth:** Firebase token verification + local JWT fallback
+- **Auth:** Firebase Authentication (token verification via Firebase Admin SDK)
 - **Deployment:** Vercel (Frontend SPA + Backend serverless API)
-- **CI/CD:** GitHub Actions pipeline for lint, test, build, deploy
 
-## What this project does
+## What This Project Does
 
-- User registration with role support (`admin`, `donor`, `requester`)
-- Manual login and password setup/update
-- Donor profile creation and donor search
-- Admin donor approval/rejection workflow
-- Blood request creation and admin request management
-- Bangladesh location tree APIs (division -> district -> upazila)
+- User registration via Firebase (roles: `admin`, `donor`)
+- Donor profile creation with blood type, location, and phone number
+- Admin approval workflow — donors start as `pending`, admin approves or rejects
+- Public donor search with filters (blood type, division, district, upazila)
+- Bangladesh location APIs (division → district → upazila)
 
-## Repository structure
+## Application Flow
 
-- `Client-Side/` - React UI app
-- `Server-Side/` - Express REST API
-- `.github/workflows/vercel-cicd.yml` - CI/CD workflow
+```
+Public User (no login required)
+  ├── Browse approved donors
+  ├── View donor details
+  └── Browse locations
 
-## Local setup
+Logged-in User (Firebase auth)
+  ├── Register in database
+  ├── Submit donor form → status: "pending"
+  └── Update own donor profile
 
-### 1) Install dependencies
-
-From project root, run in both apps:
-
-```bash
-cd Client-Side
-npm install
-
-cd ../Server-Side
-npm install
+Admin (Firebase auth + admin role)
+  ├── View all users
+  ├── Update user roles
+  ├── Approve / Reject donors
+  └── Delete donors
 ```
 
-### 2) Configure environment variables
+## Repository Structure
 
-- Client example: `Client-Side/.env.example`
-- Server example: `Server-Side/.env.example`
+```
+RedBridge/
+├── Client-Side/          # React frontend app
+│   ├── src/
+│   │   ├── Components/   # UI components (Auth, Shared, Static, Errors)
+│   │   ├── Firebase/     # Firebase config
+│   │   ├── Hooks/        # Custom hooks (useAxios, useDocumentTitle)
+│   │   ├── Layout/       # Page layouts (Home, Admin)
+│   │   └── Router/       # Route definitions
+│   └── vercel.json       # Vercel SPA config
+│
+├── Server-Side/          # Express REST API
+│   ├── src/
+│   │   ├── config/       # DB, Firebase, env config
+│   │   ├── middlewares/   # Auth, role, error, validation
+│   │   ├── modules/
+│   │   │   ├── user/     # User model, service, controller, routes
+│   │   │   ├── donor/    # Donor model, service, controller, routes
+│   │   │   └── location/ # BD location proxy (divisions, districts, upazilas)
+│   │   └── utils/        # ApiError, catchAsync, sendResponse
+│   ├── api/index.ts      # Vercel serverless entry point
+│   └── vercel.json       # Vercel API config
+│
+└── README.md
+```
 
-Create local `.env` files from examples.
+## Local Setup
 
-### 3) Run development servers
+### 1) Install Dependencies
 
 ```bash
-# Terminal 1
+cd Client-Side && npm install
+cd ../Server-Side && npm install
+```
+
+### 2) Configure Environment Variables
+
+**Server-Side `.env`:**
+
+```env
+PORT=5000
+NODE_ENV=development
+MONGODB_URI=mongodb://localhost:27017/blood-donation-finder
+FIREBASE_PROJECT_ID=your-project-id
+FIREBASE_CLIENT_EMAIL=your-client-email
+FIREBASE_PRIVATE_KEY="your-private-key"
+CORS_ORIGIN=http://localhost:5173
+```
+
+**Client-Side `.env`:**
+
+```env
+VITE_API_URL=http://localhost:5000/api
+VITE_FIREBASE_API_KEY=your-api-key
+VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+```
+
+### 3) Run Development Servers
+
+```bash
+# Terminal 1 — Backend
 cd Server-Side
 npm run dev
 
-# Terminal 2
+# Terminal 2 — Frontend
 cd Client-Side
 npm run dev
 ```
 
 ---
 
-## API access guide
+## API Endpoints
 
-### Base URLs
+### Base URL: `/api`
 
-- Local API base: `http://localhost:5000/api`
-- Health check (no `/api` prefix): `http://localhost:5000/health`
-
-### Authentication rules
-
-- Protected routes need: `Authorization: Bearer <token>`
-- Token can be:
-  - Firebase ID token
-  - Local JWT token from `POST /api/users/login`
-- Role-based routes are enforced by middleware:
-  - `admin`
-  - `donor`
-  - `requester`
-
-### Standard response shape
-
-```json
-{
-  "success": true,
-  "message": "Operation successful",
-  "data": {}
-}
-```
-
----
-
-## API endpoints summary
+All protected routes require: `Authorization: Bearer <firebase_id_token>`
 
 ### System
 
 | Method | Endpoint | Access | Purpose |
-|---|---|---|---|
+|--------|----------|--------|---------|
 | GET | `/health` | Public | API health/uptime status |
 
 ### Users
 
 | Method | Endpoint | Access | Purpose |
-|---|---|---|---|
-| POST | `/api/users` | Public | Create user |
-| POST | `/api/users/login` | Public | Manual login (email/password) |
-| PATCH | `/api/users/set-password` | Authenticated | Set/update own password |
+|--------|----------|--------|---------|
+| POST | `/api/users` | Public | Register user (after Firebase auth) |
 | GET | `/api/users` | Admin | Get all users |
-| PATCH | `/api/users/:id/role` | Admin | Update user role |
+| PATCH | `/api/users/:id/role` | Admin | Update user role (`admin` or `donor`) |
 
 ### Donors
 
 | Method | Endpoint | Access | Purpose |
-|---|---|---|---|
-| POST | `/api/donors` | Authenticated | Create donor profile |
-| GET | `/api/donors` | Public | Search/list donors |
+|--------|----------|--------|---------|
+| POST | `/api/donors` | Authenticated | Create donor profile (status: pending) |
+| GET | `/api/donors` | Public | Search approved donors (with filters) |
 | GET | `/api/donors/:id` | Public | Get donor details |
-| PUT | `/api/donors/:id` | Authenticated | Update donor profile |
+| PUT | `/api/donors/:id` | Owner | Update own donor profile |
 | DELETE | `/api/donors/:id` | Admin | Delete donor |
 | PATCH | `/api/donors/:id/approve` | Admin | Approve donor |
 | PATCH | `/api/donors/:id/reject` | Admin | Reject donor |
 
-### Requests
-
-| Method | Endpoint | Access | Purpose |
-|---|---|---|---|
-| POST | `/api/requests` | Authenticated | Create blood request |
-| GET | `/api/requests` | Admin | Get all blood requests |
-| DELETE | `/api/requests/:id` | Admin | Delete request |
+**Donor search query params:** `?bloodType=O+&division=Dhaka&district=Dhaka&upazila=Dhanmondi`
 
 ### Locations
 
 | Method | Endpoint | Access | Purpose |
-|---|---|---|---|
+|--------|----------|--------|---------|
 | GET | `/api/locations` | Public | Full location tree |
-| GET | `/api/locations/divisions` | Public | All divisions |
-| GET | `/api/locations/districts/:divisionName` | Public | Districts by division |
-| GET | `/api/locations/upazilas/:districtName` | Public | Upazilas by district |
+| GET | `/api/locations/divisions` | Public | All 8 divisions |
+| GET | `/api/locations/districts/:divisionName` | Public | Districts of a division |
+| GET | `/api/locations/upazilas/:districtName` | Public | Upazilas of a district |
 
-> Full API examples (request/response) are available in `Server-Side/API_DOCUMENTATION.md`.
+> Full API examples with request/response bodies available in [`Server-Side/API_DOCUMENTATION.md`](Server-Side/API_DOCUMENTATION.md)
+
+### Response Format
+
+```json
+{
+  "success": true,
+  "message": "Operation successful",
+  "data": { ... }
+}
+```
 
 ---
 
-## CI/CD + Vercel setup
+## Tech Stack
 
-This repository includes a production-ready CI/CD pipeline for GitHub + Vercel.
+| Layer | Technology |
+|-------|------------|
+| Frontend | React 18, Vite, React Router, Tailwind CSS |
+| Backend | Node.js, Express, TypeScript |
+| Database | MongoDB, Mongoose |
+| Authentication | Firebase Auth + Firebase Admin SDK |
+| Deployment | Vercel (SPA + Serverless) |
+| Location Data | [BD APIs](https://bdapis.com/api/v1.2) |
 
-### What is configured
+---
 
-- GitHub Actions workflow: `.github/workflows/vercel-cicd.yml`
-- CI for both apps (`Client-Side`, `Server-Side`) on every push/PR to `main`
-- CI gates in order:
-  1. Install dependencies (`npm ci`)
-  2. Lint check (`npm run lint`)
-  3. Test run (`npm run test --if-present`)
-  4. Production build (`npm run build`)
-- Deploy blocked automatically when CI fails (`needs: ci`)
-- PR preview deployment to Vercel (Frontend + Backend API)
-- Production deployment to Vercel when `main` is pushed (Frontend + Backend API)
-- Vercel project config for Vite SPA in `Client-Side/vercel.json`
-- Vercel serverless API config in `Server-Side/vercel.json`
+## Vercel Deployment
 
-### Required GitHub secrets
+### Required GitHub Secrets
 
-Add these in GitHub Repository -> Settings -> Secrets and variables -> Actions:
+| Secret | Description |
+|--------|-------------|
+| `VERCEL_TOKEN` | Vercel personal access token |
+| `VERCEL_ORG_ID` | Vercel organization/team ID |
+| `VERCEL_FRONTEND_PROJECT_ID` | Vercel project ID for Client-Side |
+| `VERCEL_BACKEND_PROJECT_ID` | Vercel project ID for Server-Side |
 
-- `VERCEL_TOKEN`
-- `VERCEL_ORG_ID`
-- `VERCEL_FRONTEND_PROJECT_ID`
-- `VERCEL_BACKEND_PROJECT_ID`
+### Setup Steps
 
-### Quick way to get Vercel values
-
-Run from `Client-Side`:
-
-1. `npx vercel login`
-2. `npx vercel link`
-3. `npx vercel env pull .env.vercel`
-
-After `vercel link`, local `.vercel/project.json` contains:
-
-- `orgId` -> use as `VERCEL_ORG_ID`
-- `projectId` -> use as frontend/backend project ID
-
-Create token from Vercel: **Account Settings -> Tokens** and use it as `VERCEL_TOKEN`.
-
-### Connect GitHub repo with Vercel
-
-1. Open Vercel dashboard -> **Add New Project**.
-2. Import this GitHub repository as **Frontend** with root directory `Client-Side`.
-3. Create another Vercel project as **Backend API** with root directory `Server-Side`.
-4. Keep project-specific commands from each `vercel.json` file.
-5. Add environment variables from:
-   - `Client-Side/.env.example` (frontend project)
-   - `Server-Side/.env.example` (backend project)
-
-### CI/CD notes
-
-- For forked PRs, preview deployment is skipped because repository secrets are not exposed to forks.
-- Backend is deployed to Vercel as serverless API in this pipeline.
-- You can manually trigger production deploy from GitHub Actions using `workflow_dispatch`.
+1. Run `npx vercel login` and `npx vercel link` in both `Client-Side` and `Server-Side`
+2. Get `orgId` and `projectId` from `.vercel/project.json`
+3. Create a Vercel token at **Account Settings → Tokens**
+4. Add all secrets to GitHub → **Settings → Secrets and variables → Actions**
+5. Add environment variables to each Vercel project from the `.env` examples above
