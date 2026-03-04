@@ -34,7 +34,7 @@ const getUserByEmail = async (email: string): Promise<IUser | null> => {
 };
 
 const updateUserRole = async (id: string, role: TRole): Promise<IUser> => {
-  const validRoles: TRole[] = ['admin', 'donor', 'requester'];
+  const validRoles: TRole[] = ['admin', 'donor'];
 
   if (!validRoles.includes(role)) {
     throw new ApiError(400, `Invalid role. Must be one of: ${validRoles.join(', ')}`);
