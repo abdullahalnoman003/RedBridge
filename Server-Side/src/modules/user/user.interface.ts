@@ -1,6 +1,6 @@
 import { Document, Types } from 'mongoose';
 
-export type TRole = 'admin' | 'donor' | 'requester';
+export type TRole = 'admin' | 'donor';
 
 export interface IUser extends Document {
   _id: Types.ObjectId;

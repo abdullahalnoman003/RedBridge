@@ -6,7 +6,6 @@ import { config } from './config/index.js';
 import { errorMiddleware } from './middlewares/error.middleware.js';
 import { UserRoutes } from './modules/user/user.route.js';
 import { DonorRoutes } from './modules/donor/donor.route.js';
-import { RequestRoutes } from './modules/request/request.route.js';
 import { LocationRoutes } from './modules/location/location.route.js';
 
 const app = express();
@@ -56,7 +55,6 @@ app.get('/health', (_req, res) => {
 // ── API Routes ────────────────────────────────────────────
 app.use('/api/users', UserRoutes);
 app.use('/api/donors', DonorRoutes);
-app.use('/api/requests', RequestRoutes);
 app.use('/api/locations', LocationRoutes);
 
 // ── 404 Handler ───────────────────────────────────────────
