@@ -9,12 +9,6 @@ const router = Router();
 // POST /api/users - Create a new user (public - called after Firebase auth)
 router.post('/', UserController.createUser);
 
-// POST /api/users/login - Manual login with email/password
-router.post('/login', UserController.manualLogin);
-
-// PATCH /api/users/set-password - Set or update password for authenticated user
-router.patch('/set-password', authMiddleware, UserController.setPassword);
-
 // GET /api/users - Get all users (admin only)
 router.get('/', authMiddleware, roleMiddleware('admin'), UserController.getAllUsers);
 
