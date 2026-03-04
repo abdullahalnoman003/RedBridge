@@ -42,4 +42,5 @@ export interface IDonorFilter {
   division?: string;
   district?: string;
   upazila?: string;
+  status?: string;
 }

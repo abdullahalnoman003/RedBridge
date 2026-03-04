@@ -14,10 +14,17 @@ const createDonor = async (payload: ICreateDonor): Promise<IDonor> => {
 };
 
 const getAllDonors = async (filters: IDonorFilter): Promise<IDonor[]> => {
-  const query: Record<string, unknown> = {
-    status: 'approved',
-    availability: true,
-  };
+  const query: Record<string, unknown> = {};
+
+  // If status=all, return all donors (for admin). Otherwise default to approved+available.
+  if (filters.status && filters.status === 'all') {
+    // no status/availability filter — admin wants everything
+  } else if (filters.status) {
+    query.status = filters.status;
+  } else {
+    query.status = 'approved';
+    query.availability = true;
+  }
 
   if (filters.bloodType) {
     query.bloodType = filters.bloodType;

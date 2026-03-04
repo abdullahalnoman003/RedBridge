@@ -26,6 +26,7 @@ const getAllDonors = catchAsync(async (req: Request, res: Response): Promise<voi
     division: req.query.division as string,
     district: req.query.district as string,
     upazila: req.query.upazila as string,
+    status: req.query.status as string,
   };
 
   const donors = await DonorService.getAllDonors(filters);
