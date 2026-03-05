@@ -3,7 +3,7 @@ import React from 'react';
 const Navbar = () => {
     return (
         <div>
-            This skhajajdsvasv Is Navbar!
+            This Is Navbar!
         </div>
     );
 };
