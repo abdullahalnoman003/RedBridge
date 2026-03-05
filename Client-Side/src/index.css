@@ -1,2 +1,7 @@
 @import "tailwindcss";
-@plugin "daisyui";
+ @plugin "daisyui" {
+   themes: cupcake --default;
+ }
+ .active{
+    @apply text-red-600
+ }
