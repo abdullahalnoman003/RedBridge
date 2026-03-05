@@ -14,7 +14,7 @@ const Navbar = () => {
         <li><a>Item 1</a></li>
         <li> <a>Item 2</a>
         </li>
-        <li><a>Item 3</a></li>
+        <li><a>tera number</a></li>
       </ul>
     </div>
     <a className="btn btn-ghost text-xl">RedBridge</a>
