@@ -11,6 +11,8 @@ import Slider from "../Layout/Home/Landing/Slider";
 import BloodInfo from "../Layout/Home/Landing/BloodInfo";
 import Statistics from "../Layout/Home/Landing/Statistics";
 import CTA from "../Layout/Home/Landing/CTA";
+import FindDonorsPage from "../Components/Donor/FindDonorsPage";
+import DonatePage from "../Components/Donor/DonatePage";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +48,14 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register></Register>,
+      },
+      {
+        path: "/find-donors",
+        element:  <FindDonorsPage></FindDonorsPage> ,
+      },
+      {
+        path: "/donate",
+        element: <DonatePage></DonatePage> ,
       },
       {
         path: "/*",
