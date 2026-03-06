@@ -6,11 +6,19 @@ import Contact from "../Components/Static/Contact";
 import TC from "../Components/Static/TC";
 import Register from "../Components/Authentication/AuthPage/Register";
 import Login from "../Components/Authentication/AuthPage/Login";
+import ForgotPassword from "../Components/Authentication/AuthPage/ForgotPassword";
+import PrivateRoute from "../Components/Authentication/Routes/PrivateRoute";
+import AdminRoute from "../Components/Authentication/Routes/AdminRoute";
+import PublicRoute from "../Components/Authentication/Routes/PublicRoute";
 import Hero from "../Layout/Home/Landing/Hero";
 import Slider from "../Layout/Home/Landing/Slider";
 import BloodInfo from "../Layout/Home/Landing/BloodInfo";
 import Statistics from "../Layout/Home/Landing/Statistics";
 import CTA from "../Layout/Home/Landing/CTA";
+import DonatePage from "../Components/Donor/DonatePage";
+import FindDonorsPage from "../Components/Donor/FindDonorsPage";
+import Profile from "../Components/Profile/Profile";
+import AdminLayout from "../Layout/Admin/AdminLayout";
 
 const router = createBrowserRouter([
   {
@@ -41,11 +49,31 @@ const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <Login></Login>,
+        element: <PublicRoute><Login></Login></PublicRoute>,
       },
       {
         path: "/register",
-        element: <Register></Register>,
+        element: <PublicRoute><Register></Register></PublicRoute>,
+      },
+      {
+        path: "/forgot-password",
+        element: <PublicRoute><ForgotPassword /></PublicRoute>,
+      },
+      {
+        path: "/find-donors",
+        element: <FindDonorsPage />,
+      },
+      {
+        path: "/donate",
+        element: <PrivateRoute><DonatePage /></PrivateRoute>,
+      },
+      {
+        path: "/profile",
+        element: <PrivateRoute><Profile /></PrivateRoute>,
+      },
+      {
+        path: "/dashboard/admin",
+        element: <AdminRoute><AdminLayout /></AdminRoute>,
       },
       {
         path: "/*",

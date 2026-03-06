@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 import useAxios from '../../../Hooks/useAxios';
 import { FcGoogle } from 'react-icons/fc';
 import { FaEye, FaEyeSlash, FaTint } from 'react-icons/fa';
+import { AuthContext } from '../Context/AuthContext';
 
 const Login = () => {
   useEffect(() => { document.title = 'Login | RedBridge'; }, []);
@@ -19,6 +20,7 @@ const Login = () => {
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
   const axiosInstance = useAxios();
+  const { refreshRole } = React.useContext(AuthContext) || {};
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -62,13 +64,7 @@ const Login = () => {
       const res = await signInWithEmailAndPassword(auth, form.email, form.password);
       const token = await res.user.getIdToken();
       localStorage.setItem('access-token', token);
-      try {
-        await axiosInstance.patch(`/users/update?email=${res.user.email}`, {
-          lastLogin: new Date().toISOString(),
-        });
-      } catch (e) {
-        console.error(e);
-      }
+      if (refreshRole) await refreshRole();
       toast.success(`Welcome back, ${res.user.displayName || 'User'}!`);
       navigate(from, { replace: true });
     } catch (error) {
@@ -89,21 +85,12 @@ const Login = () => {
         await axiosInstance.post('/users', {
           name: user.displayName,
           email: user.email.toLowerCase(),
-          role: 'user',
-          photoURL: user.photoURL || null,
-          isVerified: true,
-          lastLogin: new Date().toISOString(),
+          role: 'donor',
         });
       } catch (e) {
         console.error(e);
       }
-      try {
-        await axiosInstance.patch(`/users/update?email=${user.email}`, {
-          lastLogin: new Date().toISOString(),
-        });
-      } catch (e) {
-        console.error(e);
-      }
+      if (refreshRole) await refreshRole();
       toast.success(`Welcome back, ${user.displayName}!`);
       navigate(from, { replace: true });
     } catch (error) {

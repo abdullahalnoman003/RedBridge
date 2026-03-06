@@ -1,6 +1,8 @@
 import { ApiError } from '../../utils/ApiError.js';
 
-const BD_API_BASE = 'https://bdapis.com/api/v1.2';
+const BD_API_BASE = 'https://bdapis.com';
+const BD_API_NAMESPACE = '/api';
+const BD_API_VERSION = '/v1.2';
 
 interface BdApiStatus {
   code: number;
@@ -34,7 +36,7 @@ interface BdApiResponse<T> {
 
 const fetchFromBdApi = async <T>(endpoint: string): Promise<T> => {
   try {
-    const response = await fetch(`${BD_API_BASE}${endpoint}`);
+    const response = await fetch(`${BD_API_BASE}${BD_API_NAMESPACE}${BD_API_VERSION}${endpoint}`);
 
     if (!response.ok) {
       throw new ApiError(

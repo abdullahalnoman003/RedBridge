@@ -1,24 +1,31 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Authentication/Context/AuthContext';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
 
 const Navbar = () => {
-  const { user, logout } = useContext(AuthContext) || {};
-  const [role] = useState(() => localStorage.getItem("userRole"));
+  const { user, role, logout } = useContext(AuthContext) || {};
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     const result = await Swal.fire({
-      title: 'Logout?',
-      text: 'Are you sure you want to log out?',
+      title: 'Log Out Now?',
+      text: 'You will need to login again to access private pages.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#dc2626',
-      cancelButtonColor: '#6b7280',
       confirmButtonText: 'Yes, logout',
       cancelButtonText: 'Cancel',
+      reverseButtons: true,
+      buttonsStyling: false,
+      customClass: {
+        popup: 'rb-swal-popup',
+        title: 'rb-swal-title',
+        htmlContainer: 'rb-swal-text',
+        confirmButton: 'rb-swal-confirm',
+        cancelButton: 'rb-swal-cancel',
+        icon: 'rb-swal-icon',
+      },
     });
     if (!result.isConfirmed) return;
     try {
@@ -73,6 +80,11 @@ const Navbar = () => {
               <li className="font-bold">
                 <NavLink to="/about">About Us</NavLink>
               </li>
+              {user && role !== 'admin' ? (
+                <li className="font-bold">
+                  <NavLink to="/profile">My Profile</NavLink>
+                </li>
+              ) : null}
               {user && <li className="font-bold">{renderDashboardLink()}</li>}
             </ul>
           </div>
@@ -110,6 +122,13 @@ const Navbar = () => {
                 About Us
               </NavLink>
             </li>
+            {user && role !== 'admin' ? (
+              <li>
+                <NavLink to="/profile" className="font-bold">
+                  My Profile
+                </NavLink>
+              </li>
+            ) : null}
             {user && <li className="font-bold">{renderDashboardLink()}</li>}
           </ul>
         </div>

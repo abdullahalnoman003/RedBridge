@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 import { FcGoogle } from 'react-icons/fc';
 import { FaEye, FaEyeSlash, FaTint } from 'react-icons/fa';
 import useAxios from '../../../Hooks/useAxios';
+import { AuthContext } from '../Context/AuthContext';
 
 const provider = new GoogleAuthProvider();
 const IMGBB_KEY = import.meta.env.VITE_IMGBB_API_KEY;
@@ -20,6 +21,7 @@ const Register = () => {
 
   const navigate = useNavigate();
   const axiosInstance = useAxios();
+  const { refreshRole } = React.useContext(AuthContext) || {};
 
   const [form, setForm] = useState({ name: '', email: '', password: '', image: null });
   const [errors, setErrors] = useState({});
@@ -70,14 +72,13 @@ const Register = () => {
       const userInfo = {
         name: form.name,
         email: form.email.toLowerCase(),
-        role: 'user',
-        photoURL: photoURL || null,
-        joinDate: new Date().toISOString(),
-        lastLogin: new Date().toISOString(),
+        role: 'donor',
       };
 
       try { await axiosInstance.post('/users', userInfo); }
       catch { /* non-critical — auth succeeded */ }
+
+      if (refreshRole) await refreshRole();
 
       toast.success(`Welcome to RedBridge, ${form.name}!`);
       navigate('/');
@@ -102,14 +103,13 @@ const Register = () => {
       const userInfo = {
         name: user.displayName,
         email: user.email.toLowerCase(),
-        role: 'user',
-        photoURL: user.photoURL || null,
-        joinDate: new Date().toISOString(),
-        lastLogin: new Date().toISOString(),
+        role: 'donor',
       };
 
       try { await axiosInstance.post('/users', userInfo); }
       catch { /* non-critical — auth succeeded */ }
+
+      if (refreshRole) await refreshRole();
 
       toast.success(`Welcome to RedBridge, ${user.displayName}!`);
       navigate('/');

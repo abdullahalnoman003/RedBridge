@@ -2,6 +2,138 @@
  @plugin "daisyui" {
    themes: cupcake --default;
  }
+
+ :root {
+   --rb-ink: #1a1a2e;
+   --rb-cherry: #d7265e;
+   --rb-crimson: #a20f46;
+   --rb-peach: #fff4f6;
+   --rb-sky: #f3f7ff;
+ }
+
+ body {
+   color: var(--rb-ink);
+   background: radial-gradient(circle at 12% 8%, #fff7f9 0%, #f7f9ff 38%, #f5f4ff 100%);
+ }
+
+ .rb-gradient-bg {
+   background-image:
+     radial-gradient(circle at 10% 14%, rgb(255 255 255 / 20%) 0%, rgb(255 255 255 / 0%) 38%),
+     radial-gradient(circle at 92% 76%, rgb(255 255 255 / 20%) 0%, rgb(255 255 255 / 0%) 40%),
+     linear-gradient(128deg, #35123e 0%, #7d1747 45%, #d7265e 100%);
+ }
+
+ .rb-soft-card {
+   border: 1px solid rgb(255 255 255 / 50%);
+   background: rgb(255 255 255 / 80%);
+   backdrop-filter: blur(8px);
+   color: var(--rb-ink);
+ }
+
+ .rb-soft-card-muted {
+   color: #605673;
+ }
+
+ .rb-glass-dark {
+   border: 1px solid rgb(255 255 255 / 28%);
+   background: rgb(13 12 20 / 56%);
+   color: #f8f6ff;
+   backdrop-filter: blur(8px);
+ }
+
+ .rb-fade-up {
+   animation: rbFadeUp 0.75s ease-out both;
+ }
+
+ .rb-fade-up-delay-1 {
+   animation: rbFadeUp 0.75s ease-out 0.1s both;
+ }
+
+ .rb-fade-up-delay-2 {
+   animation: rbFadeUp 0.75s ease-out 0.2s both;
+ }
+
+ .rb-float {
+   animation: rbFloat 4.2s ease-in-out infinite;
+ }
+
+ @keyframes rbFadeUp {
+   from {
+     opacity: 0;
+     transform: translateY(26px);
+   }
+
+   to {
+     opacity: 1;
+     transform: translateY(0);
+   }
+ }
+
+ @keyframes rbFloat {
+   0% {
+     transform: translateY(0);
+   }
+
+   50% {
+     transform: translateY(-10px);
+   }
+
+   100% {
+     transform: translateY(0);
+   }
+ }
+
  .active{
     @apply text-red-600
  }
+
+.rb-swal-popup {
+  border-radius: 22px !important;
+  border: 1px solid #eadfed !important;
+  box-shadow: 0 24px 55px rgb(25 17 44 / 26%) !important;
+  background: linear-gradient(180deg, #ffffff 0%, #fcf9ff 100%) !important;
+  padding: 1.5rem 1.4rem 1.25rem !important;
+}
+
+.rb-swal-title {
+  color: #1a1a2e !important;
+  font-size: 1.9rem !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.rb-swal-text {
+  color: #625978 !important;
+  font-size: 1rem !important;
+}
+
+.rb-swal-icon {
+  border-color: #f2ab73 !important;
+  color: #d2752f !important;
+}
+
+.rb-swal-confirm,
+.rb-swal-cancel {
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 0.65rem 1.2rem !important;
+  font-weight: 700 !important;
+  font-size: 0.9rem !important;
+  transition: transform 0.2s ease, opacity 0.2s ease !important;
+}
+
+.rb-swal-confirm {
+  background: linear-gradient(135deg, #b7164b 0%, #e02e64 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 18px rgb(215 38 94 / 33%) !important;
+}
+
+.rb-swal-cancel {
+  background: #eef0f7 !important;
+  color: #37334a !important;
+}
+
+.rb-swal-confirm:hover,
+.rb-swal-cancel:hover {
+  transform: translateY(-1px) !important;
+}
