@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
+import { rateLimit } from 'express-rate-limit';
 import { config } from './config/index.js';
 import { errorMiddleware } from './middlewares/error.middleware.js';
 import { UserRoutes } from './modules/user/user.route.js';
@@ -11,7 +11,7 @@ import { LocationRoutes } from './modules/location/location.route.js';
 const app = express();
 
 // ── Security Middlewares ──────────────────────────────────
-app.use(helmet());
+app.use((helmet as any)());
 
 app.use(
   cors({
