@@ -4,34 +4,43 @@ import ErrorPage from "../Components/Errors/ErrorPage";
 import About from "../Components/Static/About";
 import Contact from "../Components/Static/Contact";
 import TC from "../Components/Static/TC";
+import Register from "../Components/Authentication/AuthPage/Register";
+import Login from "../Components/Authentication/AuthPage/Login";
 
 const router = createBrowserRouter([
-    {
-        path:"/",
-        element:<HomeLayout></HomeLayout>,
-        children:[
-            {
-                index: true,
-                element:<>
-                </>
-            },
-            {
-                path:"/about",
-                element: <About></About>,
-            },
-            {
-                path:"/contact",
-                element: <Contact></Contact>,
-            },
-            {
-                path:"/terms",
-                element: <TC></TC>,
-            },
-        ]
-    },
-    {
-    path: "/*",
-    element: <ErrorPage></ErrorPage>,
+  {
+    path: "/",
+    element: <HomeLayout></HomeLayout>,
+    children: [
+      {
+        index: true,
+        element: <></>,
+      },
+      {
+        path: "/about",
+        element: <About></About>,
+      },
+      {
+        path: "/contact",
+        element: <Contact></Contact>,
+      },
+      {
+        path: "/terms",
+        element: <TC></TC>,
+      },
+      {
+        path: "/login",
+        element: <Login></Login>,
+      },
+      {
+        path: "/register",
+        element: <Register></Register>,
+      },
+      {
+        path: "/*",
+        element: <ErrorPage></ErrorPage>,
+      },
+    ],
   },
-])
+]);
 export default router;
