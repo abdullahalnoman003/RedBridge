@@ -6,6 +6,11 @@ import Contact from "../Components/Static/Contact";
 import TC from "../Components/Static/TC";
 import Register from "../Components/Authentication/AuthPage/Register";
 import Login from "../Components/Authentication/AuthPage/Login";
+import Hero from "../Layout/Home/Landing/Hero";
+import Slider from "../Layout/Home/Landing/Slider";
+import BloodInfo from "../Layout/Home/Landing/BloodInfo";
+import Statistics from "../Layout/Home/Landing/Statistics";
+import CTA from "../Layout/Home/Landing/CTA";
 
 const router = createBrowserRouter([
   {
@@ -14,7 +19,13 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <></>,
+        element: <>
+        <Hero></Hero>
+        <Slider></Slider>
+        <BloodInfo></BloodInfo>
+        <Statistics></Statistics>
+        <CTA></CTA>
+        </>,
       },
       {
         path: "/about",
