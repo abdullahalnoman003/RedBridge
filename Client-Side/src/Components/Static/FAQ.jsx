@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 const FAQ = () => {
-    const [expandedId, setExpandedId] = useState(null);
     const [activeCategory, setActiveCategory] = useState('general');
 
     const faqCategories = {
