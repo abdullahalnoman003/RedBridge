@@ -1,12 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const TC = () => {
-    const [expandedSection, setExpandedSection] = useState(null);
-
-    const toggleSection = (section) => {
-        setExpandedSection(expandedSection === section ? null : section);
-    };
-
     const sections = [
         {
             id: 'acceptance',
@@ -165,40 +159,22 @@ const TC = () => {
             {/* Terms Content */}
             <section className="py-16 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto">
-                    <div className="space-y-4">
-                        {sections.map((section) => (
-                            <div
-                                key={section.id}
-                                className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition"
-                            >
-                                <button
-                                    onClick={() => toggleSection(section.id)}
-                                    className="w-full bg-gray-50 hover:bg-gray-100 p-6 text-left flex justify-between items-center transition"
-                                >
-                                    <h3 className="text-lg font-semibold text-gray-900">{section.title}</h3>
-                                    <svg
-                                        className={`w-5 h-5 text-gray-600 transition transform ${
-                                            expandedSection === section.id ? 'rotate-180' : ''
-                                        }`}
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                                        />
-                                    </svg>
-                                </button>
-                                {expandedSection === section.id && (
-                                    <div className="p-6 bg-white border-t border-gray-200">
-                                        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-                                            {section.content}
-                                        </p>
-                                    </div>
-                                )}
+                    <div className="space-y-2">
+                        {sections.map((section, index) => (
+                            <div key={section.id} className="collapse collapse-plus bg-base-100 border border-red-200 hover:border-red-400 transition">
+                                <input 
+                                    type="radio" 
+                                    name="tc-accordion" 
+                                    defaultChecked={index === 0}
+                                />
+                                <div className="collapse-title font-semibold text-gray-900 hover:text-red-600">
+                                    {section.title}
+                                </div>
+                                <div className="collapse-content text-sm text-gray-700 bg-gray-50">
+                                    <p className="whitespace-pre-wrap leading-relaxed pt-2">
+                                        {section.content}
+                                    </p>
+                                </div>
                             </div>
                         ))}
                     </div>
