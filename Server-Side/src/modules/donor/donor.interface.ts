@@ -1,7 +1,7 @@
 import { Document, Types } from 'mongoose';
+import { TBloodType, TDonorStatus } from '../../constants/donor.js';
 
-export type TBloodType = 'A+' | 'A-' | 'B+' | 'B-' | 'O+' | 'O-' | 'AB+' | 'AB-';
-export type TDonorStatus = 'pending' | 'approved' | 'rejected';
+export type { TBloodType, TDonorStatus };
 
 export interface IDonorLocation {
   division: string;
@@ -22,6 +22,7 @@ export interface IDonor extends Document {
   updatedAt: Date;
 }
 
+// Simplified: Use Partial<IDonor> for updates
 export interface ICreateDonor {
   userId: Types.ObjectId | string;
   bloodType: TBloodType;

@@ -22,3 +22,11 @@ export const connectDB = async (): Promise<void> => {
     throw error;
   }
 };
+
+export const disconnectDB = async (): Promise<void> => {
+  if (mongoose.connection.readyState === 0) {
+    return;
+  }
+
+  await mongoose.connection.close();
+};

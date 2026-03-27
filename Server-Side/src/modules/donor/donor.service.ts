@@ -1,72 +1,68 @@
 import { Donor } from './donor.model.js';
 import { IDonor, ICreateDonor, IUpdateDonor, IDonorFilter, TDonorStatus } from './donor.interface.js';
 import { ApiError } from '../../utils/ApiError.js';
+import { ERRORS } from '../../utils/errors.constants.js';
+import { buildApprovedDonorQuery } from './donor.query.js';
+import { USER_PUBLIC_POPULATE_FIELDS } from '../../constants/populate.js';
+import { buildPaginationMeta, buildPaginationParams, PaginatedResult } from '../../utils/pagination.js';
+import { ensureFound } from '../../utils/mongoose.js';
+
+interface IDonorListParams {
+  page?: number;
+  limit?: number;
+}
 
 const createDonor = async (payload: ICreateDonor): Promise<IDonor> => {
   const existingDonor = await Donor.findOne({ userId: payload.userId });
 
   if (existingDonor) {
-    throw new ApiError(409, 'Donor profile already exists for this user');
+    throw new ApiError(ERRORS.DONOR_EXISTS.code, ERRORS.DONOR_EXISTS.msg);
   }
 
   const donor = await Donor.create(payload);
-  return donor.populate('userId', 'name email role');
+  return donor.populate('userId', USER_PUBLIC_POPULATE_FIELDS);
 };
 
-const getAllDonors = async (filters: IDonorFilter): Promise<IDonor[]> => {
-  const query: Record<string, unknown> = {
-    status: 'approved',
-    availability: true,
+const getAllDonors = async (
+  filters: IDonorFilter,
+  params: IDonorListParams = {}
+): Promise<PaginatedResult<IDonor>> => {
+  const query = buildApprovedDonorQuery(filters);
+  const { page, limit, skip } = buildPaginationParams(params.page, params.limit);
+
+  const [items, total] = await Promise.all([
+    Donor.find(query)
+      .populate('userId', USER_PUBLIC_POPULATE_FIELDS)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit),
+    Donor.countDocuments(query),
+  ]);
+
+  return {
+    items,
+    meta: buildPaginationMeta(page, limit, total),
   };
-
-  if (filters.bloodType) {
-    query.bloodType = filters.bloodType;
-  }
-
-  if (filters.division) {
-    query['location.division'] = { $regex: new RegExp(filters.division, 'i') };
-  }
-
-  if (filters.district) {
-    query['location.district'] = { $regex: new RegExp(filters.district, 'i') };
-  }
-
-  if (filters.upazila) {
-    query['location.upazila'] = { $regex: new RegExp(filters.upazila, 'i') };
-  }
-
-  const donors = await Donor.find(query)
-    .populate('userId', 'name email role')
-    .sort({ createdAt: -1 });
-
-  return donors;
 };
 
 const getDonorById = async (id: string): Promise<IDonor> => {
-  const donor = await Donor.findById(id).populate('userId', 'name email role');
+  const donor = await Donor.findById(id).populate('userId', USER_PUBLIC_POPULATE_FIELDS);
 
-  if (!donor) {
-    throw new ApiError(404, 'Donor not found');
-  }
-
-  return donor;
+  return ensureFound(donor, ERRORS.DONOR_NOT_FOUND.code, ERRORS.DONOR_NOT_FOUND.msg);
 };
 
 const updateDonor = async (id: string, userId: string, payload: IUpdateDonor): Promise<IDonor> => {
   const donor = await Donor.findById(id);
+  const foundDonor = ensureFound(donor, ERRORS.DONOR_NOT_FOUND.code, ERRORS.DONOR_NOT_FOUND.msg);
 
-  if (!donor) {
-    throw new ApiError(404, 'Donor not found');
-  }
-
-  if (donor.userId.toString() !== userId) {
-    throw new ApiError(403, 'You can only update your own donor profile');
+  if (foundDonor.userId.toString() !== userId) {
+    throw new ApiError(ERRORS.DONOR_UNAUTHORIZED.code, ERRORS.DONOR_UNAUTHORIZED.msg);
   }
 
   const updatedDonor = await Donor.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,
-  }).populate('userId', 'name email role');
+  }).populate('userId', USER_PUBLIC_POPULATE_FIELDS);
 
   return updatedDonor as IDonor;
 };
@@ -74,11 +70,7 @@ const updateDonor = async (id: string, userId: string, payload: IUpdateDonor): P
 const deleteDonor = async (id: string): Promise<IDonor> => {
   const donor = await Donor.findByIdAndDelete(id);
 
-  if (!donor) {
-    throw new ApiError(404, 'Donor not found');
-  }
-
-  return donor;
+  return ensureFound(donor, ERRORS.DONOR_NOT_FOUND.code, ERRORS.DONOR_NOT_FOUND.msg);
 };
 
 const updateDonorStatus = async (id: string, status: TDonorStatus): Promise<IDonor> => {
@@ -86,13 +78,9 @@ const updateDonorStatus = async (id: string, status: TDonorStatus): Promise<IDon
     id,
     { status },
     { new: true, runValidators: true }
-  ).populate('userId', 'name email role');
+  ).populate('userId', USER_PUBLIC_POPULATE_FIELDS);
 
-  if (!donor) {
-    throw new ApiError(404, 'Donor not found');
-  }
-
-  return donor;
+  return ensureFound(donor, ERRORS.DONOR_NOT_FOUND.code, ERRORS.DONOR_NOT_FOUND.msg);
 };
 
 export const DonorService = {

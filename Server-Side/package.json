@@ -24,7 +24,8 @@
     "express-rate-limit": "^7.5.0",
     "firebase-admin": "^13.0.2",
     "helmet": "^8.0.0",
-    "mongoose": "^8.9.5"
+    "mongoose": "^8.9.5",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

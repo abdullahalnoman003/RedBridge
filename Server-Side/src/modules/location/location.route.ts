@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { LocationController } from './location.controller.js';
+import { validateParams } from '../../middlewares/validateRequest.middleware.js';
+import { districtParamSchema, divisionParamSchema } from './location.validation.js';
 
 const router = Router();
 
@@ -10,9 +12,17 @@ router.get('/', LocationController.getFullTree);
 router.get('/divisions', LocationController.getDivisions);
 
 // GET /api/locations/districts/:divisionName - Get districts & upazilas of a division
-router.get('/districts/:divisionName', LocationController.getDistrictsByDivision);
+router.get(
+	'/districts/:divisionName',
+	validateParams(divisionParamSchema),
+	LocationController.getDistrictsByDivision
+);
 
 // GET /api/locations/upazilas/:districtName - Get upazilas of a district
-router.get('/upazilas/:districtName', LocationController.getUpazilasByDistrict);
+router.get(
+	'/upazilas/:districtName',
+	validateParams(districtParamSchema),
+	LocationController.getUpazilasByDistrict
+);
 
 export const LocationRoutes = router;

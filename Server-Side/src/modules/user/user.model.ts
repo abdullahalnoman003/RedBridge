@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { IUser } from './user.interface.js';
+import { DEFAULT_USER_ROLE, USER_ROLES } from '../../constants/roles.js';
+import { EMAIL_REGEX } from '../../constants/patterns.js';
 
 const userSchema = new Schema<IUser>(
   {
@@ -16,15 +18,28 @@ const userSchema = new Schema<IUser>(
       unique: true,
       trim: true,
       lowercase: true,
-      match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email'],
+      match: [EMAIL_REGEX, 'Please provide a valid email'],
     },
     role: {
       type: String,
       enum: {
-        values: ['admin', 'donor'],
+        values: USER_ROLES,
         message: '{VALUE} is not a valid role',
       },
-      default: 'donor',
+      default: DEFAULT_USER_ROLE,
+    },
+    photoURL: {
+      type: String,
+      default: null,
+      trim: true,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    lastLogin: {
+      type: Date,
+      default: new Date(),
     },
   },
   {

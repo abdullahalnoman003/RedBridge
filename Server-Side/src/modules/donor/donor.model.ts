@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { IDonor } from './donor.interface.js';
+import { BLOOD_TYPES, DEFAULT_DONOR_STATUS, DONOR_STATUSES } from '../../constants/donor.js';
+import { BANGLADESH_PHONE_REGEX } from '../../constants/patterns.js';
 
 const donorSchema = new Schema<IDonor>(
   {
@@ -12,7 +14,7 @@ const donorSchema = new Schema<IDonor>(
       type: String,
       required: [true, 'Blood type is required'],
       enum: {
-        values: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
+        values: BLOOD_TYPES,
         message: '{VALUE} is not a valid blood type',
       },
     },
@@ -42,7 +44,7 @@ const donorSchema = new Schema<IDonor>(
       type: String,
       required: [true, 'Phone number is required'],
       trim: true,
-      match: [/^(\+?880|0)1[0-9]{9}$/, 'Please provide a valid Bangladeshi phone number'],
+      match: [BANGLADESH_PHONE_REGEX, 'Please provide a valid Bangladeshi phone number'],
     },
     availability: {
       type: Boolean,
@@ -51,10 +53,10 @@ const donorSchema = new Schema<IDonor>(
     status: {
       type: String,
       enum: {
-        values: ['pending', 'approved', 'rejected'],
+        values: DONOR_STATUSES,
         message: '{VALUE} is not a valid status',
       },
-      default: 'pending',
+      default: DEFAULT_DONOR_STATUS,
     },
   },
   {

@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { catchAsync } from '../../utils/catchAsync.js';
-import { sendResponse } from '../../utils/sendResponse.js';
+import { sendSuccess } from '../../utils/sendResponse.js';
 import { LocationService } from './location.service.js';
+import { MESSAGES } from '../../constants/messages.js';
+import { DistrictParam, DivisionParam } from './location.validation.js';
 
 /**
  * GET /api/locations
@@ -22,12 +24,7 @@ const getFullTree = catchAsync(async (_req: Request, res: Response): Promise<voi
     })
   );
 
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: 'Full location tree retrieved successfully',
-    data: fullTree,
-  });
+  sendSuccess(res, MESSAGES.location.fullTree, fullTree);
 });
 
 /**
@@ -37,12 +34,7 @@ const getFullTree = catchAsync(async (_req: Request, res: Response): Promise<voi
 const getDivisions = catchAsync(async (_req: Request, res: Response): Promise<void> => {
   const divisions = await LocationService.getDivisions();
 
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: 'Divisions retrieved successfully',
-    data: divisions,
-  });
+  sendSuccess(res, MESSAGES.location.divisions, divisions);
 });
 
 /**
@@ -50,15 +42,10 @@ const getDivisions = catchAsync(async (_req: Request, res: Response): Promise<vo
  * Returns all districts & upazilas of a specific division
  */
 const getDistrictsByDivision = catchAsync(async (req: Request, res: Response): Promise<void> => {
-  const divisionName = req.params.divisionName as string;
+  const { divisionName } = req.params as unknown as DivisionParam;
   const data = await LocationService.getDistrictsByDivision(divisionName);
 
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: `Districts of ${divisionName} retrieved successfully`,
-    data,
-  });
+  sendSuccess(res, MESSAGES.location.districtsByDivision(divisionName), data);
 });
 
 /**
@@ -66,15 +53,10 @@ const getDistrictsByDivision = catchAsync(async (req: Request, res: Response): P
  * Returns upazilas of a specific district
  */
 const getUpazilasByDistrict = catchAsync(async (req: Request, res: Response): Promise<void> => {
-  const districtName = req.params.districtName as string;
+  const { districtName } = req.params as unknown as DistrictParam;
   const data = await LocationService.getUpazilasByDistrict(districtName);
 
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: `Upazilas of ${districtName} retrieved successfully`,
-    data,
-  });
+  sendSuccess(res, MESSAGES.location.upazilasByDistrict(districtName), data);
 });
 
 export const LocationController = {

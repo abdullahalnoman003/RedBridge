@@ -1,9 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import { randomUUID } from 'node:crypto';
 import { rateLimit } from 'express-rate-limit';
 import { config } from './config/index.js';
 import { errorMiddleware } from './middlewares/error.middleware.js';
+import { ERRORS } from './utils/errors.constants.js';
 import { UserRoutes } from './modules/user/user.route.js';
 import { DonorRoutes } from './modules/donor/donor.route.js';
 import { LocationRoutes } from './modules/location/location.route.js';
@@ -11,7 +13,27 @@ import { LocationRoutes } from './modules/location/location.route.js';
 const app = express();
 
 // ── Security Middlewares ──────────────────────────────────
-app.use((helmet as any)());
+app.use(helmet());
+
+app.use((req, res, next) => {
+  const requestId = randomUUID();
+  const start = Date.now();
+
+  res.setHeader('x-request-id', requestId);
+
+  res.on('finish', () => {
+    const durationMs = Date.now() - start;
+    const method = req.method;
+    const path = req.originalUrl;
+    const status = res.statusCode;
+
+    console.info(
+      `[request] id=${requestId} method=${method} path=${path} status=${status} durationMs=${durationMs}`
+    );
+  });
+
+  next();
+});
 
 app.use(
   cors({
@@ -29,8 +51,8 @@ const limiter = rateLimit({
   legacyHeaders: false,
   message: {
     success: false,
-    message: 'Too many requests, please try again later.',
-    error: 'Rate limit exceeded',
+    message: ERRORS.RATE_LIMIT_EXCEEDED.msg,
+    error: ERRORS.RATE_LIMIT_EXCEEDED.msg,
   },
 });
 
@@ -59,9 +81,9 @@ app.use('/api/locations', LocationRoutes);
 
 // ── 404 Handler ───────────────────────────────────────────
 app.use((_req, res) => {
-  res.status(404).json({
+  res.status(ERRORS.ROUTE_NOT_FOUND.code).json({
     success: false,
-    message: 'Route not found',
+    message: ERRORS.ROUTE_NOT_FOUND.msg,
     error: 'The requested endpoint does not exist',
   });
 });

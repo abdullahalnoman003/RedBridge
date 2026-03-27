@@ -1,23 +1,38 @@
 import { Router } from 'express';
 import { UserController } from './user.controller.js';
-import { authMiddleware } from '../../middlewares/auth.middleware.js';
-import { roleMiddleware } from '../../middlewares/role.middleware.js';
-import { validateObjectId } from '../../middlewares/validateObjectId.middleware.js';
+import { adminMiddleware } from '../../middlewares/authAndRole.middleware.js';
+import { validateBody, validateParams, validateQuery } from '../../middlewares/validateRequest.middleware.js';
+import {
+  createUserBodySchema,
+  userIdParamSchema,
+  userListQuerySchema,
+  updateUserBodySchema,
+  updateUserQuerySchema,
+  updateUserRoleBodySchema,
+} from './user.validation.js';
 
 const router = Router();
 
 // POST /api/users - Create a new user (public - called after Firebase auth)
-router.post('/', UserController.createUser);
+router.post('/', validateBody(createUserBodySchema), UserController.createUser);
 
 // GET /api/users - Get all users (admin only)
-router.get('/', authMiddleware, roleMiddleware('admin'), UserController.getAllUsers);
+router.get('/', adminMiddleware, validateQuery(userListQuerySchema), UserController.getAllUsers);
+
+// PATCH /api/users/update - Update user by email (updates lastLogin, photoURL, etc)
+router.patch(
+  '/update',
+  validateQuery(updateUserQuerySchema),
+  validateBody(updateUserBodySchema),
+  UserController.updateUser
+);
 
 // PATCH /api/users/:id/role - Update user role (admin only)
 router.patch(
   '/:id/role',
-  authMiddleware,
-  roleMiddleware('admin'),
-  validateObjectId('id'),
+  adminMiddleware,
+  validateParams(userIdParamSchema),
+  validateBody(updateUserRoleBodySchema),
   UserController.updateUserRole
 );
 
