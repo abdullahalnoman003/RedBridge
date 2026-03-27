@@ -49,6 +49,8 @@ const FindDonorsPage = () => {
       Object.entries(searchFilters).forEach(([key, value]) => {
         if (value) query.append(key, value);
       });
+      // Request maximum allowed limit to get all donors
+      query.append('limit', '100');
       const res = await axiosInstance.get(`/donors?${query.toString()}`);
       setDonors(res?.data?.data || []);
     } catch (error) {

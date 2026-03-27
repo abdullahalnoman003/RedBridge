@@ -9,7 +9,8 @@
     "test": "node --test",
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "tsx watch src/server.ts"
+    "dev": "tsx watch src/server.ts",
+    "seed": "tsx src/seed.ts"
   },
   "keywords": [
     "blood-donation",
