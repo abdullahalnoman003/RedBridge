@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { randomUUID } from 'node:crypto';
+import { RequestHandler } from 'express';
 import { rateLimit } from 'express-rate-limit';
 import { config } from './config/index.js';
 import { errorMiddleware } from './middlewares/error.middleware.js';
@@ -12,8 +13,22 @@ import { LocationRoutes } from './modules/location/location.route.js';
 
 const app = express();
 
+const resolveHelmet = (): RequestHandler => {
+  const helmetModule = helmet as unknown as { default?: () => RequestHandler };
+  const helmetFactory: (() => RequestHandler) | undefined =
+    typeof helmet === 'function'
+      ? (helmet as unknown as () => RequestHandler)
+      : helmetModule.default;
+
+  if (helmetFactory) {
+    return helmetFactory();
+  }
+
+  throw new Error('Helmet middleware initialization failed');
+};
+
 // ── Security Middlewares ──────────────────────────────────
-app.use(helmet());
+app.use(resolveHelmet());
 
 app.use((req, res, next) => {
   const requestId = randomUUID();
