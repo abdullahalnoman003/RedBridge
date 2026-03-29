@@ -1,12 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Authentication/Context/AuthContext';
+import useUserRole from '../../Hooks/useUserRole';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext) || {};
-  const [role] = useState(() => localStorage.getItem("userRole"));
+  const [role, loadingRole] = useUserRole(user?.email);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
