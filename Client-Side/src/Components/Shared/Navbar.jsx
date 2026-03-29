@@ -32,6 +32,7 @@ const Navbar = () => {
   };
 
   const renderDashboardLink = () => {
+    if (loadingRole) return null;
     if (!role) return null;
     if (role === "admin")
       return <NavLink to="/dashboard/admin">Admin Dashboard</NavLink>;

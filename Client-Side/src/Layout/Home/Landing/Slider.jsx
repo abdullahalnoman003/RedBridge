@@ -29,7 +29,7 @@ const Slider = () => {
             </div>
 
             <div className="grid md:grid-cols-3 gap-5">
-                {testimonials.map((item, index) => (
+                {testimonials.map((item) => (
                     <article
                         key={item.name}
                         className="group rounded-2xl overflow-hidden border border-gray-200 bg-gradient-to-br from-white to-gray-50 shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
