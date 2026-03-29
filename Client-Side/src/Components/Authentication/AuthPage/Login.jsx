@@ -91,6 +91,8 @@ const Login = () => {
           email: user.email.toLowerCase(),
           role: 'user',
           photoURL: user.photoURL || null,
+          bio: null,
+          address: null,
           isVerified: true,
           lastLogin: new Date().toISOString(),
         });
