@@ -20,26 +20,30 @@ const infoCards = [
 
 const BloodInfo = () => {
     return (
-        <section className="py-14 bg-gradient-to-b from-[#fff5f8] to-[#f7f8ff]">
+        <section className="py-14 bg-gradient-to-b from-pink-50 via-white to-purple-50">
             <div className="max-w-7xl mx-auto px-4">
-                <div className="mb-8 rb-fade-up">
-                    <p className="uppercase tracking-wider text-xs text-[#d7265e]">Education</p>
-                    <h2 className="text-3xl md:text-4xl font-black mt-2">Know Before You Donate</h2>
+                <div className="mb-8 text-center">
+                    <p className="uppercase tracking-wider text-xs text-red-600 font-semibold mb-2">Education</p>
+                    <h2 className="text-3xl md:text-4xl font-black text-gray-800">Know Before You Donate</h2>
+                    <p className="text-gray-600 mt-3 max-w-2xl mx-auto">Essential information to help you become a safe and informed blood donor</p>
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-5">
                     {infoCards.map((card, index) => (
                         <article
                             key={card.title}
-                            className={`rounded-2xl overflow-hidden border bg-white shadow-sm hover:shadow-xl transition duration-300 hover:-translate-y-1 ${
-                                index === 0 ? 'rb-fade-up' : index === 1 ? 'rb-fade-up-delay-1' : 'rb-fade-up-delay-2'
-                            }`}
+                            className="rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group"
                         >
-                            <div className="h-44 overflow-hidden">
-                                <img src={card.image} alt={card.title} className="w-full h-full object-cover hover:scale-105 transition duration-500" />
+                            <div className="h-44 overflow-hidden relative">
+                                <img
+                                    src={card.image}
+                                    alt={card.title}
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             </div>
                             <div className="p-5">
-                                <h3 className="font-bold text-lg mb-2">{card.title}</h3>
+                                <h3 className="font-bold text-lg mb-2 text-red-700 group-hover:text-red-600 transition-colors">{card.title}</h3>
                                 <p className="text-sm text-gray-600 leading-relaxed">{card.text}</p>
                             </div>
                         </article>
