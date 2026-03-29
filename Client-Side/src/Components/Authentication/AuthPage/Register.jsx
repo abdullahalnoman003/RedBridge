@@ -72,6 +72,8 @@ const Register = () => {
         email: form.email.toLowerCase(),
         role: 'user',
         photoURL: photoURL || null,
+        bio: null,
+        address: null,
         joinDate: new Date().toISOString(),
         lastLogin: new Date().toISOString(),
       };
@@ -104,7 +106,9 @@ const Register = () => {
         email: user.email.toLowerCase(),
         role: 'user',
         photoURL: user.photoURL || null,
-        joinDate: new Date().toISOString(),
+        bio: null,
+        address: null,
+        isVerified: true,
         lastLogin: new Date().toISOString(),
       };
 
