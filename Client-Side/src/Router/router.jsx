@@ -13,6 +13,8 @@ import Statistics from "../Layout/Home/Landing/Statistics";
 import CTA from "../Layout/Home/Landing/CTA";
 import FindDonorsPage from "../Components/Donor/FindDonorsPage";
 import DonatePage from "../Components/Donor/DonatePage";
+import Profile from "../Components/Profile/Profile";
+import ForgotPassword from "../Components/Authentication/AuthPage/ForgotPassword";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +58,14 @@ const router = createBrowserRouter([
       {
         path: "/donate",
         element: <DonatePage></DonatePage> ,
+      },
+      {
+        path: "/profile",
+        element: <Profile></Profile> ,
+      },
+      {
+        path: "/forgot-password",
+        element: <ForgotPassword></ForgotPassword> ,
       },
       {
         path: "/*",
