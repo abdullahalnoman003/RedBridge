@@ -20,7 +20,7 @@ const infoCards = [
 
 const BloodInfo = () => {
     return (
-        <section className="py-14 bg-gradient-to-b from-pink-50 via-white to-purple-50">
+        <section className="py-14 bg-linear-to-b from-pink-50 via-white to-purple-50">
             <div className="max-w-7xl mx-auto px-4">
                 <div className="mb-8 text-center">
                     <p className="uppercase tracking-wider text-xs text-red-600 font-semibold mb-2">Education</p>
@@ -29,7 +29,7 @@ const BloodInfo = () => {
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-5">
-                    {infoCards.map((card, index) => (
+                    {infoCards.map((card) => (
                         <article
                             key={card.title}
                             className="rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group"
@@ -40,7 +40,7 @@ const BloodInfo = () => {
                                     alt={card.title}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             </div>
                             <div className="p-5">
                                 <h3 className="font-bold text-lg mb-2 text-red-700 group-hover:text-red-600 transition-colors">{card.title}</h3>

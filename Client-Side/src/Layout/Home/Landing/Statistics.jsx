@@ -10,7 +10,7 @@ const metrics = [
 
 const Statistics = () => {
     return (
-        <section className="max-w-7xl mx-auto px-4 py-14 bg-gradient-to-b from-white to-gray-50">
+        <section className="max-w-7xl mx-auto px-4 py-14 bg-linear-to-b from-white to-gray-50">
             <div className="text-center mb-8">
                 <p className="uppercase tracking-wider text-xs text-red-600 font-semibold mb-2">Platform Analytics</p>
                 <h2 className="text-3xl md:text-4xl font-black text-gray-800">Live Impact Overview</h2>
@@ -18,7 +18,7 @@ const Statistics = () => {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {metrics.map((metric, index) => {
+                {metrics.map((metric) => {
                     const Icon = metric.icon;
                     return (
                         <div
@@ -35,7 +35,7 @@ const Statistics = () => {
                             <p className="text-4xl font-black text-red-700 mb-4">{metric.value}</p>
                             <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
                                 <div
-                                    className="h-2 bg-gradient-to-r from-red-700 to-pink-600 rounded-full transition-all duration-1000 ease-out"
+                                    className="h-2 bg-linear-to-r from-red-700 to-pink-600 rounded-full transition-all duration-1000 ease-out"
                                     style={{ width: metric.ratio }}
                                 />
                             </div>
