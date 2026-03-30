@@ -12,5 +12,6 @@ createRoot(document.getElementById("root")).render(
       <RouterProvider router={router}></RouterProvider>
       <Toaster position="bottom-center" toastOptions={{ duration: 2000 }} />
     </AuthProvider>
-  </StrictMode>,
+  </StrictMode>
+  
 );
