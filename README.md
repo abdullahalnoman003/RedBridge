@@ -1,202 +1,851 @@
-# RedBridge - Blood Donation Finder
+# RedBridge
 
-RedBridge is a full-stack blood donation platform where users can register as donors, search for donors by location and blood group, and admins can manage the approval workflow.
+A full-stack blood donor discovery and donor management platform focused on Bangladesh. RedBridge helps users quickly find approved blood donors by blood group and location, while giving administrators the tools to review and moderate donor registrations.
 
-## Project at a Glance
+## 1. Project Overview
 
-- **Frontend:** React + Vite (`Client-Side`)
-- **Backend:** Node.js + Express + TypeScript (`Server-Side`)
-- **Database:** MongoDB (Mongoose)
-- **Auth:** Firebase Authentication (token verification via Firebase Admin SDK)
-- **Deployment:** Vercel (Frontend SPA + Backend serverless API)
+RedBridge is designed to reduce the time required to connect blood seekers with available donors.
 
-## What This Project Does
+Purpose:
+- Make blood donor search faster and location-aware.
+- Provide a trusted donor directory through an admin approval workflow.
+- Offer a simple and accessible interface for both donors and seekers.
 
-- User registration via Firebase (roles: `admin`, `donor`)
-- Donor profile creation with blood type, location, and phone number
-- Admin approval workflow — donors start as `pending`, admin approves or rejects
-- Public donor search with filters (blood type, division, district, upazila)
-- Bangladesh location APIs (division → district → upazila)
+Main features:
+- Firebase-based user authentication.
+- Donor profile creation with blood group and detailed location.
+- Admin moderation (approve/reject/delete donor profiles).
+- Public donor search with filters.
+- Bangladesh locations support (division, district, upazila).
 
-## Application Flow
+Expected users:
+- Blood seekers and patient families.
+- Voluntary blood donors.
+- University/project admins or moderators.
 
-```
-Public User (no login required)
-  ├── Browse approved donors
-  ├── View donor details
-  └── Browse locations
+## 2. Tech Stack
 
-Logged-in User (Firebase auth)
-  ├── Register in database
-  ├── Submit donor form → status: "pending"
-  └── Update own donor profile
+### Frontend
+- React 19
+- Vite 7
+- React Router DOM 7
+- Axios
+- Tailwind CSS 4
+- DaisyUI
+- React Hot Toast
+- SweetAlert2
+- React Icons
 
-Admin (Firebase auth + admin role)
-  ├── View all users
-  ├── Update user roles
-  ├── Approve / Reject donors
-  └── Delete donors
-```
+### Backend
+- Node.js
+- Express 4
+- TypeScript 5
+- Zod (request validation)
+- Helmet (security headers)
+- CORS
+- express-rate-limit
 
-## Repository Structure
+### Database
+- MongoDB
+- Mongoose
 
-```
-RedBridge/
-├── Client-Side/          # React frontend app
-│   ├── src/
-│   │   ├── Components/   # UI components (Auth, Shared, Static, Errors)
-│   │   ├── Firebase/     # Firebase config
-│   │   ├── Hooks/        # Custom hooks (useAxios, useDocumentTitle)
-│   │   ├── Layout/       # Page layouts (Home, Admin)
-│   │   └── Router/       # Route definitions
-│   └── vercel.json       # Vercel SPA config
-│
-├── Server-Side/          # Express REST API
-│   ├── src/
-│   │   ├── config/       # DB, Firebase, env config
-│   │   ├── middlewares/   # Auth, role, error, validation
-│   │   ├── modules/
-│   │   │   ├── user/     # User model, service, controller, routes
-│   │   │   ├── donor/    # Donor model, service, controller, routes
-│   │   │   └── location/ # BD location proxy (divisions, districts, upazilas)
-│   │   └── utils/        # ApiError, catchAsync, sendResponse
-│   ├── api/index.ts      # Vercel serverless entry point
-│   └── vercel.json       # Vercel API config
-│
-└── README.md
-```
+### Authentication and Authorization
+- Firebase Authentication (client)
+- Firebase Admin SDK (server-side token verification)
+- Role-based access control (`admin`, `donor`)
 
-## Local Setup
+### Tooling and Deployment
+- ESLint
+- tsx
+- Vercel (frontend + backend deployments)
 
-### 1) Install Dependencies
+## 3. Installation Guide
 
+### 3.1 Prerequisites
+- Node.js 20+ (recommended)
+- npm 10+
+- MongoDB (local or cloud instance)
+- Firebase project with Authentication enabled
+
+### 3.2 Clone Repository
 ```bash
-cd Client-Side && npm install
-cd ../Server-Side && npm install
+git clone <your-repository-url>
+cd RedBridge
 ```
 
-### 2) Configure Environment Variables
+### 3.3 Install Dependencies
+```bash
+cd Client-Side
+npm install
 
-**Server-Side `.env`:**
+cd ../Server-Side
+npm install
+```
 
+### 3.4 Configure Environment Variables
+
+Create `.env` in `Server-Side`:
 ```env
-PORT=5000
 NODE_ENV=development
+PORT=5000
 MONGODB_URI=mongodb://localhost:27017/blood-donation-finder
-FIREBASE_PROJECT_ID=your-project-id
-FIREBASE_CLIENT_EMAIL=your-client-email
-FIREBASE_PRIVATE_KEY="your-private-key"
-CORS_ORIGIN=http://localhost:5173
+
+FIREBASE_PROJECT_ID=your-firebase-project-id
+FIREBASE_CLIENT_EMAIL=your-firebase-client-email
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+
+CORS_ORIGIN=http://localhost:5173,http://localhost:3000
 ```
 
-**Client-Side `.env`:**
-
+Create `.env` in `Client-Side`:
 ```env
-VITE_API_URL=http://localhost:5000/api
+VITE_API_BASE_URL=http://localhost:5000
+
 VITE_FIREBASE_API_KEY=your-api-key
 VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
 VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+VITE_FIREBASE_APP_ID=your-app-id
 ```
 
-### 3) Run Development Servers
+### 3.5 Run Project Locally
 
+Start backend:
 ```bash
-# Terminal 1 — Backend
 cd Server-Side
 npm run dev
+```
 
-# Terminal 2 — Frontend
+Start frontend in a second terminal:
+```bash
 cd Client-Side
 npm run dev
 ```
 
----
+Default local URLs:
+- Frontend: `http://localhost:5173`
+- Backend health: `http://localhost:5000/health`
 
-## API Endpoints
+### 3.6 Optional Scripts
 
-### Base URL: `/api`
+Backend:
+```bash
+npm run build
+npm run start
+npm run lint
+npm run seed
+```
 
-All protected routes require: `Authorization: Bearer <firebase_id_token>`
+Frontend:
+```bash
+npm run build
+npm run preview
+npm run lint
+```
 
-### System
+## 4. API Documentation
 
-| Method | Endpoint | Access | Purpose |
-|--------|----------|--------|---------|
-| GET | `/health` | Public | API health/uptime status |
+### 4.1 Base URL
+- Local backend root: `http://localhost:5000`
+- API prefix: `/api`
+- Effective local API base: `http://localhost:5000/api`
 
-### Users
+### 4.2 Authentication Method
+Protected endpoints require Firebase ID token:
 
-| Method | Endpoint | Access | Purpose |
-|--------|----------|--------|---------|
-| POST | `/api/users` | Public | Register user (after Firebase auth) |
-| GET | `/api/users` | Admin | Get all users |
-| PATCH | `/api/users/:id/role` | Admin | Update user role (`admin` or `donor`) |
+```http
+Authorization: Bearer <firebase_id_token>
+```
 
-### Donors
+Authorization rules:
+- Public: no token needed.
+- Authenticated: valid Firebase token required.
+- Admin only: valid token and user role must be `admin`.
 
-| Method | Endpoint | Access | Purpose |
-|--------|----------|--------|---------|
-| POST | `/api/donors` | Authenticated | Create donor profile (status: pending) |
-| GET | `/api/donors` | Public | Search approved donors (with filters) |
-| GET | `/api/donors/:id` | Public | Get donor details |
-| PUT | `/api/donors/:id` | Owner | Update own donor profile |
-| DELETE | `/api/donors/:id` | Admin | Delete donor |
-| PATCH | `/api/donors/:id/approve` | Admin | Approve donor |
-| PATCH | `/api/donors/:id/reject` | Admin | Reject donor |
+### 4.3 Common Response Formats
 
-**Donor search query params:** `?bloodType=O+&division=Dhaka&district=Dhaka&upazila=Dhanmondi`
-
-### Locations
-
-| Method | Endpoint | Access | Purpose |
-|--------|----------|--------|---------|
-| GET | `/api/locations` | Public | Full location tree |
-| GET | `/api/locations/divisions` | Public | All 8 divisions |
-| GET | `/api/locations/districts/:divisionName` | Public | Districts of a division |
-| GET | `/api/locations/upazilas/:districtName` | Public | Upazilas of a district |
-
-> Full API examples with request/response bodies available in [`Server-Side/API_DOCUMENTATION.md`](Server-Side/API_DOCUMENTATION.md)
-
-### Response Format
-
+Success response:
 ```json
 {
   "success": true,
   "message": "Operation successful",
-  "data": { ... }
+  "data": {}
 }
 ```
 
----
+Paginated response:
+```json
+{
+  "success": true,
+  "message": "Data retrieved successfully",
+  "meta": {
+    "page": 1,
+    "limit": 10,
+    "total": 52,
+    "totalPages": 6
+  },
+  "data": []
+}
+```
 
-## Tech Stack
+Error response:
+```json
+{
+  "success": false,
+  "code": "INTERNAL_ERROR",
+  "message": "Something went wrong",
+  "details": "optional in development",
+  "data": null
+}
+```
 
-| Layer | Technology |
-|-------|------------|
-| Frontend | React 18, Vite, React Router, Tailwind CSS |
-| Backend | Node.js, Express, TypeScript |
-| Database | MongoDB, Mongoose |
-| Authentication | Firebase Auth + Firebase Admin SDK |
-| Deployment | Vercel (SPA + Serverless) |
-| Location Data | [BD APIs](https://bdapis.com/api/v1.2) |
+### 4.4 Endpoints
 
----
+#### System
 
-## Vercel Deployment
+##### GET /health
+Access: Public
 
-### Required GitHub Secrets
+Success response example:
+```json
+{
+  "success": true,
+  "message": "Blood Donation Finder API is running",
+  "data": {
+    "timestamp": "2026-03-30T12:00:00.000Z",
+    "uptime": 1234.56
+  }
+}
+```
 
-| Secret | Description |
-|--------|-------------|
-| `VERCEL_TOKEN` | Vercel personal access token |
-| `VERCEL_ORG_ID` | Vercel organization/team ID |
-| `VERCEL_FRONTEND_PROJECT_ID` | Vercel project ID for Client-Side |
-| `VERCEL_BACKEND_PROJECT_ID` | Vercel project ID for Server-Side |
+#### Users
 
-### Setup Steps
+##### POST /api/users
+Access: Public
+Purpose: Create user record after Firebase sign-in.
 
-1. Run `npx vercel login` and `npx vercel link` in both `Client-Side` and `Server-Side`
-2. Get `orgId` and `projectId` from `.vercel/project.json`
-3. Create a Vercel token at **Account Settings → Tokens**
-4. Add all secrets to GitHub → **Settings → Secrets and variables → Actions**
-5. Add environment variables to each Vercel project from the `.env` examples above
+Request body example:
+```json
+{
+  "name": "Rahim Uddin",
+  "email": "rahim@example.com",
+  "photoURL": "https://example.com/avatar.jpg",
+  "phone": "01712345678",
+  "address": "Dhaka",
+  "bio": "Regular blood donor"
+}
+```
+
+Success response example (201):
+```json
+{
+  "success": true,
+  "message": "User created successfully",
+  "data": {
+    "_id": "660a1b2c3d4e5f6a7b8c9d0e",
+    "name": "Rahim Uddin",
+    "email": "rahim@example.com",
+    "role": "donor"
+  }
+}
+```
+
+##### GET /api/users
+Access: Admin only
+Purpose: Get users list.
+
+Query parameters:
+- `page` (optional, positive integer)
+- `limit` (optional, positive integer, max 100)
+
+Success response example:
+```json
+{
+  "success": true,
+  "message": "Users retrieved successfully",
+  "meta": {
+    "page": 1,
+    "limit": 10,
+    "total": 1,
+    "totalPages": 1
+  },
+  "data": [
+    {
+      "_id": "660a1b2c3d4e5f6a7b8c9d0e",
+      "name": "Rahim Uddin",
+      "email": "rahim@example.com",
+      "role": "donor"
+    }
+  ]
+}
+```
+
+##### GET /api/users/role?email=<email>
+Access: Public
+Purpose: Get a single user by email.
+
+Success response example:
+```json
+{
+  "success": true,
+  "message": "User retrieved successfully",
+  "data": {
+    "_id": "660a1b2c3d4e5f6a7b8c9d0e",
+    "name": "Rahim Uddin",
+    "email": "rahim@example.com",
+    "role": "donor"
+  }
+}
+```
+
+##### PATCH /api/users/update?email=<email>
+Access: Public
+Purpose: Update user profile fields by email.
+
+Request body example:
+```json
+{
+  "name": "Rahim Uddin",
+  "photoURL": "https://example.com/new-avatar.jpg",
+  "phone": "01812345678",
+  "address": "Dhaka, Bangladesh",
+  "bio": "Available for emergency donation",
+  "isVerified": true,
+  "lastLogin": "2026-03-30T09:20:00.000Z"
+}
+```
+
+Success response example:
+```json
+{
+  "success": true,
+  "message": "User updated successfully",
+  "data": {
+    "_id": "660a1b2c3d4e5f6a7b8c9d0e",
+    "email": "rahim@example.com"
+  }
+}
+```
+
+##### PATCH /api/users/:id/role
+Access: Admin only
+Purpose: Change user role.
+
+Request body example:
+```json
+{
+  "role": "admin"
+}
+```
+
+Success response example:
+```json
+{
+  "success": true,
+  "message": "User role updated successfully",
+  "data": {
+    "_id": "660a1b2c3d4e5f6a7b8c9d0e",
+    "role": "admin"
+  }
+}
+```
+
+#### Donors
+
+##### POST /api/donors
+Access: Authenticated
+Purpose: Create donor profile with pending status.
+
+Request body example:
+```json
+{
+  "bloodType": "O+",
+  "location": {
+    "division": "Dhaka",
+    "district": "Dhaka",
+    "upazila": "Dhanmondi",
+    "area": "Road 27"
+  },
+  "phone": "01712345678",
+  "availability": true
+}
+```
+
+Success response example (201):
+```json
+{
+  "success": true,
+  "message": "Donor profile created successfully. Awaiting admin approval.",
+  "data": {
+    "_id": "660b2c3d4e5f6a7b8c9d0e1f",
+    "bloodType": "O+",
+    "status": "pending"
+  }
+}
+```
+
+##### GET /api/donors
+Access: Public
+Purpose: Search approved donors.
+
+Query parameters:
+- `bloodType` (A+, A-, B+, B-, O+, O-, AB+, AB-)
+- `division`
+- `district`
+- `upazila`
+- `page` (optional)
+- `limit` (optional, max 100)
+
+Success response example:
+```json
+{
+  "success": true,
+  "message": "Donors retrieved successfully",
+  "meta": {
+    "page": 1,
+    "limit": 10,
+    "total": 1,
+    "totalPages": 1
+  },
+  "data": [
+    {
+      "_id": "660b2c3d4e5f6a7b8c9d0e1f",
+      "bloodType": "O+",
+      "status": "approved"
+    }
+  ]
+}
+```
+
+##### GET /api/donors/pending
+Access: Admin only
+Purpose: Get pending donor requests.
+
+Query parameters:
+- `page` (optional)
+- `limit` (optional, max 100)
+
+Success response example:
+```json
+{
+  "success": true,
+  "message": "Pending donor requests retrieved successfully",
+  "meta": {
+    "page": 1,
+    "limit": 10,
+    "total": 1,
+    "totalPages": 1
+  },
+  "data": [
+    {
+      "_id": "660b2c3d4e5f6a7b8c9d0e1f",
+      "status": "pending"
+    }
+  ]
+}
+```
+
+##### GET /api/donors/:id
+Access: Public
+Purpose: Get donor details by id.
+
+Success response example:
+```json
+{
+  "success": true,
+  "message": "Donor retrieved successfully",
+  "data": {
+    "_id": "660b2c3d4e5f6a7b8c9d0e1f",
+    "bloodType": "O+",
+    "location": {
+      "division": "Dhaka",
+      "district": "Dhaka",
+      "upazila": "Dhanmondi",
+      "area": "Road 27"
+    },
+    "phone": "01712345678",
+    "availability": true,
+    "status": "approved"
+  }
+}
+```
+
+##### PUT /api/donors/:id
+Access: Authenticated (owner only)
+Purpose: Update donor profile.
+
+Request body example:
+```json
+{
+  "bloodType": "A+",
+  "location": {
+    "district": "Gazipur"
+  },
+  "phone": "01812345678",
+  "availability": false
+}
+```
+
+Success response example:
+```json
+{
+  "success": true,
+  "message": "Donor profile updated successfully",
+  "data": {
+    "_id": "660b2c3d4e5f6a7b8c9d0e1f",
+    "bloodType": "A+"
+  }
+}
+```
+
+##### DELETE /api/donors/:id
+Access: Admin only
+Purpose: Remove donor profile.
+
+Success response example:
+```json
+{
+  "success": true,
+  "message": "Donor profile deleted successfully",
+  "data": {
+    "_id": "660b2c3d4e5f6a7b8c9d0e1f"
+  }
+}
+```
+
+##### PATCH /api/donors/:id/approve
+Access: Admin only
+Purpose: Approve donor profile.
+
+Request body: none
+
+Success response example:
+```json
+{
+  "success": true,
+  "message": "Donor approved successfully",
+  "data": {
+    "_id": "660b2c3d4e5f6a7b8c9d0e1f",
+    "status": "approved"
+  }
+}
+```
+
+##### PATCH /api/donors/:id/reject
+Access: Admin only
+Purpose: Reject donor profile.
+
+Request body: none
+
+Success response example:
+```json
+{
+  "success": true,
+  "message": "Donor rejected successfully",
+  "data": {
+    "_id": "660b2c3d4e5f6a7b8c9d0e1f",
+    "status": "rejected"
+  }
+}
+```
+
+#### Locations
+
+##### GET /api/locations
+Access: Public
+Purpose: Get full Bangladesh location tree.
+
+Success response example:
+```json
+{
+  "success": true,
+  "message": "Full location tree retrieved successfully",
+  "data": [
+    {
+      "division": "Dhaka",
+      "districts": [
+        {
+          "district": "Dhaka",
+          "upazila": ["Dhanmondi", "Gulshan"]
+        }
+      ]
+    }
+  ]
+}
+```
+
+##### GET /api/locations/divisions
+Access: Public
+Purpose: Get all divisions.
+
+Success response example:
+```json
+{
+  "success": true,
+  "message": "Divisions retrieved successfully",
+  "data": [
+    {
+      "division": "Dhaka",
+      "divisionbn": "ঢাকা"
+    }
+  ]
+}
+```
+
+##### GET /api/locations/districts/:divisionName
+Access: Public
+Purpose: Get districts and upazilas for a division.
+
+Success response example:
+```json
+{
+  "success": true,
+  "message": "Districts of Dhaka retrieved successfully",
+  "data": [
+    {
+      "district": "Dhaka",
+      "upazila": ["Dhanmondi", "Mirpur"]
+    }
+  ]
+}
+```
+
+##### GET /api/locations/upazilas/:districtName
+Access: Public
+Purpose: Get upazilas by district.
+
+Success response example:
+```json
+{
+  "success": true,
+  "message": "Upazilas of Dhaka retrieved successfully",
+  "data": ["Dhanmondi", "Mirpur"]
+}
+```
+
+### 4.5 Error Responses
+
+Common API error examples:
+
+400 Bad Request
+```json
+{
+  "success": false,
+  "code": "INVALID_DATA",
+  "message": "Invalid request data",
+  "data": null
+}
+```
+
+401 Unauthorized
+```json
+{
+  "success": false,
+  "code": "UNAUTHORIZED",
+  "message": "No authorization token provided",
+  "data": null
+}
+```
+
+403 Forbidden
+```json
+{
+  "success": false,
+  "code": "FORBIDDEN",
+  "message": "Access denied",
+  "data": null
+}
+```
+
+404 Not Found
+```json
+{
+  "success": false,
+  "code": "NOT_FOUND",
+  "message": "Resource not found",
+  "data": null
+}
+```
+
+409 Conflict
+```json
+{
+  "success": false,
+  "code": "DUPLICATE_FIELD",
+  "message": "Duplicate value found",
+  "data": null
+}
+```
+
+429 Too Many Requests
+```json
+{
+  "success": false,
+  "message": "Too many requests. Please try again later.",
+  "error": "Too many requests. Please try again later."
+}
+```
+
+500 Internal Server Error
+```json
+{
+  "success": false,
+  "code": "INTERNAL_ERROR",
+  "message": "Internal Server Error",
+  "data": null
+}
+```
+
+## 5. Project Structure
+
+```text
+RedBridge/
+|-- README.md
+|-- Client-Side/
+|   |-- package.json
+|   |-- vite.config.js
+|   |-- vercel.json
+|   |-- src/
+|       |-- main.jsx
+|       |-- index.css
+|       |-- Firebase/
+|       |   |-- firebase.init.js
+|       |-- Hooks/
+|       |   |-- useAxios.jsx
+|       |   |-- useDocumentTitle.jsx
+|       |   |-- useUserRole.jsx
+|       |-- Router/
+|       |   |-- router.jsx
+|       |-- Layout/
+|       |   |-- Home/
+|       |   |-- Admin/
+|       |-- Components/
+|           |-- Authentication/
+|           |-- Donor/
+|           |-- Profile/
+|           |-- Shared/
+|           |-- Static/
+|           |-- Errors/
+|
+|-- Server-Side/
+    |-- API_DOCUMENTATION.md
+    |-- package.json
+    |-- tsconfig.json
+    |-- vercel.json
+    |-- api/
+    |   |-- index.ts
+    |-- src/
+        |-- app.ts
+        |-- server.ts
+        |-- seed.ts
+        |-- config/
+        |   |-- index.ts
+        |   |-- db.ts
+        |   |-- firebase.ts
+        |-- constants/
+        |-- middlewares/
+        |-- modules/
+        |   |-- user/
+        |   |-- donor/
+        |   |-- location/
+        |-- utils/
+        |-- data/
+            |-- bangladesh-locations.json
+```
+
+Key locations:
+- Frontend routing and page composition: `Client-Side/src/Router/router.jsx`
+- Frontend API client setup: `Client-Side/src/Hooks/useAxios.jsx`
+- Firebase initialization: `Client-Side/src/Firebase/firebase.init.js`
+- Backend app bootstrap and middleware: `Server-Side/src/app.ts`
+- Backend API module routes/controllers/services: `Server-Side/src/modules/*`
+
+## 6. Features
+
+- User registration and login with Firebase Authentication.
+- Role-aware access model (`admin`, `donor`).
+- Donor registration workflow with pending approval.
+- Admin dashboard route for moderation.
+- Donor search by blood type and geographic filters.
+- Donor availability management.
+- Bangladesh location hierarchy endpoints.
+- Standardized API response format.
+- Request validation with Zod.
+- Global error handling with consistent error schema.
+- Rate limiting and security middleware integration.
+
+## 7. Usage
+
+### For Public Visitors
+1. Open the website home page.
+2. Go to Find Donors.
+3. Filter by blood group and location.
+4. View approved donor profiles.
+
+### For Donors
+1. Register or log in using Firebase authentication.
+2. Complete your donor profile with blood group, phone, and location.
+3. Wait for admin approval.
+4. Update your profile and availability when needed.
+
+### For Admins
+1. Log in with an account that has `admin` role.
+2. Review pending donor requests.
+3. Approve or reject donor profiles.
+4. Manage user roles and donor records.
+
+## 8. Developer Information
+
+Important: Replace these profile links with actual team information before final public release.
+
+| Full Name | Role | Facebook | LinkedIn | WhatsApp |
+|---|---|---|---|---|
+| Md. Developer One | Full-Stack Developer | https://facebook.com/developer.one | https://linkedin.com/in/developer-one | https://wa.me/8801700000001 |
+| Nusrat Developer Two | Frontend Developer | https://facebook.com/developer.two | https://linkedin.com/in/developer-two | https://wa.me/8801700000002 |
+| Tanvir Developer Three | Backend Developer | https://facebook.com/developer.three | https://linkedin.com/in/developer-three | https://wa.me/8801700000003 |
+
+## 9. Academic Context
+
+- This project is a university course project.
+- It was developed as a group project.
+
+## 10. Contribution Guidelines
+
+Contributions are welcome.
+
+1. Fork the repository.
+2. Create a feature branch from `main`.
+3. Make focused changes with clear commit messages.
+4. Run lint/build checks before opening a pull request.
+5. Open a pull request with:
+   - Summary of what changed
+   - Why it changed
+   - Testing notes
+6. Address review feedback and keep the branch up to date.
+
+Recommended quality checks:
+```bash
+# Frontend
+cd Client-Side
+npm run lint
+npm run build
+
+# Backend
+cd ../Server-Side
+npm run lint
+npm run build
+```
+
+## 11. License
+
+This project is distributed under the ISC License.
+
+If your university or team policy requires a different license, update this section and add a dedicated `LICENSE` file.
+
+## 12. Document Quality Notes
+
+- Language is kept clear and direct.
+- Heading hierarchy and formatting are consistent.
+- No emoji characters are used.
+- API section includes base URL, authentication, all endpoints, request and response examples, and error formats.
