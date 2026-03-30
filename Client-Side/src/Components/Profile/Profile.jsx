@@ -1,12 +1,14 @@
 import React, { useContext, useState, useEffect } from "react";
 import { updateProfile } from "firebase/auth";
 import Swal from "sweetalert2";
+import toast from 'react-hot-toast';
 import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaEdit, FaSave, FaTimes, FaCamera, FaCalendarAlt, FaTint, FaIdCard } from "react-icons/fa";
 import { MdBloodtype } from "react-icons/md";
 import { AuthContext } from "../Authentication/Context/AuthContext";
 
 import useDocumentTitle from "../../Hooks/useDocumentTitle";
 import useAxios from "../../Hooks/useAxios";
+import getApiErrorMessage from "../../Utils/getApiErrorMessage";
 
 const Profile = () => {
   useDocumentTitle("RedBridge || Profile");
@@ -41,7 +43,7 @@ const Profile = () => {
           }));
         }
       } catch (error) {
-        console.log("Error fetching user data:", error);
+        toast.error(getApiErrorMessage(error, 'Failed to load profile data.'));
       }
     };
 
@@ -92,7 +94,7 @@ const Profile = () => {
       Swal.fire({
         icon: "error",
         title: "Update Failed",
-        text: error.message || "Something went wrong. Please try again.",
+        text: getApiErrorMessage(error, "Something went wrong. Please try again."),
       });
     } finally {
       setLoading(false);

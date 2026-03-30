@@ -8,6 +8,7 @@ import {
 import { auth } from '../../../Firebase/firebase.init';
 import toast from 'react-hot-toast';
 import useAxios from '../../../Hooks/useAxios';
+import getApiErrorMessage from '../../../Utils/getApiErrorMessage';
 import { FcGoogle } from 'react-icons/fc';
 import { FaEye, FaEyeSlash, FaTint } from 'react-icons/fa';
 
@@ -58,7 +59,7 @@ const Login = () => {
       localStorage.setItem('userRole', role);
       return role === 'admin' ? '/dashboard/admin' : '/';
     } catch (error) {
-      console.error('Failed to fetch role for redirect:', error);
+      toast.error(getApiErrorMessage(error, 'Failed to load user role.'));
       const fallbackRole = localStorage.getItem('userRole') || 'user';
       return fallbackRole === 'admin' ? '/dashboard/admin' : '/';
     }

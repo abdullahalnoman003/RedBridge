@@ -6,6 +6,7 @@ import {
   loadDistrictsByDivision,
   loadUpazilasByDistrict,
 } from '../../Utils/bdLocationApi';
+import getApiErrorMessage from '../../Utils/getApiErrorMessage';
 
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 
@@ -37,8 +38,8 @@ const DonatePage = () => {
       try {
         const data = await loadBdDivisions(axiosInstance);
         setDivisions(data);
-      } catch {
-        toast.error('Failed to load divisions');
+      } catch (error) {
+        toast.error(getApiErrorMessage(error, 'Failed to load divisions'));
       }
     };
 
@@ -60,8 +61,8 @@ const DonatePage = () => {
     try {
       const data = await loadDistrictsByDivision(axiosInstance, division);
       setDistricts(data);
-    } catch {
-      toast.error('Failed to load districts');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Failed to load districts'));
     }
   };
 
@@ -79,8 +80,8 @@ const DonatePage = () => {
     try {
       const data = await loadUpazilasByDistrict(axiosInstance, district);
       setUpazilas(data);
-    } catch {
-      toast.error('Failed to load upazilas');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Failed to load upazilas'));
     }
   };
 
@@ -104,7 +105,7 @@ const DonatePage = () => {
 
       toast.success('Donor profile submitted. Waiting for admin approval.');
     } catch (error) {
-      toast.error(error?.response?.data?.message || 'Failed to submit donor profile');
+      toast.error(getApiErrorMessage(error, 'Failed to submit donor profile'));
     } finally {
       setLoading(false);
     }

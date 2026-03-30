@@ -6,6 +6,7 @@ import {
   loadDistrictsByDivision,
   loadUpazilasByDistrict,
 } from '../../Utils/bdLocationApi';
+import getApiErrorMessage from '../../Utils/getApiErrorMessage';
 import { FaPhoneAlt, FaMapMarkerAlt, FaTint } from 'react-icons/fa';
 
 const PAGE_SIZE = 6;
@@ -32,8 +33,8 @@ const FindDonorsPage = () => {
       try {
         const data = await loadBdDivisions(axiosInstance);
         setDivisions(data);
-      } catch {
-        toast.error('Failed to load divisions');
+      } catch (error) {
+        toast.error(getApiErrorMessage(error, 'Failed to load divisions'));
       }
     };
 
@@ -54,7 +55,7 @@ const FindDonorsPage = () => {
       const res = await axiosInstance.get(`/donors?${query.toString()}`);
       setDonors(res?.data?.data || []);
     } catch (error) {
-      toast.error(error?.response?.data?.message || 'Failed to fetch donors', { id: 'fetch-donors' });
+      toast.error(getApiErrorMessage(error, 'Failed to fetch donors'), { id: 'fetch-donors' });
     } finally {
       setLoading(false);
     }
@@ -83,8 +84,8 @@ const FindDonorsPage = () => {
     try {
       const data = await loadDistrictsByDivision(axiosInstance, value);
       setDistricts(data);
-    } catch {
-      toast.error('Failed to load districts');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Failed to load districts'));
     }
   };
 
@@ -100,8 +101,8 @@ const FindDonorsPage = () => {
     try {
       const data = await loadUpazilasByDistrict(axiosInstance, value);
       setUpazilas(data);
-    } catch {
-      toast.error('Failed to load upazilas');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Failed to load upazilas'));
     }
   };
 

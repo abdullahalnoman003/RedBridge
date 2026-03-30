@@ -4,6 +4,7 @@ import { AuthContext } from '../Authentication/Context/AuthContext';
 import useUserRole from '../../Hooks/useUserRole';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
+import getApiErrorMessage from '../../Utils/getApiErrorMessage';
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext) || {};
@@ -27,7 +28,7 @@ const Navbar = () => {
       toast.success("Logged out successfully!");
       navigate("/");
     } catch (error) {
-      toast.error(`Logout failed: ${error.message}`);
+      toast.error(getApiErrorMessage(error, 'Logout failed. Please try again.'));
     }
   };
 
