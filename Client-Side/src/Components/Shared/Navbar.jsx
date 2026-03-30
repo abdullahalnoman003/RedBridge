@@ -33,9 +33,11 @@ const Navbar = () => {
 
   const renderDashboardLink = () => {
     if (loadingRole) return null;
-    if (!role) return null;
-    if (role === "admin")
+    if (role === "admin") {
       return <NavLink to="/dashboard/admin">Admin Dashboard</NavLink>;
+    }
+
+    return null;
   };
 
   return (
@@ -69,9 +71,11 @@ const Navbar = () => {
               <li className="font-bold">
                 <NavLink to="/find-donors">Find Donors</NavLink>
               </li>
-              <li className="font-bold">
-                <NavLink to="/donate">Donate Blood</NavLink>
-              </li>
+              {user && (
+                <li className="font-bold">
+                  <NavLink to="/donate">Donate Blood</NavLink>
+                </li>
+              )}
               <li className="font-bold">
                 <NavLink to="/about">About Us</NavLink>
               </li>
@@ -102,11 +106,13 @@ const Navbar = () => {
                 Find Donors
               </NavLink>
             </li>
-            <li>
-              <NavLink to="/donate" className="font-bold">
-                Donate Blood
-              </NavLink>
-            </li>
+            {user && (
+              <li>
+                <NavLink to="/donate" className="font-bold">
+                  Donate Blood
+                </NavLink>
+              </li>
+            )}
             <li>
               <NavLink to="/about" className="font-bold">
                 About Us

@@ -41,6 +41,19 @@ const Register = () => {
     return e;
   };
 
+  const resolveRoleBasedPath = async (email) => {
+    try {
+      const res = await axiosInstance.get(`/users/role?email=${encodeURIComponent(email)}`);
+      const role = res?.data?.data?.role || 'user';
+      localStorage.setItem('userRole', role);
+      return role === 'admin' ? '/dashboard/admin' : '/';
+    } catch (error) {
+      console.error('Failed to fetch role for redirect:', error);
+      const fallbackRole = localStorage.getItem('userRole') || 'user';
+      return fallbackRole === 'admin' ? '/dashboard/admin' : '/';
+    }
+  };
+
   const uploadImage = async (file) => {
     const data = new FormData();
     data.append('image', file);
@@ -82,7 +95,8 @@ const Register = () => {
       catch { /* non-critical — auth succeeded */ }
 
       toast.success(`Welcome to RedBridge, ${form.name}!`);
-      navigate('/');
+      const redirectPath = await resolveRoleBasedPath(user.email);
+      navigate(redirectPath, { replace: true });
     } catch (err) {
       const msgs = {
         'auth/email-already-in-use': 'This email is already registered.',
@@ -116,7 +130,8 @@ const Register = () => {
       catch { /* non-critical — auth succeeded */ }
 
       toast.success(`Welcome to RedBridge, ${user.displayName}!`);
-      navigate('/');
+      const redirectPath = await resolveRoleBasedPath(user.email);
+      navigate(redirectPath, { replace: true });
     } catch (err) {
       const msgs = {
         'auth/popup-closed-by-user': 'Sign-in cancelled.',
@@ -144,7 +159,7 @@ const Register = () => {
       <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2">
 
         {/* Left branded panel */}
-        <div className="hidden md:flex flex-col justify-between bg-gradient-to-br from-red-800 via-red-600 to-rose-500 p-10 text-white">
+        <div className="hidden md:flex flex-col justify-between bg-linear-to-br from-red-800 via-red-600 to-rose-500 p-10 text-white">
           <div>
             <div className="flex items-center gap-2 mb-8">
               <img src="/logo.png" alt="RedBridge" className="h-10 w-auto brightness-0 invert" />

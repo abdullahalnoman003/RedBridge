@@ -9,6 +9,9 @@ export interface IUser extends Document {
   email: string;
   role: TRole;
   photoURL?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  bio?: string | null;
   isVerified: boolean;
   lastLogin: Date;
   createdAt: Date;
@@ -19,6 +22,9 @@ export interface ICreateUser {
   email: string;
   role?: TRole;
   photoURL?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  bio?: string | null;
   isVerified?: boolean;
   lastLogin?: Date;
 }

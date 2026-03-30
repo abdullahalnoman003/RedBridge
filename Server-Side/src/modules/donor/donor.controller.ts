@@ -34,6 +34,16 @@ const getAllDonors = catchAsync(async (req: Request, res: Response): Promise<voi
   sendPaginated(res, MESSAGES.donor.list, donors.items, donors.meta);
 });
 
+const getPendingDonors = catchAsync(async (req: Request, res: Response): Promise<void> => {
+  const listQuery = req.query as unknown as DonorListQuery;
+  const donors = await DonorService.getPendingDonors({
+    page: listQuery.page,
+    limit: listQuery.limit,
+  });
+
+  sendPaginated(res, MESSAGES.donor.pendingList, donors.items, donors.meta);
+});
+
 const getDonorById = catchAsync(async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params as unknown as DonorIdParam;
   const donor = await DonorService.getDonorById(id);
@@ -77,6 +87,7 @@ const rejectDonor = catchAsync(async (req: Request, res: Response): Promise<void
 export const DonorController = {
   createDonor,
   getAllDonors,
+  getPendingDonors,
   getDonorById,
   updateDonor,
   deleteDonor,

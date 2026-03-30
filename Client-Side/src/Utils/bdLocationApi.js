@@ -1,5 +1,3 @@
-const BD_API_BASE = 'https://bdapis.com/api/v1.2';
-
 const toArray = (value) => (Array.isArray(value) ? value : []);
 
 const extractUpazilas = (payload) => {
@@ -14,44 +12,17 @@ const extractUpazilas = (payload) => {
     .filter(Boolean);
 };
 
-const fetchBdApi = async (path) => {
-  const response = await fetch(`${BD_API_BASE}${path}`);
-  if (!response.ok) {
-    throw new Error(`BD API request failed with status ${response.status}`);
-  }
-
-  const json = await response.json();
-  if (json?.status?.code !== 200) {
-    throw new Error(json?.status?.message || 'BD API returned non-200 status code');
-  }
-
-  return toArray(json?.data);
-};
-
 export const loadDivisions = async (axiosInstance) => {
-  try {
-    const res = await axiosInstance.get('/locations/divisions');
-    return toArray(res?.data?.data);
-  } catch {
-    return fetchBdApi('/divisions');
-  }
+  const res = await axiosInstance.get('/locations/divisions');
+  return toArray(res?.data?.data);
 };
 
 export const loadDistrictsByDivision = async (axiosInstance, divisionName) => {
-  try {
-    const res = await axiosInstance.get(`/locations/districts/${encodeURIComponent(divisionName)}`);
-    return toArray(res?.data?.data);
-  } catch {
-    return fetchBdApi(`/division/${encodeURIComponent(divisionName)}`);
-  }
+  const res = await axiosInstance.get(`/locations/districts/${encodeURIComponent(divisionName)}`);
+  return toArray(res?.data?.data);
 };
 
 export const loadUpazilasByDistrict = async (axiosInstance, districtName) => {
-  try {
-    const res = await axiosInstance.get(`/locations/upazilas/${encodeURIComponent(districtName)}`);
-    return extractUpazilas(res?.data?.data);
-  } catch {
-    const districtData = await fetchBdApi(`/district/${encodeURIComponent(districtName)}`);
-    return extractUpazilas(districtData);
-  }
+  const res = await axiosInstance.get(`/locations/upazilas/${encodeURIComponent(districtName)}`);
+  return extractUpazilas(res?.data?.data);
 };

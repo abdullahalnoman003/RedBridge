@@ -2,12 +2,14 @@ export const MESSAGES = {
   user: {
     created: 'User created successfully',
     list: 'Users retrieved successfully',
+    single: 'User retrieved successfully',
     roleUpdated: 'User role updated successfully',
     updated: 'User updated successfully',
   },
   donor: {
     created: 'Donor profile created successfully. Awaiting admin approval.',
     list: 'Donors retrieved successfully',
+    pendingList: 'Pending donor requests retrieved successfully',
     single: 'Donor retrieved successfully',
     updated: 'Donor profile updated successfully',
     deleted: 'Donor profile deleted successfully',

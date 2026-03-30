@@ -5,6 +5,7 @@ import { UserService } from './user.service.js';
 import { MESSAGES } from '../../constants/messages.js';
 import {
   CreateUserBody,
+  GetUserByEmailQuery,
   UpdateUserBody,
   UserIdParam,
   UpdateUserQuery,
@@ -24,6 +25,13 @@ const getAllUsers = catchAsync(async (req: Request, res: Response): Promise<void
   const users = await UserService.getAllUsers(query);
 
   sendPaginated(res, MESSAGES.user.list, users.items, users.meta);
+});
+
+const getUserByEmail = catchAsync(async (req: Request, res: Response): Promise<void> => {
+  const { email } = req.query as unknown as GetUserByEmailQuery;
+  const user = await UserService.getUserByEmail(email);
+
+  sendSuccess(res, MESSAGES.user.single, user);
 });
 
 const updateUserRole = catchAsync(async (req: Request, res: Response): Promise<void> => {
@@ -47,6 +55,7 @@ const updateUser = catchAsync(async (req: Request, res: Response): Promise<void>
 export const UserController = {
   createUser,
   getAllUsers,
+  getUserByEmail,
   updateUserRole,
   updateUser,
 };

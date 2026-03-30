@@ -33,6 +33,24 @@ const userSchema = new Schema<IUser>(
       default: null,
       trim: true,
     },
+    phone: {
+      type: String,
+      default: null,
+      trim: true,
+      maxlength: [20, 'Phone cannot exceed 20 characters'],
+    },
+    address: {
+      type: String,
+      default: null,
+      trim: true,
+      maxlength: [300, 'Address cannot exceed 300 characters'],
+    },
+    bio: {
+      type: String,
+      default: null,
+      trim: true,
+      maxlength: [500, 'Bio cannot exceed 500 characters'],
+    },
     isVerified: {
       type: Boolean,
       default: false,

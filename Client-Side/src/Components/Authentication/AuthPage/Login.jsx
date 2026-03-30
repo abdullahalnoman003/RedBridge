@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -16,8 +16,6 @@ const Login = () => {
 
   const provider = new GoogleAuthProvider();
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || '/';
   const axiosInstance = useAxios();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -53,6 +51,19 @@ const Login = () => {
     return e;
   };
 
+  const resolveRoleBasedPath = async (email) => {
+    try {
+      const res = await axiosInstance.get(`/users/role?email=${encodeURIComponent(email)}`);
+      const role = res?.data?.data?.role || 'user';
+      localStorage.setItem('userRole', role);
+      return role === 'admin' ? '/dashboard/admin' : '/';
+    } catch (error) {
+      console.error('Failed to fetch role for redirect:', error);
+      const fallbackRole = localStorage.getItem('userRole') || 'user';
+      return fallbackRole === 'admin' ? '/dashboard/admin' : '/';
+    }
+  };
+
   const handleEmailLogin = async (e) => {
     e.preventDefault();
     const errs = validate();
@@ -70,7 +81,8 @@ const Login = () => {
         console.error(e);
       }
       toast.success(`Welcome back, ${res.user.displayName || 'User'}!`);
-      navigate(from, { replace: true });
+      const redirectPath = await resolveRoleBasedPath(res.user.email);
+      navigate(redirectPath, { replace: true });
     } catch (error) {
       toast.error(getErrorMessage(error.code));
     } finally {
@@ -107,7 +119,8 @@ const Login = () => {
         console.error(e);
       }
       toast.success(`Welcome back, ${user.displayName}!`);
-      navigate(from, { replace: true });
+      const redirectPath = await resolveRoleBasedPath(user.email);
+      navigate(redirectPath, { replace: true });
     } catch (error) {
       toast.error(getErrorMessage(error.code));
     } finally {

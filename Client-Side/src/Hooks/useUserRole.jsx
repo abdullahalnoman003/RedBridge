@@ -12,14 +12,14 @@ const useUserRole = (email) => {
       axiosSecure
         .get(`/users/role/?email=${email}`, {})
         .then((res) => {
-          const fetchedRole = res.data?.data?.role || "donor";
+          const fetchedRole = res.data?.data?.role || "user";
           setRole(fetchedRole);
           localStorage.setItem("userRole", fetchedRole);
 
         })
         .catch((err) => {
           console.error("Failed to fetch user role:", err);
-          const fallbackRole = localStorage.getItem("userRole") || "donor";
+          const fallbackRole = localStorage.getItem("userRole") || "user";
           setRole(fallbackRole);
 
         })

@@ -6,11 +6,31 @@ import { buildApprovedDonorQuery } from './donor.query.js';
 import { USER_PUBLIC_POPULATE_FIELDS } from '../../constants/populate.js';
 import { buildPaginationMeta, buildPaginationParams, PaginatedResult } from '../../utils/pagination.js';
 import { ensureFound } from '../../utils/mongoose.js';
+import { User } from '../user/user.model.js';
 
 interface IDonorListParams {
   page?: number;
   limit?: number;
 }
+
+const getPendingDonors = async (params: IDonorListParams = {}): Promise<PaginatedResult<IDonor>> => {
+  const { page, limit, skip } = buildPaginationParams(params.page, params.limit);
+  const query = { status: 'pending' };
+
+  const [items, total] = await Promise.all([
+    Donor.find(query)
+      .populate('userId', USER_PUBLIC_POPULATE_FIELDS)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit),
+    Donor.countDocuments(query),
+  ]);
+
+  return {
+    items,
+    meta: buildPaginationMeta(page, limit, total),
+  };
+};
 
 const createDonor = async (payload: ICreateDonor): Promise<IDonor> => {
   const existingDonor = await Donor.findOne({ userId: payload.userId });
@@ -74,11 +94,17 @@ const deleteDonor = async (id: string): Promise<IDonor> => {
 };
 
 const updateDonorStatus = async (id: string, status: TDonorStatus): Promise<IDonor> => {
+  const existingDonor = await Donor.findById(id);
+  const foundDonor = ensureFound(existingDonor, ERRORS.DONOR_NOT_FOUND.code, ERRORS.DONOR_NOT_FOUND.msg);
+
   const donor = await Donor.findByIdAndUpdate(
     id,
     { status },
     { new: true, runValidators: true }
   ).populate('userId', USER_PUBLIC_POPULATE_FIELDS);
+
+  const nextRole = status === 'approved' ? 'donor' : 'user';
+  await User.findByIdAndUpdate(foundDonor.userId, { role: nextRole }, { runValidators: true });
 
   return ensureFound(donor, ERRORS.DONOR_NOT_FOUND.code, ERRORS.DONOR_NOT_FOUND.msg);
 };
@@ -86,6 +112,7 @@ const updateDonorStatus = async (id: string, status: TDonorStatus): Promise<IDon
 export const DonorService = {
   createDonor,
   getAllDonors,
+  getPendingDonors,
   getDonorById,
   updateDonor,
   deleteDonor,

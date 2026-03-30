@@ -1,45 +1,7 @@
 import { ApiError } from '../../utils/ApiError.js';
 import { ERRORS } from '../../utils/errors.constants.js';
-
-const BD_API_BASE = 'https://bdapis.com/api/v1.2';
-const CACHE_TTL_MS = 10 * 60 * 1000;
-
-interface CacheEntry<T> {
-  expiresAt: number;
-  value: T;
-}
-
-const locationCache = new Map<string, CacheEntry<unknown>>();
-
-const getCached = <T>(key: string): T | null => {
-  const entry = locationCache.get(key);
-
-  if (!entry) {
-    return null;
-  }
-
-  if (Date.now() > entry.expiresAt) {
-    locationCache.delete(key);
-    return null;
-  }
-
-  return entry.value as T;
-};
-
-const setCached = <T>(key: string, value: T): T => {
-  locationCache.set(key, {
-    value,
-    expiresAt: Date.now() + CACHE_TTL_MS,
-  });
-
-  return value;
-};
-
-interface BdApiStatus {
-  code: number;
-  message: string;
-  date: string;
-}
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 export interface IBdDivision {
   division: string;
@@ -60,47 +22,88 @@ export interface IBdDistrictDetail {
   upazilla: string[];
 }
 
-interface BdApiResponse<T> {
-  status: BdApiStatus;
-  data: T;
+interface ILocationDatasetDistrict {
+  district: string;
+  districtbn: string;
+  coordinates: string;
+  upazilla: string[];
 }
 
-const fetchFromBdApi = async <T>(endpoint: string): Promise<T> => {
-  const cacheKey = endpoint;
-  const cached = getCached<T>(cacheKey);
+interface ILocationDatasetDivision {
+  division: string;
+  divisionbn: string;
+  coordinates: string;
+  districts: ILocationDatasetDistrict[];
+}
 
-  if (cached) {
-    return cached;
+interface ILocationDataset {
+  country: string;
+  source: string;
+  generatedAt: string;
+  divisions: ILocationDatasetDivision[];
+}
+
+const LOCATION_DATA_PATH = join(process.cwd(), 'src', 'data', 'bangladesh-locations.json');
+
+let locationsDataset: ILocationDataset | null = null;
+
+const getLocationsDataset = (): ILocationDataset => {
+  if (locationsDataset) {
+    return locationsDataset;
   }
 
   try {
-    const response = await fetch(`${BD_API_BASE}${endpoint}`);
-
-    if (!response.ok) {
-      throw new ApiError(
-        response.status,
-        `BD API request failed: ${response.statusText}`
-      );
-    }
-
-    const json = (await response.json()) as BdApiResponse<T>;
-
-    if (json.status.code !== 200) {
-      throw new ApiError(ERRORS.BD_API_ERROR.code, `BD API returned error: ${json.status.message}`);
-    }
-
-    return setCached(cacheKey, json.data);
-  } catch (error) {
-    if (error instanceof ApiError) throw error;
-    throw new ApiError(ERRORS.BD_API_ERROR.code, ERRORS.BD_API_ERROR.msg);
+    const raw = readFileSync(LOCATION_DATA_PATH, 'utf-8');
+    const sanitized = raw.replace(/^\uFEFF/, '');
+    locationsDataset = JSON.parse(sanitized) as ILocationDataset;
+    return locationsDataset;
+  } catch {
+    throw new ApiError(ERRORS.LOCATION_NOT_FOUND.code, ERRORS.LOCATION_NOT_FOUND.msg);
   }
+};
+
+const normalize = (value: string): string => value.trim().toLowerCase();
+
+const findDivision = (divisionName: string): ILocationDatasetDivision => {
+  const dataset = getLocationsDataset();
+  const division = dataset.divisions.find(
+    (item) => normalize(item.division) === normalize(divisionName)
+  );
+
+  if (!division) {
+    throw new ApiError(ERRORS.LOCATION_NOT_FOUND.code, `Division not found: ${divisionName}`);
+  }
+
+  return division;
+};
+
+const findDistrict = (districtName: string): ILocationDatasetDistrict => {
+  const dataset = getLocationsDataset();
+
+  for (const division of dataset.divisions) {
+    const district = division.districts.find(
+      (item) => normalize(item.district) === normalize(districtName)
+    );
+
+    if (district) {
+      return district;
+    }
+  }
+
+  throw new ApiError(ERRORS.LOCATION_NOT_FOUND.code, `District not found: ${districtName}`);
 };
 
 /**
  * GET /divisions — all 8 divisions
  */
 const getDivisions = async (): Promise<IBdDivision[]> => {
-  return fetchFromBdApi<IBdDivision[]>('/divisions');
+  const dataset = getLocationsDataset();
+
+  return dataset.divisions.map((division) => ({
+    division: division.division,
+    divisionbn: division.divisionbn,
+    coordinates: division.coordinates,
+  }));
 };
 
 
@@ -110,9 +113,13 @@ const getDivisions = async (): Promise<IBdDivision[]> => {
 const getDistrictsByDivision = async (
   divisionName: string
 ): Promise<IBdDistrictWithUpazilla[]> => {
-  return fetchFromBdApi<IBdDistrictWithUpazilla[]>(
-    `/division/${encodeURIComponent(divisionName)}`
-  );
+  const division = findDivision(divisionName);
+
+  return division.districts.map((district) => ({
+    district: district.district,
+    coordinates: district.coordinates,
+    upazilla: district.upazilla,
+  }));
 };
 
 /**
@@ -121,9 +128,16 @@ const getDistrictsByDivision = async (
 const getUpazilasByDistrict = async (
   districtName: string
 ): Promise<IBdDistrictDetail[]> => {
-  return fetchFromBdApi<IBdDistrictDetail[]>(
-    `/district/${encodeURIComponent(districtName)}`
-  );
+  const district = findDistrict(districtName);
+
+  return [
+    {
+      district: district.district,
+      districtbn: district.districtbn,
+      coordinates: district.coordinates,
+      upazilla: district.upazilla,
+    },
+  ];
 };
 
 export const LocationService = {

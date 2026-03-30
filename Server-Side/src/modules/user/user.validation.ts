@@ -9,6 +9,9 @@ export const createUserBodySchema = z.object({
   email: z.string().trim().email(),
   role: roleEnum.optional(),
   photoURL: z.string().trim().url().nullable().optional(),
+  phone: z.string().trim().max(20).nullable().optional(),
+  address: z.string().trim().max(300).nullable().optional(),
+  bio: z.string().trim().max(500).nullable().optional(),
   isVerified: z.boolean().optional(),
   lastLogin: z.coerce.date().optional(),
 });
@@ -25,6 +28,8 @@ export const updateUserQuerySchema = z.object({
   email: z.string().trim().email(),
 });
 
+export const getUserByEmailQuerySchema = updateUserQuerySchema;
+
 export const userListQuerySchema = z.object({
   page: z.coerce.number().int().positive().optional(),
   limit: z.coerce.number().int().positive().max(100).optional(),
@@ -35,6 +40,9 @@ export const updateUserBodySchema = z
     name: z.string().trim().min(2).max(100).optional(),
     role: roleEnum.optional(),
     photoURL: z.string().trim().url().nullable().optional(),
+    phone: z.string().trim().max(20).nullable().optional(),
+    address: z.string().trim().max(300).nullable().optional(),
+    bio: z.string().trim().max(500).nullable().optional(),
     isVerified: z.boolean().optional(),
     lastLogin: z.coerce.date().optional(),
   })
@@ -46,3 +54,4 @@ export type UserIdParam = z.infer<typeof userIdParamSchema>;
 export type UpdateUserQuery = z.infer<typeof updateUserQuerySchema>;
 export type UpdateUserBody = z.infer<typeof updateUserBodySchema>;
 export type UserListQuery = z.infer<typeof userListQuerySchema>;
+export type GetUserByEmailQuery = z.infer<typeof getUserByEmailQuerySchema>;
