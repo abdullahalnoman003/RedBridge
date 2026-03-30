@@ -9,6 +9,7 @@ import { AuthContext } from "../Authentication/Context/AuthContext";
 import useDocumentTitle from "../../Hooks/useDocumentTitle";
 import useAxios from "../../Hooks/useAxios";
 import getApiErrorMessage from "../../Utils/getApiErrorMessage";
+import { extractRoleFromApiResponse, resolveFallbackRole, storeUserRole } from "../../Utils/roleUtils";
 
 const Profile = () => {
   useDocumentTitle("RedBridge || Profile");
@@ -32,17 +33,23 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosSecure.get(`/users/role/?email=${user?.email}`);
+        const response = await axiosSecure.get(`/users/role?email=${encodeURIComponent(user?.email || '')}`);
         if (response.data?.data) {
+          const role = extractRoleFromApiResponse(response.data);
           setUserProfile(prev => ({
             ...prev,
             ...response.data.data,
+            role,
             displayName: user?.displayName || response.data.data.name || "",
             photoURL: user?.photoURL || response.data.data.photoURL || "",
             email: user?.email || response.data.data.email || "",
           }));
+          storeUserRole(role);
         }
       } catch (error) {
+        const fallbackRole = resolveFallbackRole(user?.email);
+        setUserProfile((prev) => ({ ...prev, role: fallbackRole }));
+        storeUserRole(fallbackRole);
         toast.error(getApiErrorMessage(error, 'Failed to load profile data.'));
       }
     };

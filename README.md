@@ -100,6 +100,7 @@ CORS_ORIGIN=http://localhost:5173,http://localhost:3000
 Create `.env` in `Client-Side`:
 ```env
 VITE_API_BASE_URL=http://localhost:5000
+VITE_ADMIN_EMAILS=admin1@example.com,admin2@example.com
 
 VITE_FIREBASE_API_KEY=your-api-key
 VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
@@ -108,6 +109,15 @@ VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
 VITE_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
 VITE_FIREBASE_APP_ID=your-app-id
 ```
+
+Production note:
+- In Vercel, set `VITE_API_BASE_URL` to your deployed backend URL (for example `https://your-backend.vercel.app`).
+- Do not keep `VITE_API_BASE_URL=http://localhost:5000` for production builds.
+- Optionally set `VITE_ADMIN_EMAILS` (comma-separated) so admin role fallback still works if role API is temporarily unavailable.
+
+Backend deployment note:
+- In Vercel (Server-Side project), set `MONGODB_URI` (or `MONGODB_URL` / `DATABASE_URL`) to your MongoDB Atlas connection string.
+- Also set `CORS_ORIGIN` to your frontend domain (for example `https://redbridgediu.vercel.app`).
 
 ### 3.5 Run Project Locally
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import useAxios from "./useAxios";
+import { extractRoleFromApiResponse, resolveFallbackRole, storeUserRole } from "../Utils/roleUtils";
 
 const useUserRole = (email) => {
   const [role, setRole] = useState(null);
@@ -10,17 +11,18 @@ const useUserRole = (email) => {
     if (email) {
       setLoading(true);
       axiosSecure
-        .get(`/users/role/?email=${email}`, {})
+        .get(`/users/role?email=${encodeURIComponent(email)}`, {})
         .then((res) => {
-          const fetchedRole = res.data?.data?.role || "user";
+          const fetchedRole = extractRoleFromApiResponse(res.data);
           setRole(fetchedRole);
-          localStorage.setItem("userRole", fetchedRole);
+          storeUserRole(fetchedRole);
 
         })
         .catch((err) => {
           console.error("Failed to fetch user role:", err);
-          const fallbackRole = localStorage.getItem("userRole") || "user";
+          const fallbackRole = resolveFallbackRole(email);
           setRole(fallbackRole);
+          storeUserRole(fallbackRole);
 
         })
         .finally(() => {

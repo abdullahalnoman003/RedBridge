@@ -1,16 +1,27 @@
 import axios from 'axios';
 
 const ensureApiBaseUrl = (rawBaseUrl) => {
-  const fallback = '/api';
+  const browserOrigin =
+    typeof window !== 'undefined' && window.location?.origin ? window.location.origin : '';
+  const fallback = browserOrigin ? `${browserOrigin}/api` : '/api';
   const source = rawBaseUrl || fallback;
 
-  
   if (source.startsWith('/')) {
     return source.endsWith('/api') ? source : `${source.replace(/\/$/, '')}/api`;
   }
 
   try {
     const url = new URL(source);
+
+    const isRuntimeProductionBrowser =
+      typeof window !== 'undefined' && !['localhost', '127.0.0.1'].includes(window.location.hostname);
+    const isLocalOnlyHost = ['localhost', '127.0.0.1'].includes(url.hostname);
+
+    if (isRuntimeProductionBrowser && isLocalOnlyHost && browserOrigin) {
+      const fallbackUrl = new URL('/api', browserOrigin);
+      return fallbackUrl.toString().replace(/\/$/, '');
+    }
+
     if (!url.pathname || url.pathname === '/') {
       url.pathname = '/api';
     } else if (!url.pathname.endsWith('/api')) {

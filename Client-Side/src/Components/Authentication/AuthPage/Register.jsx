@@ -12,6 +12,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { FaEye, FaEyeSlash, FaTint } from 'react-icons/fa';
 import useAxios from '../../../Hooks/useAxios';
 import getApiErrorMessage from '../../../Utils/getApiErrorMessage';
+import { extractRoleFromApiResponse, resolveFallbackRole, storeUserRole } from '../../../Utils/roleUtils';
 
 const provider = new GoogleAuthProvider();
 const IMGBB_KEY = import.meta.env.VITE_IMGBB_API_KEY;
@@ -45,12 +46,13 @@ const Register = () => {
   const resolveRoleBasedPath = async (email) => {
     try {
       const res = await axiosInstance.get(`/users/role?email=${encodeURIComponent(email)}`);
-      const role = res?.data?.data?.role || 'user';
-      localStorage.setItem('userRole', role);
+      const role = extractRoleFromApiResponse(res.data);
+      storeUserRole(role);
       return role === 'admin' ? '/dashboard/admin' : '/';
     } catch (error) {
       toast.error(getApiErrorMessage(error, 'Failed to load user role.'));
-      const fallbackRole = localStorage.getItem('userRole') || 'user';
+      const fallbackRole = resolveFallbackRole(email);
+      storeUserRole(fallbackRole);
       return fallbackRole === 'admin' ? '/dashboard/admin' : '/';
     }
   };

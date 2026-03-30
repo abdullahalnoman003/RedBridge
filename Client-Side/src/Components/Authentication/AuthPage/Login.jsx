@@ -9,6 +9,7 @@ import { auth } from '../../../Firebase/firebase.init';
 import toast from 'react-hot-toast';
 import useAxios from '../../../Hooks/useAxios';
 import getApiErrorMessage from '../../../Utils/getApiErrorMessage';
+import { extractRoleFromApiResponse, resolveFallbackRole, storeUserRole } from '../../../Utils/roleUtils';
 import { FcGoogle } from 'react-icons/fc';
 import { FaEye, FaEyeSlash, FaTint } from 'react-icons/fa';
 
@@ -55,12 +56,13 @@ const Login = () => {
   const resolveRoleBasedPath = async (email) => {
     try {
       const res = await axiosInstance.get(`/users/role?email=${encodeURIComponent(email)}`);
-      const role = res?.data?.data?.role || 'user';
-      localStorage.setItem('userRole', role);
+      const role = extractRoleFromApiResponse(res.data);
+      storeUserRole(role);
       return role === 'admin' ? '/dashboard/admin' : '/';
     } catch (error) {
       toast.error(getApiErrorMessage(error, 'Failed to load user role.'));
-      const fallbackRole = localStorage.getItem('userRole') || 'user';
+      const fallbackRole = resolveFallbackRole(email);
+      storeUserRole(fallbackRole);
       return fallbackRole === 'admin' ? '/dashboard/admin' : '/';
     }
   };

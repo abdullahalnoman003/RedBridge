@@ -13,6 +13,9 @@ import { LocationRoutes } from './modules/location/location.route.js';
 
 const app = express();
 
+// Required on Vercel/other reverse proxies so rate-limit and request IP detection work correctly.
+app.set('trust proxy', 1);
+
 const resolveHelmet = (): RequestHandler => {
   const helmetModule = helmet as unknown as { default?: () => RequestHandler };
   const helmetFactory: (() => RequestHandler) | undefined =
