@@ -4,7 +4,7 @@ import { extractRoleFromApiResponse, resolveFallbackRole, storeUserRole } from "
 
 const useUserRole = (email) => {
   const [role, setRole] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(Boolean(email));
   const axiosSecure = useAxios();
 
   useEffect(() => {
@@ -35,7 +35,8 @@ const useUserRole = (email) => {
           setLoading(false);
         });
     } else {
-      console.log("No email provided, skipping role fetch");
+      setRole(null);
+      setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [email]);

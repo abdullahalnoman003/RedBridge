@@ -6,10 +6,11 @@ import useUserRole from '../../../Hooks/useUserRole';
 const AdminRoute = ({ children }) => {
     const { user, loading: authLoading } = useContext(AuthContext) || {};
     const [role, roleLoading] = useUserRole(user?.email);
+    const isRoleResolving = Boolean(user) && (roleLoading || role === null);
 
-    if (authLoading || roleLoading) {
+    if (authLoading || isRoleResolving) {
         return (
-            <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-base-100 via-base-200 to-base-300">
+            <div className="h-screen w-full flex items-center justify-center bg-linear-to-br from-base-100 via-base-200 to-base-300">
                 <div className="text-center space-y-3">
                     <span className="loading loading-bars loading-lg text-primary"></span>
                     <p className="text-xl font-semibold text-primary">Loading Dashboard...</p>
