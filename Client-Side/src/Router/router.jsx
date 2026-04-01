@@ -16,6 +16,7 @@ import DonatePage from "../Components/Donor/DonatePage";
 import Profile from "../Components/Profile/Profile";
 import ForgotPassword from "../Components/Authentication/AuthPage/ForgotPassword";
 import AdminLayout from "../Layout/Admin/AdminLayout";
+import AdminRoute from "../Components/Authentication/Routes/AdminRoute";
 
 const router = createBrowserRouter([
   {
@@ -70,7 +71,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/dashboard/admin",
-        element: <AdminLayout></AdminLayout>,
+        element: <AdminRoute><AdminLayout></AdminLayout></AdminRoute>,
       },
       {
         path: "/*",
