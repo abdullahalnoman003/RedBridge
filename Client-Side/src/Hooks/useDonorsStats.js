@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import useAxios from './useAxios';
 
+const STATS_PAGE_LIMIT = 100;
+
 const useDonorsStats = () => {
   const [stats, setStats] = useState({
     totalDonors: 0,
@@ -13,25 +15,69 @@ const useDonorsStats = () => {
   const [loading, setLoading] = useState(false);
   const axiosSecure = useAxios();
 
+  const fetchAllPendingDonors = async () => {
+    const first = await axiosSecure.get(`/donors/pending?page=1&limit=${STATS_PAGE_LIMIT}`);
+    const firstItems = first.data?.data || [];
+    const meta = first.data?.meta || {};
+    const totalPages = meta.totalPages || 1;
+
+    if (totalPages <= 1) {
+      return { items: firstItems, total: meta.total || firstItems.length };
+    }
+
+    const restResponses = await Promise.all(
+      Array.from({ length: totalPages - 1 }, (_, index) =>
+        axiosSecure.get(`/donors/pending?page=${index + 2}&limit=${STATS_PAGE_LIMIT}`)
+      )
+    );
+
+    const restItems = restResponses.flatMap((res) => res.data?.data || []);
+    return {
+      items: [...firstItems, ...restItems],
+      total: meta.total || firstItems.length + restItems.length,
+    };
+  };
+
+  const fetchAllApprovedVisibleDonors = async () => {
+    const first = await axiosSecure.get(`/donors?page=1&limit=${STATS_PAGE_LIMIT}`);
+    const firstItems = first.data?.data || [];
+    const meta = first.data?.meta || {};
+    const totalPages = meta.totalPages || 1;
+
+    if (totalPages <= 1) {
+      return { items: firstItems, total: meta.total || firstItems.length };
+    }
+
+    const restResponses = await Promise.all(
+      Array.from({ length: totalPages - 1 }, (_, index) =>
+        axiosSecure.get(`/donors?page=${index + 2}&limit=${STATS_PAGE_LIMIT}`)
+      )
+    );
+
+    const restItems = restResponses.flatMap((res) => res.data?.data || []);
+    return {
+      items: [...firstItems, ...restItems],
+      total: meta.total || firstItems.length + restItems.length,
+    };
+  };
+
   const fetchStats = async () => {
     setLoading(true);
     try {
-      // Fetch pending donors to get count
-      const pendingRes = await axiosSecure.get('/donors/pending?page=1&limit=1000');
-      const pendingCount = pendingRes.data?.meta?.total || 0;
-      const pendingDonors = pendingRes.data?.data || [];
+      const [{ items: pendingDonors, total: pendingCount }, { items: approvedDonors, total: approvedCount }] =
+        await Promise.all([fetchAllPendingDonors(), fetchAllApprovedVisibleDonors()]);
 
-      // Count available/unavailable from pending
-      const available = pendingDonors.filter((d) => d.availability === true).length;
-      const unavailable = pendingDonors.filter((d) => d.availability === false).length;
+      const pendingAvailable = pendingDonors.filter((d) => d.availability === true).length;
+      const pendingUnavailable = pendingDonors.filter((d) => d.availability === false).length;
+      const approvedAvailable = approvedDonors.filter((d) => d.availability === true).length;
 
       setStats({
-        totalDonors: pendingCount,
-        approvedDonors: 0, // Could be calculated from another endpoint if available
+        totalDonors: pendingCount + approvedCount,
+        approvedDonors: approvedCount,
         pendingDonors: pendingCount,
         rejectedDonors: 0,
-        availableDonors: available,
-        unavailableDonors: unavailable,
+        availableDonors: pendingAvailable + approvedAvailable,
+        unavailableDonors: pendingUnavailable,
       });
     } catch (err) {
       console.error('Failed to fetch donor stats:', err);

@@ -15,11 +15,30 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
 
   const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
+  const getDonorName = (donor) => donor?.userId?.name || donor?.name || 'Unknown';
+  const getDonorEmail = (donor) => donor?.userId?.email || donor?.email || 'N/A';
+  const getDonorBloodType = (donor) => donor?.bloodType || donor?.bloodGroup || 'N/A';
+  const getDonorLocation = (donor) => {
+    if (typeof donor?.location === 'string') {
+      return donor.location;
+    }
+
+    const division = donor?.location?.division;
+    const district = donor?.location?.district;
+    const upazila = donor?.location?.upazila;
+    const area = donor?.location?.area;
+    return [upazila, district, division, area].filter(Boolean).join(', ') || 'N/A';
+  };
+
   const filteredDonors = donors.filter((donor) => {
+    const donorName = getDonorName(donor).toLowerCase();
+    const donorEmail = getDonorEmail(donor).toLowerCase();
+    const donorBloodType = getDonorBloodType(donor);
+
     const matchesSearch =
-      donor.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      donor.email?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesBloodGroup = !bloodGroupFilter || donor.bloodGroup === bloodGroupFilter;
+      donorName.includes(searchTerm.toLowerCase()) ||
+      donorEmail.includes(searchTerm.toLowerCase());
+    const matchesBloodGroup = !bloodGroupFilter || donorBloodType === bloodGroupFilter;
     return matchesSearch && matchesBloodGroup;
   });
 
@@ -190,13 +209,13 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
               <tbody>
                 {filteredDonors.map((donor) => (
                   <tr key={donor._id} className="hover:bg-base-200">
-                    <td className="font-semibold">{donor.name}</td>
-                    <td>{donor.email}</td>
+                    <td className="font-semibold">{getDonorName(donor)}</td>
+                    <td>{getDonorEmail(donor)}</td>
                     <td>
-                      <span className="badge badge-lg badge-error">{donor.bloodGroup}</span>
+                      <span className="badge badge-lg badge-error">{getDonorBloodType(donor)}</span>
                     </td>
                     <td>{donor.phone}</td>
-                    <td className="text-sm">{donor.location}</td>
+                    <td className="text-sm">{getDonorLocation(donor)}</td>
                     <td>
                       <div className="flex gap-2">
                         <button
