@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
+import { FiFilter, FiSearch, FiShield, FiUser, FiUserCheck } from 'react-icons/fi';
 import useAxios from '../../Hooks/useAxios';
 import useUsers from '../../Hooks/useUsers';
 import getApiErrorMessage from '../../Utils/getApiErrorMessage';
@@ -14,6 +15,12 @@ const UserManagement = ({ onActionComplete }) => {
   const axiosSecure = useAxios();
 
   const roles = ['admin', 'donor', 'user'];
+
+  const roleActionIcons = {
+    admin: <FiShield />,
+    donor: <FiUserCheck />,
+    user: <FiUser />,
+  };
 
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
@@ -90,36 +97,51 @@ const UserManagement = ({ onActionComplete }) => {
   }
 
   return (
-    <div className="bg-base-100 rounded-lg shadow-lg p-6">
-      <h2 className="text-2xl font-bold mb-6">User Management</h2>
+    <div className="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-md">
+      <div className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-info/20 bg-info/10 px-4 py-3">
+        <div>
+          <h2 className="text-2xl font-bold text-base-content">User Management</h2>
+          <p className="text-sm text-base-content/65">Assign roles securely to control platform permissions.</p>
+        </div>
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-info/20 text-info text-lg">
+          <FiShield />
+        </div>
+      </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Search by name or email..."
-          className="input input-bordered"
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setPage(1);
-          }}
-        />
-        <select
-          className="select select-bordered"
-          value={roleFilter}
-          onChange={(e) => {
-            setRoleFilter(e.target.value);
-            setPage(1);
-          }}
-        >
-          <option value="">All Roles</option>
-          {roles.map((role) => (
-            <option key={role} value={role}>
-              {role.charAt(0).toUpperCase() + role.slice(1)}
-            </option>
-          ))}
-        </select>
+      <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+        <label className="input input-bordered flex items-center gap-2 focus-within:input-primary">
+          <FiSearch className="text-base-content/60" />
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            className="grow"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setPage(1);
+            }}
+          />
+        </label>
+
+        <label className="select select-bordered flex items-center gap-2 focus-within:select-primary">
+          <FiFilter className="text-base-content/60" />
+          <select
+            className="grow"
+            value={roleFilter}
+            onChange={(e) => {
+              setRoleFilter(e.target.value);
+              setPage(1);
+            }}
+          >
+            <option value="">All Roles</option>
+            {roles.map((role) => (
+              <option key={role} value={role}>
+                {role.charAt(0).toUpperCase() + role.slice(1)}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
 
       {/* Table */}
@@ -129,14 +151,14 @@ const UserManagement = ({ onActionComplete }) => {
         </div>
       ) : filteredUsers.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-gray-500 text-lg">No users found</p>
+          <p className="text-base-content/55 text-lg">No users found</p>
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto mb-6">
+          <div className="overflow-x-auto mb-6 rounded-xl border border-base-300">
             <table className="table table-compact w-full">
               <thead>
-                <tr className="bg-base-200">
+                <tr className="bg-base-200/80 text-base-content/80">
                   <th>Name</th>
                   <th>Email</th>
                   <th>Current Role</th>
@@ -145,23 +167,23 @@ const UserManagement = ({ onActionComplete }) => {
               </thead>
               <tbody>
                 {filteredUsers.map((user) => (
-                  <tr key={user._id} className="hover:bg-base-200">
+                  <tr key={user._id} className="hover:bg-base-200/70 transition-colors">
                     <td className="font-semibold">{user.name}</td>
-                    <td>{user.email}</td>
+                    <td className="text-base-content/75">{user.email}</td>
                     <td>
-                      <span className={`badge badge-lg ${getRoleBadgeColor(user.role)}`}>
+                      <span className={`btn btn-sm uppercase rounded-2xl bg-accent text-white ${getRoleBadgeColor(user.role)}`}>
                         {user.role}
                       </span>
                     </td>
                     <td>
-                      <div className="flex gap-1">
+                      <div className="flex flex-wrap gap-1">
                         {roles.map((role) => (
                           <button
                             key={role}
-                            className={`btn btn-xs ${
+                            className={`btn btn-xs  ${
                               user.role === role
                                 ? 'btn-disabled'
-                                : 'btn-outline'
+                                : 'btn-outline hover:scale-105 transition-transform'
                             }`}
                             onClick={() => handleRoleChange(user, role)}
                             disabled={actionLoading === user._id || user.role === role}
@@ -169,7 +191,10 @@ const UserManagement = ({ onActionComplete }) => {
                             {actionLoading === user._id ? (
                               <span className="loading loading-spinner loading-xs"></span>
                             ) : (
-                              role.charAt(0).toUpperCase() + role.slice(1)
+                              <span className="flex items-center gap-1">
+                                {roleActionIcons[role]}
+                                {role.charAt(0).toUpperCase() + role.slice(1)}
+                              </span>
                             )}
                           </button>
                         ))}

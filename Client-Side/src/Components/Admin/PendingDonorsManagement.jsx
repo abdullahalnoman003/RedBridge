@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
+import { FiCheckCircle, FiMapPin, FiPhone, FiSearch, FiTrash2, FiXCircle } from 'react-icons/fi';
+import { LuDroplets, LuListFilter } from 'react-icons/lu';
 import useAxios from '../../Hooks/useAxios';
 import usePendingDonors from '../../Hooks/usePendingDonors';
 import getApiErrorMessage from '../../Utils/getApiErrorMessage';
@@ -151,36 +153,50 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
   }
 
   return (
-    <div className="bg-base-100 rounded-lg shadow-lg p-6 mb-6">
-      <h2 className="text-2xl font-bold mb-6">Pending Donors Management</h2>
+    <div className="mb-6 rounded-2xl border border-base-300 bg-base-100 p-6 shadow-md">
+      <div className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-error/20 bg-linear-to-r from-error/10 via-base-100 to-base-100 px-4 py-3">
+        <div>
+          <h2 className="text-2xl font-bold text-base-content">Pending Donors Management</h2>
+          <p className="text-sm text-base-content/65">Review blood donor requests and keep the donor pool trusted.</p>
+        </div>
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-error/15 text-error text-xl">
+          <LuDroplets />
+        </div>
+      </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Search by name or email..."
-          className="input input-bordered"
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setPage(1);
-          }}
-        />
-        <select
-          className="select select-bordered"
-          value={bloodGroupFilter}
-          onChange={(e) => {
-            setBloodGroupFilter(e.target.value);
-            setPage(1);
-          }}
-        >
-          <option value="">All Blood Groups</option>
-          {bloodGroups.map((bg) => (
-            <option key={bg} value={bg}>
-              {bg}
-            </option>
-          ))}
-        </select>
+      <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+        <label className="input input-bordered flex items-center gap-2 focus-within:input-error">
+          <FiSearch className="text-base-content/60" />
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            className="grow"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setPage(1);
+            }}
+          />
+        </label>
+        <label className="select select-bordered flex items-center gap-2 focus-within:select-error">
+          <LuListFilter className="text-base-content/60" />
+          <select
+            className="grow "
+            value={bloodGroupFilter}
+            onChange={(e) => {
+              setBloodGroupFilter(e.target.value);
+              setPage(1);
+            }}
+          >
+            <option value="">All Blood Groups</option>
+            {bloodGroups.map((bg) => (
+              <option key={bg} value={bg}>
+                {bg}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
 
       {/* Table */}
@@ -190,14 +206,14 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
         </div>
       ) : filteredDonors.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-gray-500 text-lg">No pending donors found</p>
+          <p className="text-base-content/55 text-lg">No pending donors found</p>
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto mb-6">
+          <div className="overflow-x-auto mb-6 rounded-xl border border-base-300">
             <table className="table table-compact w-full">
               <thead>
-                <tr className="bg-base-200">
+                <tr className="bg-base-200/80 text-base-content/80">
                   <th>Name</th>
                   <th>Email</th>
                   <th>Blood Group</th>
@@ -208,16 +224,29 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
               </thead>
               <tbody>
                 {filteredDonors.map((donor) => (
-                  <tr key={donor._id} className="hover:bg-base-200">
+                  <tr key={donor._id} className="hover:bg-base-200/70 transition-colors">
                     <td className="font-semibold">{getDonorName(donor)}</td>
-                    <td>{getDonorEmail(donor)}</td>
+                    <td className="text-base-content/75">{getDonorEmail(donor)}</td>
                     <td>
-                      <span className="badge badge-lg badge-error">{getDonorBloodType(donor)}</span>
+                      <span className="badge badge-lg badge-error gap-1">
+                        <LuDroplets />
+                        {getDonorBloodType(donor)}
+                      </span>
                     </td>
-                    <td>{donor.phone}</td>
-                    <td className="text-sm">{getDonorLocation(donor)}</td>
                     <td>
-                      <div className="flex gap-2">
+                      <span className="inline-flex font-bold items-center gap-1 text-sm text-base-content/80">
+                        <FiPhone />
+                        {donor.phone}
+                      </span>
+                    </td>
+                    <td className="text-sm">
+                      <span className="inline-flex items-start gap-1 text-base-content/75">
+                        <FiMapPin className="mt-0.5 shrink-0" />
+                        {getDonorLocation(donor)}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="flex flex-wrap gap-2">
                         <button
                           className="btn btn-sm btn-success"
                           onClick={() => handleApprove(donor)}
@@ -226,18 +255,24 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
                           {actionLoading === donor._id ? (
                             <span className="loading loading-spinner loading-xs"></span>
                           ) : (
-                            '✓ Approve'
+                            <span className="flex items-center gap-1">
+                              <FiCheckCircle />
+                              Approve
+                            </span>
                           )}
                         </button>
                         <button
-                          className="btn btn-sm btn-warning"
+                          className="btn btn-sm btn-warning p-[1.15rem]"
                           onClick={() => handleReject(donor)}
                           disabled={actionLoading === donor._id}
                         >
                           {actionLoading === donor._id ? (
                             <span className="loading loading-spinner loading-xs"></span>
                           ) : (
-                            '✗ Reject'
+                            <span className="flex items-center gap-1">
+                              <FiXCircle />
+                              Reject
+                            </span>
                           )}
                         </button>
                         <button
@@ -248,7 +283,10 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
                           {actionLoading === donor._id ? (
                             <span className="loading loading-spinner loading-xs"></span>
                           ) : (
-                            '🗑 Delete'
+                            <span className="flex items-center gap-1 p-1">
+                              <FiTrash2 />
+                              Delete
+                            </span>
                           )}
                         </button>
                       </div>
