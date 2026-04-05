@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { FaQuestionCircle, FaDroplet, FaHandsHelping, FaLock, FaArrowRight } from 'react-icons/fa';
+import { FiSearch } from 'react-icons/fi';
 
 const FAQ = () => {
     const [activeCategory, setActiveCategory] = useState('general');
+    const [searchTerm, setSearchTerm] = useState('');
 
     const faqCategories = {
         general: {
             name: 'General',
-            icon: '❓',
+            icon: FaQuestionCircle,
             faqs: [
                 {
                     id: 'g1',
@@ -37,7 +41,7 @@ const FAQ = () => {
         },
         donor: {
             name: 'For Donors',
-            icon: '🩸',
+            icon: FaDroplet,
             faqs: [
                 {
                     id: 'd1',
@@ -73,7 +77,7 @@ const FAQ = () => {
         },
         recipient: {
             name: 'For Recipients',
-            icon: '🆘',
+            icon: FaHandsHelping,
             faqs: [
                 {
                     id: 'r1',
@@ -109,7 +113,7 @@ const FAQ = () => {
         },
         safety: {
             name: 'Safety & Privacy',
-            icon: '🔒',
+            icon: FaLock,
             faqs: [
                 {
                     id: 's1',
@@ -145,14 +149,18 @@ const FAQ = () => {
         }
     };
 
-    const currentFaqs = faqCategories[activeCategory].faqs;
+    const currentFaqs = faqCategories[activeCategory].faqs.filter((faq) => {
+        const query = searchTerm.trim().toLowerCase();
+        if (!query) return true;
+        return faq.question.toLowerCase().includes(query) || faq.answer.toLowerCase().includes(query);
+    });
 
     return (
-        <div className="min-h-screen bg-linear-to-b from-red-50 to-white">
+        <div className="min-h-screen bg-linear-to-b from-base-100 via-base-100 to-base-200">
             {/* Hero Section */}
-            <section className="bg-red-600 text-white py-16 px-4 sm:px-6 lg:px-8">
+            <section className="bg-linear-to-r from-primary to-secondary text-primary-content py-20 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h1 className="text-4xl sm:text-5xl font-bold mb-4">Frequently Asked Questions</h1>
+                    <h1 className="text-5xl sm:text-6xl font-black mb-6">Frequently Asked Questions</h1>
                     <p className="text-lg sm:text-xl opacity-90">
                         Find answers to common questions about RedBridge and blood donation
                     </p>
@@ -160,74 +168,92 @@ const FAQ = () => {
             </section>
 
             {/* Category Navigation */}
-            <section className="py-8 px-4 sm:px-6 lg:px-8 sticky top-16 bg-white shadow-sm z-10">
+            <section className="py-8 px-4 sm:px-6 lg:px-8 sticky top-16 bg-base-100/95 backdrop-blur shadow-sm z-10 border-b border-base-300">
                 <div className="max-w-4xl mx-auto">
+                    <label className="input input-bordered mb-4 flex items-center gap-2 focus-within:input-primary">
+                        <FiSearch className="text-base-content/60" />
+                        <input
+                            type="text"
+                            className="grow"
+                            placeholder="Search a question..."
+                            value={searchTerm}
+                            onChange={(event) => setSearchTerm(event.target.value)}
+                        />
+                    </label>
                     <div className="flex flex-wrap gap-3 justify-center">
-                        {Object.entries(faqCategories).map(([key, category]) => (
-                            <button
-                                key={key}
-                                onClick={() => setActiveCategory(key)}
-                                className={`px-6 py-2 rounded-lg font-semibold transition ${
-                                    activeCategory === key
-                                        ? 'bg-red-600 text-white shadow-md'
-                                        : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                                }`}
-                            >
-                                <span className="mr-2">{category.icon}</span>
-                                {category.name}
-                            </button>
-                        ))}
+                        {Object.entries(faqCategories).map(([key, category]) => {
+                            const IconComponent = category.icon;
+                            return (
+                                <button
+                                    key={key}
+                                    onClick={() => setActiveCategory(key)}
+                                    className={`px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${
+                                        activeCategory === key
+                                            ? 'btn btn-primary shadow-lg shadow-primary/20'
+                                            : 'btn btn-ghost hover:bg-base-200'
+                                    }`}
+                                >
+                                    <IconComponent className="text-lg" />
+                                    {category.name}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
 
             {/* FAQ Content - DaisyUI Collapse Style */}
-            <section className="py-16 px-4 sm:px-6 lg:px-8">
+            <section className="py-20 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+                    <h2 className="text-4xl font-black text-center mb-12">
                         {faqCategories[activeCategory].name} Questions
                     </h2>
 
-                    <div className="space-y-3">
-                        {currentFaqs.map((faq, index) => (
-                            <div
-                                key={faq.id}
-                                className="collapse collapse-plus bg-base-100 border border-gray-300 rounded-lg"
-                            >
-                                <input
-                                    type="radio"
-                                    name={`faq-${activeCategory}`}
-                                    defaultChecked={index === 0}
-                                />
-                                <div className="collapse-title font-semibold text-gray-900">
-                                    {faq.question}
+                    {currentFaqs.length === 0 ? (
+                        <div className="rounded-2xl border border-base-300 bg-base-100 p-8 text-center">
+                            <p className="text-lg font-semibold text-base-content">No FAQ matched your search</p>
+                            <p className="text-base-content/65 mt-2">Try another keyword or switch category above.</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            {currentFaqs.map((faq, index) => (
+                                <div
+                                    key={faq.id}
+                                    className="collapse collapse-plus bg-base-100 border border-base-300 hover:border-primary hover:shadow-md transition-all duration-300 group"
+                                >
+                                    <input
+                                        type="radio"
+                                        name={`faq-${activeCategory}`}
+                                        defaultChecked={index === 0}
+                                    />
+                                    <div className="collapse-title font-semibold text-lg group-hover:text-primary transition-colors">
+                                        {faq.question}
+                                    </div>
+                                    <div className="collapse-content text-base-content/70">
+                                        <p className="leading-relaxed">{faq.answer}</p>
+                                    </div>
                                 </div>
-                                <div className="collapse-content text-sm text-gray-700">
-                                    <p>{faq.answer}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
 
             {/* Still Have Questions Section */}
-            <section className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
+            <section className="bg-base-200/50 py-20 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-6">Still Have Questions?</h2>
-                    <p className="text-lg text-gray-700 mb-8">
+                    <h2 className="text-4xl font-black mb-6">Still Have Questions?</h2>
+                    <p className="text-lg text-base-content/70 mb-10">
                         Can't find what you're looking for? Our support team is here to help.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <a
-                            href="/contact"
-                            className="bg-red-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-red-700 transition"
-                        >
+                        <Link to="/contact" className="btn btn-primary btn-lg gap-2">
                             Contact Support
-                        </a>
+                            <FaArrowRight />
+                        </Link>
                         <a
                             href="mailto:support@redbridge.com"
-                            className="border-2 border-red-600 text-red-600 px-8 py-3 rounded-lg font-semibold hover:bg-red-50 transition"
+                            className="btn btn-outline btn-lg"
                         >
                             Email Us
                         </a>
@@ -236,48 +262,88 @@ const FAQ = () => {
             </section>
 
             {/* Quick Links */}
-            <section className="py-16 px-4 sm:px-6 lg:px-8">
+            <section className="py-20 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Quick Links</h2>
+                    <h2 className="text-4xl font-black text-center mb-12">Quick Links</h2>
                     <div className="grid md:grid-cols-2 gap-6">
-                        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                            <h3 className="text-xl font-bold text-gray-900 mb-3">🩸 Become a Donor</h3>
-                            <p className="text-gray-700 mb-4">
-                                Save lives by becoming a blood donor. Complete your registration and join our community.
-                            </p>
-                            <a href="/become-donor" className="text-red-600 font-semibold hover:text-red-700">
-                                Get Started →
-                            </a>
+                        <div className="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow border border-base-300">
+                            <div className="card-body">
+                                <div className="flex items-start gap-3">
+                                    <div className="text-3xl text-primary mt-1">
+                                        <FaDroplet />
+                                    </div>
+                                    <div>
+                                        <h3 className="card-title text-lg">Become a Donor</h3>
+                                        <p className="text-base-content/70 mt-2">
+                                            Save lives by becoming a blood donor. Complete your registration and join our community.
+                                        </p>
+                                        <Link to="/donate" className="text-primary font-semibold inline-flex items-center gap-1 mt-3 hover:gap-2 transition-all">
+                                            Get Started
+                                            <FaArrowRight className="text-sm" />
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                            <h3 className="text-xl font-bold text-gray-900 mb-3">🆘 Find a Donor</h3>
-                            <p className="text-gray-700 mb-4">
-                                Need blood? Search for donors in your area with our location-based platform.
-                            </p>
-                            <a href="/" className="text-red-600 font-semibold hover:text-red-700">
-                                Search Now →
-                            </a>
+                        <div className="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow border border-base-300">
+                            <div className="card-body">
+                                <div className="flex items-start gap-3">
+                                    <div className="text-3xl text-secondary mt-1">
+                                        <FaHandsHelping />
+                                    </div>
+                                    <div>
+                                        <h3 className="card-title text-lg">Find a Donor</h3>
+                                        <p className="text-base-content/70 mt-2">
+                                            Need blood? Search for donors in your area with our location-based platform.
+                                        </p>
+                                        <Link to="/find-donors" className="text-primary font-semibold inline-flex items-center gap-1 mt-3 hover:gap-2 transition-all">
+                                            Search Now
+                                            <FaArrowRight className="text-sm" />
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                            <h3 className="text-xl font-bold text-gray-900 mb-3">📋 About RedBridge</h3>
-                            <p className="text-gray-700 mb-4">
-                                Learn about our mission, values, and how we're changing blood donation.
-                            </p>
-                            <a href="/about" className="text-red-600 font-semibold hover:text-red-700">
-                                Learn More →
-                            </a>
+                        <div className="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow border border-base-300">
+                            <div className="card-body">
+                                <div className="flex items-start gap-3">
+                                    <div className="text-3xl text-accent mt-1">
+                                        <FaQuestionCircle />
+                                    </div>
+                                    <div>
+                                        <h3 className="card-title text-lg">About RedBridge</h3>
+                                        <p className="text-base-content/70 mt-2">
+                                            Learn about our mission, values, and how we're changing blood donation.
+                                        </p>
+                                        <Link to="/about" className="text-primary font-semibold inline-flex items-center gap-1 mt-3 hover:gap-2 transition-all">
+                                            Learn More
+                                            <FaArrowRight className="text-sm" />
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                            <h3 className="text-xl font-bold text-gray-900 mb-3">📞 Contact Us</h3>
-                            <p className="text-gray-700 mb-4">
-                                Have a question or need immediate assistance? Contact our support team.
-                            </p>
-                            <a href="/contact" className="text-red-600 font-semibold hover:text-red-700">
-                                Contact →
-                            </a>
+                        <div className="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow border border-base-300">
+                            <div className="card-body">
+                                <div className="flex items-start gap-3">
+                                    <div className="text-3xl text-info mt-1">
+                                        <FaLock />
+                                    </div>
+                                    <div>
+                                        <h3 className="card-title text-lg">Contact Us</h3>
+                                        <p className="text-base-content/70 mt-2">
+                                            Have a question or need immediate assistance? Contact our support team.
+                                        </p>
+                                        <Link to="/contact" className="text-primary font-semibold inline-flex items-center gap-1 mt-3 hover:gap-2 transition-all">
+                                            Contact
+                                            <FaArrowRight className="text-sm" />
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

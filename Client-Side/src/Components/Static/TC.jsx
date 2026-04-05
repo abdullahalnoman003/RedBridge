@@ -1,4 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { FaExclamationTriangle, FaEnvelope, FaArrowRight } from 'react-icons/fa';
+import { LuShieldCheck } from 'react-icons/lu';
 
 const TC = () => {
     const sections = [
@@ -30,7 +33,7 @@ const TC = () => {
         {
             id: 'links',
             title: '6. Links',
-            content: 'RedBridge has not reviewed all of the sites linked to its website and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by RedBridge of the site. Use of any such linked website is at the user s own risk. If you believe that a link on our site infringes your copyright rights, please contact us immediately at support@redbridge.com.'
+            content: 'RedBridge has not reviewed all of the sites linked to its website and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by RedBridge of the site. Use of any such linked website is at the user\'s own risk. If you believe that a link on our site infringes your copyright rights, please contact us immediately at support@redbridge.com.'
         },
         {
             id: 'modifications',
@@ -65,11 +68,11 @@ const TC = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-linear-to-b from-red-50 to-white">
+        <div className="min-h-screen bg-linear-to-b from-base-100 via-base-100 to-base-200">
             {/* Hero Section */}
-            <section className="bg-red-600 text-white py-16 px-4 sm:px-6 lg:px-8">
+            <section className="bg-linear-to-r from-primary to-secondary text-primary-content py-20 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h1 className="text-4xl sm:text-5xl font-bold mb-4">Terms & Conditions</h1>
+                    <h1 className="text-5xl sm:text-6xl font-black mb-6">Terms & Conditions</h1>
                     <p className="text-lg sm:text-xl opacity-90">
                         Please read these terms carefully before using RedBridge
                     </p>
@@ -79,33 +82,58 @@ const TC = () => {
 
             {/* Important Notice */}
             <section className="py-8 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-4xl mx-auto bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded">
-                    <h3 className="text-lg font-bold text-yellow-900 mb-2">⚠️ Important Notice</h3>
-                    <p className="text-yellow-800">
-                        Blood donation is a critical healthcare activity. All blood donations must be conducted in licensed medical facilities by qualified healthcare professionals. RedBridge is a platform for connecting donors and recipients, not a medical service provider. Users are responsible for complying with all local health regulations and medical guidelines.
-                    </p>
+                <div className="max-w-4xl mx-auto">
+                    <div className="alert alert-warning flex items-start gap-4">
+                        <div className="text-2xl shrink-0">
+                            <FaExclamationTriangle />
+                        </div>
+                        <div>
+                            <h3 className="font-bold text-lg">Important Notice</h3>
+                            <p className="mt-2 text-base-content/80">
+                                Blood donation is a critical healthcare activity. All blood donations must be conducted in licensed medical facilities by qualified healthcare professionals. RedBridge is a platform for connecting donors and recipients, not a medical service provider. Users are responsible for complying with all local health regulations and medical guidelines.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Quick Navigation */}
+            <section className="px-4 sm:px-6 lg:px-8">
+                <div className="max-w-4xl mx-auto rounded-2xl border border-base-300 bg-base-100 p-5 shadow-sm">
+                    <div className="mb-4 flex items-center gap-2 text-base-content/80">
+                        <LuShieldCheck className="text-lg text-primary" />
+                        <h3 className="font-bold">Quick Jump</h3>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        {sections.map((section) => (
+                            <a key={section.id} href={`#${section.id}`} className="btn btn-sm btn-ghost border border-base-300 hover:border-primary">
+                                {section.title.replace(/^\d+\.\s*/, '')}
+                            </a>
+                        ))}
+                    </div>
                 </div>
             </section>
 
             {/* Terms Content - DaisyUI Collapse Style */}
-            <section className="py-16 px-4 sm:px-6 lg:px-8">
+            <section className="py-20 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto">
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                         {sections.map((section, index) => (
                             <div
                                 key={section.id}
-                                className="collapse collapse-plus bg-base-100 border border-gray-300 rounded-lg"
+                                id={section.id}
+                                className="collapse collapse-plus bg-base-100 border border-base-300 hover:border-primary hover:shadow-md transition-all duration-300 group"
                             >
                                 <input
                                     type="radio"
                                     name="terms-accordion"
                                     defaultChecked={index === 0}
                                 />
-                                <div className="collapse-title font-semibold text-gray-900">
+                                <div className="collapse-title font-semibold text-lg group-hover:text-primary transition-colors">
                                     {section.title}
                                 </div>
-                                <div className="collapse-content text-sm text-gray-700">
-                                    <p>{section.content}</p>
+                                <div className="collapse-content text-base-content/70">
+                                    <p className="leading-relaxed">{section.content}</p>
                                 </div>
                             </div>
                         ))}
@@ -114,38 +142,25 @@ const TC = () => {
             </section>
 
             {/* Contact Section */}
-            <section className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
+            <section className="bg-base-200/50 py-20 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-6">Questions About Our Terms?</h2>
-                    <p className="text-lg text-gray-700 mb-8">
+                    <h2 className="text-4xl font-black mb-6">Questions About Our Terms?</h2>
+                    <p className="text-lg text-base-content/70 mb-10">
                         If you have any questions about these Terms and Conditions, please do not hesitate to contact us.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <a
-                            href="/contact"
-                            className="bg-red-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-red-700 transition"
-                        >
+                        <Link to="/contact" className="btn btn-primary btn-lg gap-2">
                             Contact Support
-                        </a>
+                            <FaArrowRight />
+                        </Link>
                         <a
                             href="mailto:support@redbridge.com"
-                            className="border-2 border-red-600 text-red-600 px-8 py-3 rounded-lg font-semibold hover:bg-red-50 transition"
+                            className="btn btn-outline btn-lg gap-2"
                         >
+                            <FaEnvelope />
                             Email Us
                         </a>
                     </div>
-                </div>
-            </section>
-
-            {/* Footer */}
-            <section className="bg-white py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
-                <div className="max-w-4xl mx-auto text-center text-gray-600">
-                    <p className="mb-2">
-                        By using RedBridge, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.
-                    </p>
-                    <p className="text-sm">
-                        © 2026 RedBridge. All rights reserved. Privacy Policy | Contact Us
-                    </p>
                 </div>
             </section>
         </div>
