@@ -1,60 +1,132 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { FaQuoteLeft } from 'react-icons/fa';
+import { LuChevronLeft, LuChevronRight, LuMapPin } from 'react-icons/lu';
+import { A11y, Autoplay, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const testimonials = [
     {
-        name: 'Sadia, Dhaka',
-        text: 'I found an O- donor in under 30 minutes during an emergency.',
+        name: 'Sadia Rahman',
+        location: 'Dhaka',
+        text: 'When we needed O- blood urgently, RedBridge helped us find nearby donors quickly.',
         image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=700&q=80',
+        fallbackImage: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=700&q=80',
     },
     {
-        name: 'Rafi, Chattogram',
-        text: 'The donor flow was simple and I could help someone same day.',
+        name: 'Rafiul Islam',
+        location: 'Chattogram',
+        text: 'The donor process was clear, and I could respond to a request on the same day.',
         image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=700&q=80',
+        fallbackImage: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=700&q=80',
     },
     {
-        name: 'Nabila, Rajshahi',
-        text: 'Clean interface and quick contact details made coordination easy.',
+        name: 'Nabila Sultana',
+        location: 'Rajshahi',
+        text: 'Location filters and direct contact made blood coordination much easier for our family.',
         image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=700&q=80',
+        fallbackImage: 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=700&q=80',
     },
 ];
 
 const Slider = () => {
-    return (
-        <section className="max-w-7xl mx-auto px-4 py-14 bg-white">
-            <div className="text-center mb-8">
-                <p className="uppercase tracking-wider text-xs text-red-600 font-semibold mb-2">Community Stories</p>
-                <h2 className="text-3xl md:text-4xl font-black text-gray-800">People Behind Every Match</h2>
-                <p className="text-gray-600 mt-3 max-w-2xl mx-auto">Real experiences from donors and recipients who made a difference</p>
-            </div>
+    const swiperRef = useRef(null);
 
-            <div className="grid md:grid-cols-3 gap-5">
-                {testimonials.map((item) => (
-                    <article
-                        key={item.name}
-                        className="group rounded-2xl overflow-hidden border border-gray-200 bg-gradient-to-br from-white to-gray-50 shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
+    const nextSlide = () => swiperRef.current?.slideNext();
+    const prevSlide = () => swiperRef.current?.slidePrev();
+
+    return (
+        <div className='bg-linear-to-b from-red-900 to-white via-white'>
+            <section className="mx-auto max-w-7xl px-4 py-14">
+                <div className="mb-10 text-center">
+                    <h2 className="text-3xl font-black text-white md:text-4xl">People Behind Every Match</h2>
+                    <p className="mx-auto mt-3 max-w-2xl text-white">Real stories from donors and families who coordinated faster through RedBridge.</p>
+                </div>
+
+                <div className="relative rounded-3xl border border-base-300 bg-base-100 p-4 shadow-lg sm:p-6">
+                    <div className="absolute -top-4 right-4 z-10 flex items-center gap-2">
+                        <button className="btn btn-circle btn-sm" onClick={prevSlide} aria-label="Previous story">
+                            <LuChevronLeft />
+                        </button>
+                        <button className="btn btn-circle btn-sm" onClick={nextSlide} aria-label="Next story">
+                            <LuChevronRight />
+                        </button>
+                    </div>
+
+                    <Swiper
+                        modules={[Autoplay, Pagination, A11y]}
+                        onSwiper={(swiper) => {
+                            swiperRef.current = swiper;
+                        }}
+                        spaceBetween={24}
+                        slidesPerView={1}
+                        loop
+                        speed={600}
+                        allowTouchMove={false}
+                        simulateTouch={false}
+                        autoplay={{
+                            delay: 5000,
+                            disableOnInteraction: false,
+                            pauseOnMouseEnter: true,
+                        }}
+                        pagination={{ clickable: true }}
+                        a11y={{ enabled: true }}
+                        className="pb-10"
                     >
-                        <div className="h-52 overflow-hidden relative">
-                            <img
-                                src={item.image}
-                                alt={item.name}
-                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                        {testimonials.map((item) => (
+                            <SwiperSlide key={`${item.name}-${item.location}`}>
+                                <article className="grid items-stretch gap-4 md:grid-cols-2 md:gap-6">
+                                    <div className="overflow-hidden rounded-2xl border border-base-300">
+                                        <img
+                                            src={item.image}
+                                            alt={item.name}
+                                            className="h-72 w-full object-cover"
+                                            onError={(event) => {
+                                                event.currentTarget.onerror = null;
+                                                event.currentTarget.src = item.fallbackImage;
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col justify-between rounded-2xl border border-base-300 bg-base-200/40 p-6">
+                                        <div>
+                                            <div className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-primary text-white shadow-lg">
+                                                <FaQuoteLeft className="text-lg" />
+                                            </div>
+                                            <p className="mt-4 text-lg italic leading-relaxed text-base-content/80">"{item.text}"</p>
+                                        </div>
+
+                                        <div className="mt-6">
+                                            <p className="font-semibold text-primary">{item.name}</p>
+                                            <p className="mt-1 inline-flex items-center gap-1 text-sm text-base-content/65">
+                                                <LuMapPin />
+                                                {item.location}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </article>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                </div>
+
+                <div className="mt-6 rounded-2xl border border-primary/20 bg-primary/5 p-5">
+                    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <div>
+                            <h3 className="text-lg font-bold text-base-content">Need blood now or want to help?</h3>
+                            <p className="mt-1 text-sm text-base-content/70">Search verified donors instantly or register as a donor and keep your profile active.</p>
                         </div>
-                        <div className="p-5 relative">
-                            <div className="absolute -top-6 left-5 w-12 h-12 bg-red-600 rounded-full flex items-center justify-center shadow-lg">
-                                <FaQuoteLeft className="text-white text-lg" />
-                            </div>
-                            <p className="text-gray-700 mt-4 mb-4 italic leading-relaxed">"{item.text}"</p>
-                            <p className="font-semibold text-red-700 flex items-center gap-2">
-                                {item.name}
-                            </p>
+                        <div className="flex gap-3">
+                            <Link to="/find-donors" className="btn btn-primary btn-sm">Find Donors</Link>
+                            <Link to="/donate" className="btn btn-outline btn-sm">Become a Donor</Link>
                         </div>
-                    </article>
-                ))}
-            </div>
-        </section>
+                    </div>
+                </div>
+            </section>
+        </div>
     );
 };
 
