@@ -2,48 +2,45 @@ import React from 'react';
 
 const MetricCard = ({ title, value, icon, color = 'primary', loading = false }) => {
   const colorClasses = {
-    primary: 'border-primary text-primary',
-    error: 'border-error text-error',
-    warning: 'border-warning text-warning',
-    info: 'border-info text-info',
-    success: 'border-success text-success',
-    secondary: 'border-secondary text-secondary',
+    primary: 'border-primary text-primary bg-primary/10',
+    error: 'border-error text-error bg-error/10',
+    warning: 'border-warning text-warning bg-warning/10',
+    info: 'border-info text-info bg-info/10',
+    success: 'border-success text-success bg-success/10',
+    secondary: 'border-secondary text-secondary bg-secondary/10',
   };
 
   const selectedColor = colorClasses[color] || colorClasses.primary;
-  const [borderColor, textColor] = selectedColor.split(' ');
+  const [borderColor, textColor, iconBg] = selectedColor.split(' ');
 
   return (
-    <div className={`card bg-base-100 shadow-lg border-l-4 ${borderColor}`}>
-      <div className="card-body">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-semibold text-gray-600">{title}</p>
+    <div
+      className={`group card bg-base-100/95 shadow-md border border-base-300 border-l-4 ${borderColor} transition-all duration-300 hover:-translate-y-1 hover:shadow-xl`}
+    >
+      <div className="card-body relative overflow-hidden">
+        <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-base-200/70 blur-2xl" />
+        <div className="relative flex items-center justify-between gap-4">
+          <div className="space-y-1">
+            <p className="text-xs uppercase tracking-[0.16em] text-base-content/60">{title}</p>
             {loading ? (
-              <span className="loading loading-spinner loading-sm text-primary mt-2"></span>
+              <span className="loading loading-spinner loading-sm text-primary mt-1"></span>
             ) : (
-              <p className={`text-3xl font-bold ${textColor} mt-2`}>{value || 0}</p>
+              <p className={`text-3xl font-bold ${textColor}`}>{value || 0}</p>
             )}
+            <p className="text-xs text-base-content/50">Realtime admin snapshot</p>
           </div>
-          <div className={`text-4xl opacity-20`} style={{ color: getColorValue(color) }}>
+          <div
+            className={`flex h-14 w-14 items-center justify-center rounded-2xl ${iconBg} ${textColor} text-2xl shadow-inner transition-transform duration-300 group-hover:scale-110`}
+          >
             {icon}
           </div>
+        </div>
+        <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-base-200">
+          <div className={`h-full w-3/4 rounded-full ${iconBg}`} />
         </div>
       </div>
     </div>
   );
-};
-
-const getColorValue = (color) => {
-  const colorMap = {
-    primary: 'hsl(var(--p))',
-    error: 'hsl(var(--er))',
-    warning: 'hsl(var(--wa))',
-    info: 'hsl(var(--in))',
-    success: 'hsl(var(--su))',
-    secondary: 'hsl(var(--s))',
-  };
-  return colorMap[color] || colorMap.primary;
 };
 
 export default MetricCard;

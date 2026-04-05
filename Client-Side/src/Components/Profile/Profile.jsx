@@ -138,7 +138,7 @@ console.log(userProfile);
               {/* Avatar */}
               <div className="text-center mb-6">
                 <div className="relative inline-block">
-                  <div className="w-32 h-32 rounded-full bg-gradient-to-br from-red-500 to-pink-500 p-1">
+                  <div className="w-32 h-32 rounded-full bg-linear-to-br from-red-500 to-pink-500 p-1">
                     <img
                       src={userProfile.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(userProfile.displayName || 'User')}&background=dc2626&color=fff&size=128`}
                       alt="Profile"
@@ -294,7 +294,7 @@ console.log(userProfile);
                       placeholder="Enter your address"
                     />
                   ) : (
-                    <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200 text-gray-800 min-h-[96px] whitespace-pre-wrap">
+                    <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200 text-gray-800 min-h-24 whitespace-pre-wrap">
                       {userProfile.address || "Not provided"}
                     </div>
                   )}
@@ -316,7 +316,7 @@ console.log(userProfile);
                       maxLength={500}
                     />
                   ) : (
-                    <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200 text-gray-800 min-h-[128px] whitespace-pre-wrap">
+                    <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200 text-gray-800 min-h-32 whitespace-pre-wrap">
                       {userProfile.bio || "Not provided"}
                     </div>
                   )}
@@ -350,9 +350,9 @@ console.log(userProfile);
               </div>
 
               {/* Donor Information Notice */}
-              <div className="mt-8 p-4 bg-gradient-to-r from-red-50 to-pink-50 border-l-4 border-red-600 rounded-lg">
+              <div className="mt-8 p-4 bg-linear-to-r from-red-50 to-pink-50 border-l-4 border-red-600 rounded-lg">
                 <div className="flex items-start gap-3">
-                  <MdBloodtype className="text-red-600 text-2xl flex-shrink-0 mt-1" />
+                  <MdBloodtype className="text-red-600 text-2xl shrink-0 mt-1" />
                   <div>
                     <h4 className="font-bold text-gray-800 mb-1">Want to Become a Blood Donor?</h4>
                     <p className="text-sm text-gray-600 mb-3">
