@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { FaCheckCircle, FaEnvelope, FaMapMarkerAlt, FaPaperPlane, FaPhone } from 'react-icons/fa';
+import { LuClock3, LuDroplets, LuMessagesSquare, LuShieldCheck } from 'react-icons/lu';
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -10,6 +12,7 @@ const Contact = () => {
     });
 
     const [submitted, setSubmitted] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -21,246 +24,292 @@ const Contact = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Here you would typically send the form data to your backend
-        console.log('Form submitted:', formData);
-        setSubmitted(true);
-        // Reset form after 3 seconds
+        setIsLoading(true);
+        // Simulate API call
         setTimeout(() => {
-            setFormData({
-                name: '',
-                email: '',
-                phone: '',
-                subject: '',
-                message: ''
-            });
-            setSubmitted(false);
-        }, 3000);
+            console.log('Form submitted:', formData);
+            setSubmitted(true);
+            setIsLoading(false);
+            // Reset form after 3 seconds
+            setTimeout(() => {
+                setFormData({
+                    name: '',
+                    email: '',
+                    phone: '',
+                    subject: '',
+                    message: ''
+                });
+                setSubmitted(false);
+            }, 3000);
+        }, 1000);
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-red-50 to-white">
+        <div className="min-h-screen bg-linear-to-b from-base-100 via-base-100 to-base-200">
             {/* Hero Section */}
-            <section className="bg-red-600 text-white py-16 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-4xl mx-auto text-center">
-                    <h1 className="text-4xl sm:text-5xl font-bold mb-4">Contact Us</h1>
+            <section className="relative overflow-hidden bg-linear-to-r from-primary to-secondary text-primary-content py-20 px-4 sm:px-6 lg:px-8">
+                <div className="absolute -left-24 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+                <div className="absolute -right-20 bottom-0 h-56 w-56 rounded-full bg-error/30 blur-3xl" />
+                <div className="relative max-w-4xl mx-auto text-center">
+                    <span className="badge badge-neutral badge-lg gap-2 mb-5">
+                        <LuMessagesSquare />
+                        Contact & Support
+                    </span>
+                    <h1 className="text-5xl sm:text-6xl font-black mb-6">Get in Touch</h1>
                     <p className="text-lg sm:text-xl opacity-90">
-                        We're here to help. Get in touch with the RedBridge team.
+                        Need donor support, technical help, or urgent coordination? Our support team is ready to assist across Bangladesh.
                     </p>
                 </div>
             </section>
 
             {/* Contact Information Cards */}
-            <section className="py-16 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-4xl mx-auto">
-                    <div className="grid md:grid-cols-3 gap-8 mb-16">
-                        {/* Phone */}
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                </svg>
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">Phone</h3>
-                            <p className="text-gray-700">+1 (555) 123-4567</p>
-                            <p className="text-gray-600 text-sm">Available 24/7</p>
-                        </div>
-
-                        {/* Email */}
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">Email</h3>
-                            <p className="text-gray-700">support@redbridge.com</p>
-                            <p className="text-gray-600 text-sm">We'll respond within 24 hours</p>
-                        </div>
-
-                        {/* Location */}
-                        <div className="text-center">
-                            <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">Location</h3>
-                            <p className="text-gray-700">123 Medical Center Lane</p>
-                            <p className="text-gray-600 text-sm">New York, NY 10001</p>
-                        </div>
+            <section className="py-20 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-6xl mx-auto">
+                    <div className="grid md:grid-cols-3 gap-8 mb-20">
+                        {[
+                            { icon: FaPhone, title: 'Emergency Hotline', content: '+880 1711-000000', subtitle: '24/7 support across Bangladesh' },
+                            { icon: FaEnvelope, title: 'Email Support', content: 'support@redbridge.bd', subtitle: 'Average reply within 24 hours' },
+                            { icon: FaMapMarkerAlt, title: 'Coordination Desk', content: 'Dhaka, Bangladesh', subtitle: 'Serving all divisions and districts' }
+                        ].map((contact, idx) => {
+                            const IconComp = contact.icon;
+                            return (
+                                <div key={idx} className="card bg-base-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all border border-base-300 group cursor-pointer">
+                                    <div className="card-body items-center text-center">
+                                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-3xl text-primary mb-4 group-hover:scale-110 transition-transform duration-300">
+                                            <IconComp />
+                                        </div>
+                                        <h3 className="card-title text-xl">{contact.title}</h3>
+                                        <p className="text-base-content/70 mt-2 font-semibold">{contact.content}</p>
+                                        <p className="text-sm text-base-content/60">{contact.subtitle}</p>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
 
             {/* Contact Form */}
-            <section className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-2xl mx-auto">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Send us a Message</h2>
-                    
-                    {submitted && (
-                        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                            <p className="text-green-800 font-semibold">✓ Message sent successfully!</p>
-                            <p className="text-green-700 text-sm mt-1">Thank you for contacting us. We'll get back to you soon.</p>
-                        </div>
-                    )}
-
-                    <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md">
-                        {/* Name */}
-                        <div className="mb-6">
-                            <label htmlFor="name" className="block text-gray-700 font-semibold mb-2">
-                                Full Name
-                            </label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                                placeholder="John Doe"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
-                            />
+            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-base-200/50">
+                <div className="max-w-6xl mx-auto grid grid-cols-1 gap-8 lg:grid-cols-3">
+                    <div className="lg:col-span-2 min-w-0">
+                        <div className="mb-8">
+                            <h2 className="text-4xl font-black mb-3">Send Us a Message</h2>
+                            <p className="text-base-content/70">Share your query and our team will connect with you quickly.</p>
                         </div>
 
-                        {/* Email */}
-                        <div className="mb-6">
-                            <label htmlFor="email" className="block text-gray-700 font-semibold mb-2">
-                                Email Address
-                            </label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
-                                placeholder="john@example.com"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
-                            />
+                        {submitted && (
+                            <div className="alert alert-success mb-8 flex items-center gap-3">
+                                <FaCheckCircle className="text-xl" />
+                                <div>
+                                    <p className="font-semibold">Message sent successfully.</p>
+                                    <p className="text-sm opacity-80">Our team will contact you shortly.</p>
+                                </div>
+                            </div>
+                        )}
+
+                        <form onSubmit={handleSubmit} className="card bg-base-100 shadow-xl border border-base-300">
+                            <div className="card-body">
+                                <div className="mb-2 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-error/20 bg-linear-to-r from-error/10 to-transparent px-4 py-3">
+                                    <p className="text-sm font-medium text-base-content/75">For emergency blood coordination, choose Emergency Request.</p>
+                                    <span className="badge badge-error gap-1">
+                                        <LuDroplets />
+                                        Emergency
+                                    </span>
+                                </div>
+
+                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                    <div className="form-control">
+                                        <label className="label">
+                                            <span className="label-text font-semibold">Full Name</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="name"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                            required
+                                            placeholder="Enter your full name"
+                                            className="input input-bordered w-full bg-base-200"
+                                        />
+                                    </div>
+
+                                    <div className="form-control">
+                                        <label className="label">
+                                            <span className="label-text font-semibold">Mobile Number</span>
+                                        </label>
+                                        <input
+                                            type="tel"
+                                            id="phone"
+                                            name="phone"
+                                            value={formData.phone}
+                                            onChange={handleChange}
+                                            required
+                                            placeholder="01XXXXXXXXX"
+                                            className="input input-bordered w-full bg-base-200"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-control mt-2">
+                                    <label className="label">
+                                        <span className="label-text font-semibold">Email Address</span>
+                                    </label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        required
+                                        placeholder="Enter your email address"
+                                        className="input input-bordered w-full bg-base-200"
+                                    />
+                                </div>
+
+                                <div className="form-control mt-2">
+                                    <label className="label">
+                                        <span className="label-text font-semibold">Subject</span>
+                                    </label>
+                                    <select
+                                        id="subject"
+                                        name="subject"
+                                        value={formData.subject}
+                                        onChange={handleChange}
+                                        required
+                                        className="select select-bordered w-full bg-base-200"
+                                    >
+                                        <option value="">Select your subject</option>
+                                        <option value="general">General Inquiry</option>
+                                        <option value="support">Technical Support</option>
+                                        <option value="emergency">Emergency Request</option>
+                                        <option value="feedback">Feedback</option>
+                                        <option value="partnership">Partnership Opportunity</option>
+                                    </select>
+                                </div>
+
+                                <div className="form-control mt-2">
+                                    <label className="label">
+                                        <span className="label-text font-semibold">Message</span>
+                                    </label>
+                                    <textarea
+                                        id="message"
+                                        name="message"
+                                        value={formData.message}
+                                        onChange={handleChange}
+                                        required
+                                        rows="5"
+                                        placeholder="Write your message with district, upazila, blood group, and urgency details"
+                                        className="textarea textarea-bordered w-full bg-base-200 resize-none"
+                                    ></textarea>
+                                </div>
+
+                                <div className="form-control mt-5">
+                                    <button
+                                        type="submit"
+                                        disabled={isLoading}
+                                        className="btn btn-primary btn-lg gap-2 hover:shadow-lg hover:shadow-primary/30 transition-all disabled:opacity-50"
+                                    >
+                                        {isLoading ? (
+                                            <>
+                                                <span className="loading loading-spinner loading-sm"></span>
+                                                Sending...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <FaPaperPlane />
+                                                Submit Message
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <aside className="space-y-5 min-w-0">
+                        <div className="rounded-2xl border border-base-300 bg-base-100 p-6 shadow-sm">
+                            <h3 className="text-xl font-bold mb-4">Before You Send</h3>
+                            <ul className="space-y-3 text-sm text-base-content/75">
+                                <li className="flex items-start gap-2">
+                                    <LuShieldCheck className="mt-0.5 text-primary" />
+                                    Provide correct contact details so our team can reach you.
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <LuClock3 className="mt-0.5 text-primary" />
+                                    Emergency queries are prioritized for faster response.
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <LuDroplets className="mt-0.5 text-primary" />
+                                    Include blood group and location details for urgent requests.
+                                </li>
+                            </ul>
                         </div>
 
-                        {/* Phone */}
-                        <div className="mb-6">
-                            <label htmlFor="phone" className="block text-gray-700 font-semibold mb-2">
-                                Phone Number
-                            </label>
-                            <input
-                                type="tel"
-                                id="phone"
-                                name="phone"
-                                value={formData.phone}
-                                onChange={handleChange}
-                                placeholder="(555) 123-4567"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
-                            />
+                        <div className="rounded-2xl border border-primary/20 bg-linear-to-br from-primary/10 to-base-100 p-6 shadow-sm">
+                            <h3 className="text-xl font-bold">Need Immediate Help?</h3>
+                            <p className="text-sm text-base-content/70 mt-2">For critical blood emergencies, contact hotline first, then submit form details.</p>
+                            <div className="mt-4 inline-flex items-center gap-2 rounded-lg bg-base-100 px-4 py-2 text-sm font-semibold shadow-sm">
+                                <FaPhone className="text-primary" />
+                                +880 1711-123476
+                            </div>
                         </div>
-
-                        {/* Subject */}
-                        <div className="mb-6">
-                            <label htmlFor="subject" className="block text-gray-700 font-semibold mb-2">
-                                Subject
-                            </label>
-                            <select
-                                id="subject"
-                                name="subject"
-                                value={formData.subject}
-                                onChange={handleChange}
-                                required
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
-                            >
-                                <option value="">Select a subject</option>
-                                <option value="general">General Inquiry</option>
-                                <option value="support">Technical Support</option>
-                                <option value="emergency">Emergency Request</option>
-                                <option value="feedback">Feedback</option>
-                                <option value="partnership">Partnership Opportunity</option>
-                            </select>
-                        </div>
-
-                        {/* Message */}
-                        <div className="mb-6">
-                            <label htmlFor="message" className="block text-gray-700 font-semibold mb-2">
-                                Message
-                            </label>
-                            <textarea
-                                id="message"
-                                name="message"
-                                value={formData.message}
-                                onChange={handleChange}
-                                required
-                                rows="5"
-                                placeholder="Please share your message with us..."
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 resize-none"
-                            ></textarea>
-                        </div>
-
-                        {/* Submit Button */}
-                        <button
-                            type="submit"
-                            className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition duration-200"
-                        >
-                            Send Message
-                        </button>
-                    </form>
+                    </aside>
                 </div>
             </section>
 
             {/* FAQ Section */}
-            <section className="py-16 px-4 sm:px-6 lg:px-8">
+            <section className="py-20 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Frequently Asked Questions</h2>
-                    <div className="space-y-6">
-                        <div className="border border-gray-200 rounded-lg overflow-hidden">
-                            <details className="cursor-pointer">
-                                <summary className="bg-gray-50 p-6 font-semibold text-gray-900 hover:bg-gray-100">
-                                    How do I become a blood donor?
-                                </summary>
-                                <div className="p-6 bg-white border-t border-gray-200">
-                                    <p className="text-gray-700">
-                                        You can become a blood donor by registering on our platform. Fill out your profile, complete the health questionnaire, and verify your location. Once approved, you can start helping those in need.
-                                    </p>
-                                </div>
-                            </details>
+                    <h2 className="text-4xl font-black text-center mb-12">Frequently Asked Questions</h2>
+                    <div className="space-y-4">
+                        <div className="collapse collapse-plus bg-base-100 border border-base-300">
+                            <input type="radio" name="contact-faq" defaultChecked />
+                            <div className="collapse-title font-semibold text-lg">
+                                How do I become a blood donor?
+                            </div>
+                            <div className="collapse-content text-base-content/70">
+                                <p>
+                                    You can become a blood donor by registering on our platform. Fill out your profile, complete the health questionnaire, and verify your location. Once approved, you can start helping those in need.
+                                </p>
+                            </div>
                         </div>
 
-                        <div className="border border-gray-200 rounded-lg overflow-hidden">
-                            <details className="cursor-pointer">
-                                <summary className="bg-gray-50 p-6 font-semibold text-gray-900 hover:bg-gray-100">
-                                    What blood types do you need most?
-                                </summary>
-                                <div className="p-6 bg-white border-t border-gray-200">
-                                    <p className="text-gray-700">
-                                        All blood types are important. However, O negative is the universal donor and is always in high demand. Check our platform to see which types are currently needed in your area.
-                                    </p>
-                                </div>
-                            </details>
+                        <div className="collapse collapse-plus bg-base-100 border border-base-300">
+                            <input type="radio" name="contact-faq" />
+                            <div className="collapse-title font-semibold text-lg">
+                                What blood types do you need most?
+                            </div>
+                            <div className="collapse-content text-base-content/70">
+                                <p>
+                                    All blood types are important. However, O negative is the universal donor and is always in high demand. Check our platform to see which types are currently needed in your area.
+                                </p>
+                            </div>
                         </div>
 
-                        <div className="border border-gray-200 rounded-lg overflow-hidden">
-                            <details className="cursor-pointer">
-                                <summary className="bg-gray-50 p-6 font-semibold text-gray-900 hover:bg-gray-100">
-                                    Is my personal information safe?
-                                </summary>
-                                <div className="p-6 bg-white border-t border-gray-200">
-                                    <p className="text-gray-700">
-                                        Yes, we take privacy and security very seriously. All your personal information is encrypted and stored securely. We comply with all healthcare privacy regulations and never share your data without consent.
-                                    </p>
-                                </div>
-                            </details>
+                        <div className="collapse collapse-plus bg-base-100 border border-base-300">
+                            <input type="radio" name="contact-faq" />
+                            <div className="collapse-title font-semibold text-lg">
+                                Is my personal information safe?
+                            </div>
+                            <div className="collapse-content text-base-content/70">
+                                <p>
+                                    Yes, we take privacy and security very seriously. All your personal information is encrypted and stored securely. We comply with all healthcare privacy regulations and never share your data without consent.
+                                </p>
+                            </div>
                         </div>
 
-                        <div className="border border-gray-200 rounded-lg overflow-hidden">
-                            <details className="cursor-pointer">
-                                <summary className="bg-gray-50 p-6 font-semibold text-gray-900 hover:bg-gray-100">
-                                    How quickly can I find a donor?
-                                </summary>
-                                <div className="p-6 bg-white border-t border-gray-200">
-                                    <p className="text-gray-700">
-                                        Our location-based search allows you to find nearby donors instantly. Response times vary based on donor availability, but many requests are fulfilled within hours.
-                                    </p>
-                                </div>
-                            </details>
+                        <div className="collapse collapse-plus bg-base-100 border border-base-300">
+                            <input type="radio" name="contact-faq" />
+                            <div className="collapse-title font-semibold text-lg">
+                                How quickly can I find a donor?
+                            </div>
+                            <div className="collapse-content text-base-content/70">
+                                <p>
+                                    Our location-based search allows you to find nearby donors instantly. Response times vary based on donor availability, but many requests are fulfilled within hours.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
