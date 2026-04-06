@@ -27,6 +27,7 @@ const Profile = () => {
     bio: "",
     role: "",
     joinDate: user?.metadata?.creationTime || "",
+    isAvailableForDonation: false,
   });
 
   // Fetch user data from backend
@@ -82,6 +83,7 @@ const Profile = () => {
         phone: userProfile.phone,
         address: userProfile.address,
         bio: userProfile.bio,
+        isAvailableForDonation: userProfile.isAvailableForDonation,
       };
 
       await axiosSecure.patch(`/users/update?email=${user.email}`, updateData);
@@ -107,7 +109,6 @@ const Profile = () => {
       setLoading(false);
     }
   };
-console.log(userProfile);
 
   const formatDate = (dateString) => {
     if (!dateString) return "Not available";
@@ -168,6 +169,33 @@ console.log(userProfile);
                   </div>
                 </div>
 
+                {/* Donation Availability Badge - Only for donors */}
+                {userProfile.role === 'donor' && (
+                  <div className={`flex items-center gap-3 p-3 rounded-xl border ${
+                    userProfile.isAvailableForDonation 
+                      ? 'bg-green-50 border-green-200' 
+                      : 'bg-gray-50 border-gray-200'
+                  }`}>
+                    <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+                      userProfile.isAvailableForDonation 
+                        ? 'bg-green-600' 
+                        : 'bg-gray-400'
+                    }`}>
+                      <FaTint className="text-white" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-gray-500">Donation Status</p>
+                      <p className={`font-bold text-sm truncate ${
+                        userProfile.isAvailableForDonation 
+                          ? 'text-green-700' 
+                          : 'text-gray-600'
+                      }`}>
+                        {userProfile.isAvailableForDonation ? 'Available' : 'Not Available'}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-xl border border-blue-100">
                   <div className="shrink-0 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
                     <FaCalendarAlt className="text-white" />
@@ -217,6 +245,36 @@ console.log(userProfile);
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Availability for Donation - Only show for donors */}
+                {userProfile.role === 'donor' && (
+                  <div className="form-control md:col-span-2">
+                    <label className="label cursor-pointer justify-start gap-4 p-4 bg-linear-to-r from-red-50 to-pink-50 rounded-xl border border-red-200 hover:border-red-300 transition-colors">
+                      <div className="flex-1">
+                        <span className="label-text font-bold text-gray-800 flex items-center gap-2 mb-1">
+                          <FaTint className="text-red-600" /> Available for Donation
+                        </span>
+                        <span className="label-text-alt text-gray-600 text-xs block">
+                          {userProfile.isAvailableForDonation 
+                            ? "You are currently available to donate blood" 
+                            : "You are not available for donation right now"}
+                        </span>
+                      </div>
+                      <input
+                        type="checkbox"
+                        className="toggle toggle-error toggle-lg"
+                        checked={userProfile.isAvailableForDonation || false}
+                        onChange={(e) => handleInputChange('isAvailableForDonation', e.target.checked)}
+                        disabled={!isEditing}
+                      />
+                    </label>
+                    {isEditing && (
+                      <label className="label">
+                        <span className="label-text-alt text-gray-500 text-xs">Toggle to set your donation availability status</span>
+                      </label>
+                    )}
+                  </div>
+                )}
+
                 {/* Full Name */}
                 <div className="form-control">
                   <label className="label">

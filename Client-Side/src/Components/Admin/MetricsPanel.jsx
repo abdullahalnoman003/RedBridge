@@ -50,12 +50,12 @@ const MetricsPanel = ({ refetchTrigger }) => {
           subtitle="All users who registered"
         />
         <MetricCard
-          title="Total Donors"
+          title="Donors"
           value={donorStats.totalDonors}
-          icon={<FaTint />}
-          color="error"
+          icon={ <FaUserCheck /> }
+          color="secondary"
           loading={donorLoading}
-          subtitle="Number of Total willing Donors"
+          subtitle=" Total Verified Donors"
         />
         <MetricCard
           title="Pending Donors"
@@ -74,18 +74,18 @@ const MetricsPanel = ({ refetchTrigger }) => {
           subtitle="Management Members"
         />
         <MetricCard
-          title="Donors"
+          title="Total Donors"
           value={userStats.donorUsers}
-          icon={<FaUserCheck />}
-          color="success"
+          icon={<FaTint />}
+          color="warning"
           loading={userLoading}
-          subtitle="Total Verified Donors"
+          subtitle="Total Applied Donors"
         />
         <MetricCard
           title="Regular Users"
           value={userStats.regularUsers}
           icon={<FaUser />}
-          color="secondary"
+          color="primary"
           loading={userLoading}
           subtitle="Logged in as User"
         />

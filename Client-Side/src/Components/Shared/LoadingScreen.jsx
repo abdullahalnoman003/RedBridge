@@ -1,6 +1,6 @@
 import React from 'react';
 
-const LoadingScreen = ({ title = 'Please Wait...', message = 'Preparing your RedBridge experience' }) => {
+const LoadingScreen = ({ title = 'Please Wait...', message = '' }) => {
   return (
     <div className="flex h-screen w-full items-center justify-center bg-linear-to-br from-base-100 via-base-200 to-base-300 px-4">
       <div className="relative flex w-full max-w-md flex-col items-center rounded-3xl border border-base-300 bg-base-100/90 p-8 text-center shadow-2xl backdrop-blur">

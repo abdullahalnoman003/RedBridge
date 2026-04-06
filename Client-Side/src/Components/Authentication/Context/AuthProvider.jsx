@@ -41,7 +41,7 @@ const AuthProvider = ({ children }) => {
   };
 
   if (loading) {
-    return <LoadingScreen title="Loading your account" message="Checking your authentication status and restoring your session." />;
+    return <LoadingScreen />;
   }
 
   return (
