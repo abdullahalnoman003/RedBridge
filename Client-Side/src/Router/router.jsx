@@ -17,6 +17,8 @@ import Profile from "../Components/Profile/Profile";
 import ForgotPassword from "../Components/Authentication/AuthPage/ForgotPassword";
 import AdminLayout from "../Layout/Admin/AdminLayout";
 import AdminRoute from "../Components/Authentication/Routes/AdminRoute";
+import PrivateRoute from "../Components/Authentication/Routes/PrivateRoute";
+import PublicRoute from "../Components/Authentication/Routes/PublicRoute";
 
 const router = createBrowserRouter([
   {
@@ -47,11 +49,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <Login></Login>,
+        element: <PublicRoute> <Login></Login></PublicRoute>,
       },
       {
         path: "/register",
-        element: <Register></Register>,
+        element:<PublicRoute> <Register></Register></PublicRoute>,
       },
       {
         path: "/find-donors",
@@ -59,7 +61,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/donate",
-        element: <DonatePage></DonatePage> ,
+        element: <PrivateRoute><DonatePage></DonatePage></PrivateRoute>   ,
       },
       {
         path: "/profile",
