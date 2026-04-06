@@ -2,8 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaExclamationTriangle, FaEnvelope, FaArrowRight } from 'react-icons/fa';
 import { LuShieldCheck } from 'react-icons/lu';
+import useDocumentTitle from '../../Hooks/useDocumentTitle';
 
 const TC = () => {
+    useDocumentTitle("Terms & Conditions | RedBridge")
     const sections = [
         {
             id: 'acceptance',

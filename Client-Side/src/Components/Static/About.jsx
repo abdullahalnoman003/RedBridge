@@ -11,12 +11,14 @@ import {
 } from 'react-icons/fa';
 import { IoMdPulse } from 'react-icons/io';
 import { LuDroplets } from 'react-icons/lu';
+import useDocumentTitle from '../../Hooks/useDocumentTitle';
 
 const ABOUT_HERO_IMAGE = 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=1200&q=80';
 const ABOUT_HERO_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1581595219315-a187dd40c322?auto=format&fit=crop&w=1200&q=80';
 
 const About = () => {
     const [visibleStats, setVisibleStats] = useState(false);
+    useDocumentTitle("About RedBridge");
 
     useEffect(() => {
         const observer = new IntersectionObserver(

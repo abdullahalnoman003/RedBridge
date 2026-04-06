@@ -27,7 +27,7 @@ const infoCards = [
 
 const BloodInfo = () => {
     return (
-        <section className="py-14 bg-linear-to-b from-base-100 via-base-100 to-base-200/40">
+        <section className="py-14 bg-linear-to-t from-gray-200 via-white  to-white">
             <div className="max-w-7xl mx-auto px-4">
                 <div className="mb-8 text-center">
                     <p className="uppercase tracking-wider text-xs text-primary font-semibold mb-2">Donor Education</p>

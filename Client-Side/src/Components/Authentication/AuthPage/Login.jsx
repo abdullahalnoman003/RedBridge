@@ -315,7 +315,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-linear-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 active:from-red-800 active:to-red-900 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all duration-300 text-sm shadow-lg shadow-red-500/30 hover:shadow-xl hover:shadow-red-500/40 transform hover:-translate-y-0.5 active:translate-y-0"
+              className="buttonUI w-full py-3.5 bg-linear-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 active:from-red-800 active:to-red-900 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all duration-300 text-sm shadow-lg shadow-red-500/30 hover:shadow-xl hover:shadow-red-500/40 transform hover:-translate-y-0.5 active:translate-y-0"
             >
               Sign In
             </button>
@@ -331,7 +331,7 @@ const Login = () => {
             onClick={handleGoogleSignin}
             disabled={loading}
             aria-label="Sign in with Google"
-            className="w-full py-3 border-2 border-gray-200 bg-white rounded-xl flex items-center justify-center gap-3 hover:bg-gray-50 hover:border-red-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-sm font-semibold text-gray-700 shadow-sm hover:shadow-md group"
+            className="buttonUI w-full py-3 border-2 border-gray-200 bg-white rounded-xl flex items-center justify-center gap-3 hover:bg-gray-50 hover:border-red-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-sm font-semibold text-gray-700 shadow-sm hover:shadow-md group"
           >
             <FcGoogle size={22} className="group-hover:scale-110 transition-transform duration-300" />
             Continue with Google

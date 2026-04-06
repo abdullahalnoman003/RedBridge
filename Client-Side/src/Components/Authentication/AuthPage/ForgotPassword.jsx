@@ -84,7 +84,7 @@ const ForgotPassword = () => {
             <button
               type="submit"
               disabled={loading}
-              className="btn bg-linear-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white w-full font-bold border-none shadow-lg hover:shadow-xl transition-all duration-300"
+              className="btn buttonUI bg-linear-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white w-full font-bold border-none shadow-lg hover:shadow-xl transition-all duration-300"
             >
               {loading ? (
                 <span className="loading loading-spinner loading-sm"></span>

@@ -204,11 +204,11 @@ const FindDonorsPage = () => {
             </select>
 
             <div className="flex gap-2">
-              <button type="submit" className="btn btn-error text-white flex-1" disabled={loading}>
+              <button type="submit" className="btn buttonUI btn-error text-white flex-1" disabled={loading}>
                 <LuSearch />
                 Search
               </button>
-              <button type="button" className="btn btn-ghost border border-base-300" onClick={handleResetFilters} disabled={loading}>
+              <button type="button" className="btn buttonUI btn-ghost border border-base-300" onClick={handleResetFilters} disabled={loading}>
                 <LuRefreshCw />
               </button>
             </div>
@@ -281,7 +281,7 @@ const FindDonorsPage = () => {
 
                 <a
                   href={`tel:${donor.phone}`}
-                  className="btn btn-primary btn-xs"
+                  className="btn buttonUI btn-primary btn-xs"
                 >
                   Call Donor
                 </a>
@@ -291,9 +291,9 @@ const FindDonorsPage = () => {
         </div>
 
         <div className="mt-8 flex items-center justify-center gap-3">
-          <button className="btn btn-sm" disabled={page === 1} onClick={() => setPage((prev) => Math.max(1, prev - 1))}>Prev</button>
+          <button className="btn buttonUI btn-sm" disabled={page === 1} onClick={() => setPage((prev) => Math.max(1, prev - 1))}>Prev</button>
           <span className="text-sm text-base-content/75">Page {page} / {totalPages}</span>
-          <button className="btn btn-sm" disabled={page === totalPages} onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}>Next</button>
+          <button className="btn buttonUI btn-sm" disabled={page === totalPages} onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}>Next</button>
         </div>
       </div>
     </section>

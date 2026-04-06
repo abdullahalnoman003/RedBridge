@@ -48,10 +48,10 @@ const Slider = () => {
 
                 <div className="relative rounded-3xl border border-base-300 bg-base-100 p-4 shadow-lg sm:p-6">
                     <div className="absolute -top-4 right-4 z-10 flex items-center gap-2">
-                        <button className="btn btn-circle btn-sm" onClick={prevSlide} aria-label="Previous story">
+                        <button className="btn buttonUI btn-circle btn-sm" onClick={prevSlide} aria-label="Previous story">
                             <LuChevronLeft />
                         </button>
-                        <button className="btn btn-circle btn-sm" onClick={nextSlide} aria-label="Next story">
+                        <button className="btn buttonUI btn-circle btn-sm" onClick={nextSlide} aria-label="Next story">
                             <LuChevronRight />
                         </button>
                     </div>

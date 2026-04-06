@@ -258,7 +258,7 @@ const DonatePage = () => {
                 <span className="font-medium text-base-content/85">I am currently available for blood donation</span>
               </label>
 
-              <button disabled={loading} className="btn btn-error text-white w-full sm:w-auto">
+              <button disabled={loading} className="btn buttonUI btn-error text-white w-full sm:w-auto">
                 {loading ? 'Submitting...' : 'Submit Donor Profile'}
               </button>
             </div>

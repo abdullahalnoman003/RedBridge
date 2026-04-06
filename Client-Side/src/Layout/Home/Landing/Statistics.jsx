@@ -10,7 +10,8 @@ const metrics = [
 
 const Statistics = () => {
     return (
-        <section className="max-w-7xl mx-auto px-4 py-14 bg-linear-to-b from-base-100 to-base-200/40 rounded-3xl">
+        <div className='bg-linear-to-b from-gray-200 via-white to-white'>
+            <section className="max-w-7xl mx-auto px-4 py-14 rounded-3xl">
             <div className="text-center mb-8">
                 <p className="uppercase tracking-wider text-xs text-primary font-semibold mb-2">Platform Analytics</p>
                 <h2 className="text-3xl md:text-4xl font-black text-base-content">Live Impact Overview</h2>
@@ -45,6 +46,8 @@ const Statistics = () => {
                 })}
             </div>
         </section>
+        </div>
+        
     );
 };
 

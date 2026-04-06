@@ -252,7 +252,7 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
                     <td>
                       <div className="flex flex-wrap gap-2">
                         <button
-                          className="btn btn-sm btn-success"
+                          className="btn buttonUI btn-sm btn-success"
                           onClick={() => handleApprove(donor)}
                           disabled={actionLoading === donor._id}
                         >
@@ -266,7 +266,7 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
                           )}
                         </button>
                         <button
-                          className="btn btn-sm btn-warning p-[1.15rem]"
+                          className="btn buttonUI btn-sm btn-warning p-[1.15rem]"
                           onClick={() => handleReject(donor)}
                           disabled={actionLoading === donor._id}
                         >
@@ -280,7 +280,7 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
                           )}
                         </button>
                         <button
-                          className="btn btn-sm btn-error"
+                          className="btn buttonUI btn-sm btn-error"
                           onClick={() => handleDelete(donor)}
                           disabled={actionLoading === donor._id}
                         >
@@ -305,7 +305,7 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
           {meta.totalPages > 1 && (
             <div className="flex justify-center gap-2">
               <button
-                className="btn btn-sm"
+                className="btn buttonUI btn-sm"
                 onClick={() => setPage(Math.max(1, page - 1))}
                 disabled={page === 1}
               >
@@ -315,7 +315,7 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
                 Page {page} of {meta.totalPages}
               </span>
               <button
-                className="btn btn-sm"
+                className="btn buttonUI btn-sm"
                 onClick={() => setPage(Math.min(meta.totalPages, page + 1))}
                 disabled={page === meta.totalPages}
               >

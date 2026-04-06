@@ -180,7 +180,7 @@ const UserManagement = ({ onActionComplete }) => {
                         {roles.map((role) => (
                           <button
                             key={role}
-                            className={`btn btn-xs  ${
+                            className={`btn buttonUI btn-xs  ${
                               user.role === role
                                 ? 'btn-disabled'
                                 : 'btn-outline hover:scale-105 transition-transform'
@@ -210,7 +210,7 @@ const UserManagement = ({ onActionComplete }) => {
           {meta.totalPages > 1 && (
             <div className="flex justify-center gap-2">
               <button
-                className="btn btn-sm"
+                className="btn buttonUI btn-sm"
                 onClick={() => setPage(Math.max(1, page - 1))}
                 disabled={page === 1}
               >
@@ -220,7 +220,7 @@ const UserManagement = ({ onActionComplete }) => {
                 Page {page} of {meta.totalPages}
               </span>
               <button
-                className="btn btn-sm"
+                className="btn buttonUI btn-sm"
                 onClick={() => setPage(Math.min(meta.totalPages, page + 1))}
                 disabled={page === meta.totalPages}
               >

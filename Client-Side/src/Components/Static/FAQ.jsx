@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaQuestionCircle, FaDroplet, FaHandsHelping, FaLock, FaArrowRight } from 'react-icons/fa';
 import { FiSearch } from 'react-icons/fi';
+import useDocumentTitle from '../../Hooks/useDocumentTitle';
 
 const FAQ = () => {
     const [activeCategory, setActiveCategory] = useState('general');
     const [searchTerm, setSearchTerm] = useState('');
+    useDocumentTitle("FAQ | RedBridge")
 
     const faqCategories = {
         general: {
@@ -187,7 +189,7 @@ const FAQ = () => {
                                 <button
                                     key={key}
                                     onClick={() => setActiveCategory(key)}
-                                    className={`px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${
+                                    className={`buttonUI px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${
                                         activeCategory === key
                                             ? 'btn btn-primary shadow-lg shadow-primary/20'
                                             : 'btn btn-ghost hover:bg-base-200'
@@ -247,13 +249,13 @@ const FAQ = () => {
                         Can't find what you're looking for? Our support team is here to help.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link to="/contact" className="btn btn-primary btn-lg gap-2">
+                        <Link to="/contact" className="btn buttonUI btn-primary btn-lg gap-2">
                             Contact Support
                             <FaArrowRight />
                         </Link>
                         <a
                             href="mailto:support@redbridge.com"
-                            className="btn btn-outline btn-lg"
+                            className="btn buttonUI btn-outline btn-lg"
                         >
                             Email Us
                         </a>

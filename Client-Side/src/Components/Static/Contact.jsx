@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { FaCheckCircle, FaEnvelope, FaMapMarkerAlt, FaPaperPlane, FaPhone } from 'react-icons/fa';
 import { LuClock3, LuDroplets, LuMessagesSquare, LuShieldCheck } from 'react-icons/lu';
+import useDocumentTitle from '../../Hooks/useDocumentTitle';
 
 const Contact = () => {
+    useDocumentTitle("Contact with RedBridge");
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -209,7 +211,7 @@ const Contact = () => {
                                     <button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="btn btn-primary btn-lg gap-2 hover:shadow-lg hover:shadow-primary/30 transition-all disabled:opacity-50"
+                                        className="btn buttonUI btn-primary btn-lg gap-2 hover:shadow-lg hover:shadow-primary/30 transition-all disabled:opacity-50"
                                     >
                                         {isLoading ? (
                                             <>

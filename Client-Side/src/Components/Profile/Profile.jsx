@@ -83,7 +83,7 @@ const Profile = () => {
         phone: userProfile.phone,
         address: userProfile.address,
         bio: userProfile.bio,
-        isAvailableForDonation: userProfile.isAvailableForDonation,
+        // isAvailableForDonation: userProfile.isAvailableForDonation,
       };
 
       await axiosSecure.patch(`/users/update?email=${user.email}`, updateData);
@@ -212,7 +212,7 @@ const Profile = () => {
                 {!isEditing ? (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="btn bg-linear-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white w-full border-none shadow-lg"
+                    className="btn buttonUI bg-linear-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white w-full border-none shadow-lg"
                   >
                     <FaEdit /> Edit Profile
                   </button>
@@ -221,13 +221,13 @@ const Profile = () => {
                     <button
                       onClick={handleSaveProfile}
                       disabled={loading}
-                      className="btn bg-green-600 hover:bg-green-700 text-white flex-1 border-none"
+                      className="btn buttonUI bg-green-600 hover:bg-green-700 text-white flex-1 border-none"
                     >
                       <FaSave /> {loading ? "Saving..." : "Save"}
                     </button>
                     <button
                       onClick={() => setIsEditing(false)}
-                      className="btn bg-gray-500 hover:bg-gray-600 text-white border-none"
+                      className="btn buttonUI  bg-gray-500 hover:bg-gray-600 text-white border-none"
                     >
                       <FaTimes />
                     </button>

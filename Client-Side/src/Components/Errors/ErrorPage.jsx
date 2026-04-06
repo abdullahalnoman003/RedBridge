@@ -15,7 +15,7 @@ const NotFound = () => {
       <p className=" mb-6 max-w-md">
         The page you are looking for might have been removed or does not exist. Please check the URL or go back to the homepage.
       </p>
-      <button className=" btn btn-primary  font-bold hover:shadow-xl my-3  gap-2  hover:bg-linear-to-br   px-6 py-2 rounded-md text-lg "><Link to="/" className='flex gap-2 items-center' > <FaHome/> Go back to Home</Link>
+      <button className=" buttonUI btn btn-primary  font-bold hover:shadow-xl my-3  gap-2  hover:bg-linear-to-br   px-6 py-2 rounded-md text-lg "><Link to="/" className='flex gap-2 items-center' > <FaHome/> Go back to Home</Link>
       </button>
     </div> </>
   );
