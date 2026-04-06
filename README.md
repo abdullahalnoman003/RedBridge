@@ -807,13 +807,12 @@ Key locations:
 
 ## 8. Developer Information
 
-Important: Replace these profile links with actual team information before final public release.
 
 | Full Name | Role | Facebook | LinkedIn | WhatsApp |
 |---|---|---|---|---|
-| Md. Developer One | Full-Stack Developer | https://facebook.com/developer.one | https://linkedin.com/in/developer-one | https://wa.me/8801700000001 |
-| Nusrat Developer Two | Frontend Developer | https://facebook.com/developer.two | https://linkedin.com/in/developer-two | https://wa.me/8801700000002 |
-| Tanvir Developer Three | Backend Developer | https://facebook.com/developer.three | https://linkedin.com/in/developer-three | https://wa.me/8801700000003 |
+| Md. Abdullah Al Noman | Frontend Developer | https://facebook.com/fb.abdullahalnoman | https://www.linkedin.com/in/abdullahalnoman003/ | https://wa.me/+8801522102892 |
+| Reduan Ahmad | Backend Developer | https://www.facebook.com/reduanahmadswe | https://www.linkedin.com/in/reduanahmadswe/ | https://wa.me/+8801718485840 |
+| Adnan Iqbal | Frontend Developer | https://www.facebook.com/adnan.iqbal.136202 | https://linkedin.com/in/developer-three | https://wa.me/+8801757026654 |
 
 ## 9. Academic Context
 
@@ -851,7 +850,6 @@ npm run build
 
 This project is distributed under the ISC License.
 
-If your university or team policy requires a different license, update this section and add a dedicated `LICENSE` file.
 
 ## 12. Document Quality Notes
 
