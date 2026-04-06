@@ -47,7 +47,7 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
   const handleApprove = async (donor) => {
     const result = await Swal.fire({
       title: 'Approve Donor?',
-      text: `Approve ${donor.name} as a donor?`,
+      text: `Approve ${getDonorName(donor)} as a donor?`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#22c55e',
@@ -76,7 +76,7 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
   const handleReject = async (donor) => {
     const result = await Swal.fire({
       title: 'Reject Donor?',
-      text: `Reject ${donor.name} as a donor?`,
+      text: `Reject ${getDonorName(donor)} as a donor?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#ef4444',
@@ -105,7 +105,7 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
   const handleDelete = async (donor) => {
     const result = await Swal.fire({
       title: 'Delete Donor?',
-      text: `Delete ${donor.name} permanently?`,
+      text: `Delete ${getDonorName(donor)} permanently?`,
       icon: 'error',
       showCancelButton: true,
       confirmButtonColor: '#dc2626',
@@ -118,6 +118,10 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
 
     setActionLoading(donor._id);
     try {
+      // First reject to update user state from donor to user
+      await axiosSecure.patch(`/donors/${donor._id}/reject`);
+      
+      // After deleting the donor
       const response = await axiosSecure.delete(`/donors/${donor._id}`);
       if (response.data?.success) {
         toast.success('Donor deleted successfully!');

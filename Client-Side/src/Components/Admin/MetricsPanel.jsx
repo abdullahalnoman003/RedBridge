@@ -47,6 +47,7 @@ const MetricsPanel = ({ refetchTrigger }) => {
           icon={<FaUsers />}
           color="primary"
           loading={userLoading}
+          subtitle="All users who registered"
         />
         <MetricCard
           title="Total Donors"
@@ -54,6 +55,7 @@ const MetricsPanel = ({ refetchTrigger }) => {
           icon={<FaTint />}
           color="error"
           loading={donorLoading}
+          subtitle="Number of Total willing Donors"
         />
         <MetricCard
           title="Pending Donors"
@@ -61,6 +63,7 @@ const MetricsPanel = ({ refetchTrigger }) => {
           icon={<FaClock />}
           color="warning"
           loading={donorLoading}
+          subtitle="Users needed to verify"
         />
         <MetricCard
           title="Admin Users"
@@ -68,13 +71,15 @@ const MetricsPanel = ({ refetchTrigger }) => {
           icon={<FaUserShield />}
           color="info"
           loading={userLoading}
+          subtitle="Management Members"
         />
         <MetricCard
-          title="Donor Users"
+          title="Donors"
           value={userStats.donorUsers}
           icon={<FaUserCheck />}
           color="success"
           loading={userLoading}
+          subtitle="Total Verified Donors"
         />
         <MetricCard
           title="Regular Users"
@@ -82,6 +87,7 @@ const MetricsPanel = ({ refetchTrigger }) => {
           icon={<FaUser />}
           color="secondary"
           loading={userLoading}
+          subtitle="Logged in as User"
         />
         <MetricCard
           title="Available Donors"
@@ -89,6 +95,7 @@ const MetricsPanel = ({ refetchTrigger }) => {
           icon={<FaCheckCircle />}
           color="success"
           loading={donorLoading}
+          subtitle="Prepared to Donate"
         />
         <MetricCard
           title="Unavailable Donors"
@@ -96,6 +103,7 @@ const MetricsPanel = ({ refetchTrigger }) => {
           icon={<FaTimesCircle />}
           color="error"
           loading={donorLoading}
+          subtitle="Currently not available"
         />
       </div>
     </section>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MetricCard = ({ title, value, icon, color = 'primary', loading = false }) => {
+const MetricCard = ({ title, subtitle, value, icon, color = 'primary', loading = false }) => {
   const colorClasses = {
     primary: 'border-primary text-primary bg-primary/10',
     error: 'border-error text-error bg-error/10',
@@ -27,7 +27,7 @@ const MetricCard = ({ title, value, icon, color = 'primary', loading = false }) 
             ) : (
               <p className={`text-3xl font-bold ${textColor}`}>{value || 0}</p>
             )}
-            <p className="text-xs text-base-content/50">Realtime admin snapshot</p>
+            <p className="text-xs text-base-content/50">{subtitle}</p>
           </div>
           <div
             className={`flex h-14 w-14 items-center justify-center rounded-2xl ${iconBg} ${textColor} text-2xl shadow-inner transition-transform duration-300 group-hover:scale-110`}
