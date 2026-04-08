@@ -20,7 +20,7 @@ const testimonials = [
         name: 'Rafiul Islam',
         location: 'Chattogram',
         text: 'The donor process was clear, and I could respond to a request on the same day.',
-        image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=700&q=80',
+        image: '/image/Blood_donaation.png',
         fallbackImage: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=700&q=80',
     },
     {
