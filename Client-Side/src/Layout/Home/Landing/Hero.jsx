@@ -4,8 +4,8 @@ import { FaLocationArrow, FaRegClock } from 'react-icons/fa';
 import { IoMdPulse } from 'react-icons/io';
 import { LuDroplets } from 'react-icons/lu';
 
-const HERO_IMAGE = 'https://images.unsplash.com/photo-1542736667-069246bdbc13?auto=format&fit=crop&w=1200&q=80';
-const HERO_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80';
+const HERO_IMAGE = '/image/blood_donation4.png';
+const HERO_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1542736667-069246bdbc13?auto=format&fit=crop&w=1200&q=80';
 
 const Hero = () => {
     return (
