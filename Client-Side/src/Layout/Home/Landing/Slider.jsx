@@ -13,8 +13,8 @@ const testimonials = [
         name: 'Sadia Rahman',
         location: 'Dhaka',
         text: 'When we needed O- blood urgently, RedBridge helped us find nearby donors quickly.',
-        image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=700&q=80',
-        fallbackImage: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=700&q=80',
+        image: '/image/blood_donation2.png',
+        fallbackImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=700&q=80'
     },
     {
         name: 'Rafiul Islam',
@@ -27,8 +27,8 @@ const testimonials = [
         name: 'Nabila Sultana',
         location: 'Rajshahi',
         text: 'Location filters and direct contact made blood coordination much easier for our family.',
-        image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=700&q=80',
-        fallbackImage: 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=700&q=80',
+        image: '/image/blood_donation3.png',
+        fallbackImage: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=700&q=80',
     },
 ];
 
