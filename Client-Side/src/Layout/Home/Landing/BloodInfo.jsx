@@ -5,22 +5,22 @@ const infoCards = [
     {
         title: 'Who Can Donate?',
         text: 'Most healthy adults aged 18 to 60 can donate after medical screening and safe weight checks.',
-        image: 'https://images.unsplash.com/photo-1513224502586-d1e602410265?auto=format&fit=crop&w=900&q=80',
-        fallbackImage: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=900&q=80',
+        image: '/image/blood_donation5.png',
+        fallbackImage: 'https://images.unsplash.com/photo-1513224502586-d1e602410265?auto=format&fit=crop&w=900&q=80',
         icon: FaUserCheck,
     },
     {
         title: 'How Often?',
         text: 'Whole blood donation is generally safe every 3 to 4 months, depending on doctor guidance.',
-        image: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=900&q=80',
-        fallbackImage: 'https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?auto=format&fit=crop&w=900&q=80',
+        image: '/image/blood_donation7.png',
+        fallbackImage: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=900&q=80',
         icon: FaRegClock,
     },
     {
         title: 'Safety First',
         text: 'Always donate through approved hospitals or blood banks and follow trained medical staff instructions.',
-        image: 'https://images.unsplash.com/photo-1584432810601-6c7f27d2362b?auto=format&fit=crop&w=900&q=80',
-        fallbackImage: 'https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?auto=format&fit=crop&w=900&q=80',
+        image: '/image/blood_donation6.png',
+        fallbackImage: 'https://images.unsplash.com/photo-1584432810601-6c7f27d2362b?auto=format&fit=crop&w=900&q=80',
         icon: FaCheckCircle,
     },
 ];

@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { FaHeartbeat } from 'react-icons/fa';
 import { LuDroplets } from 'react-icons/lu';
 
-const CTA_IMAGE = 'https://images.unsplash.com/photo-1581595219315-a187dd40c322?auto=format&fit=crop&w=1200&q=80';
-const CTA_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=1200&q=80';
+const CTA_IMAGE = '/image/blood_donation8.png';
+const CTA_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1581595219315-a187dd40c322?auto=format&fit=crop&w=1200&q=80';
 
 const CTA = () => {
     return (
