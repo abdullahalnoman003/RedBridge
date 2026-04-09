@@ -25,9 +25,9 @@ const CTA = () => {
                         </p>
 
                         <div className="grid gap-2 text-sm text-neutral-content/75">
-                            <p className="inline-flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-error" />Profile approval and verification workflow</p>
-                            <p className="inline-flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-error" />Location-first matching for faster donor reach</p>
-                            <p className="inline-flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-error" />Useful for hospitals, family requests, and volunteer networks</p>
+                            <p className="inline-flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-error" />Profile approval and verification workflow.</p>
+                            <p className="inline-flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-error" />Location-first matching for faster donor reach.</p>
+                            <p className="inline-flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-error" />Useful for hospitals, family requests and volunteer networks.</p>
                         </div>
 
                         <div className="flex flex-wrap gap-3 pt-2">

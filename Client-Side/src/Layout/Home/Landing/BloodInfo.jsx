@@ -11,7 +11,7 @@ const infoCards = [
     },
     {
         title: 'How Often?',
-        text: 'Whole blood donation is generally safe every 3 to 4 months, depending on doctor guidance.',
+        text: 'Whole blood donation is generally safe in every 3 to 4 months. It depends on a doctor guidance.',
         image: '/image/blood_donation7.png',
         fallbackImage: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=900&q=80',
         icon: FaRegClock,
@@ -32,7 +32,7 @@ const BloodInfo = () => {
                 <div className="mb-8 text-center">
                     <p className="uppercase tracking-wider text-xs text-primary font-semibold mb-2">Donor Education</p>
                     <h2 className="text-3xl md:text-4xl font-black text-base-content">Know Before You Donate</h2>
-                    <p className="text-base-content/65 mt-3 max-w-2xl mx-auto">Understand donation basics, safety checks, and frequency before you register as a donor.</p>
+                    <p className="text-base-content/65 mt-3 max-w-2xl mx-auto">Understand donation basics, safety checks and frequency before you register as a donor.</p>
                 </div>
 
                 <div className="mb-6 rounded-2xl border border-base-300 bg-base-100 p-5 shadow-sm">
