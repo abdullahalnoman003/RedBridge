@@ -23,7 +23,7 @@ const Hero = () => {
                     </h1>
 
                     <p className="text-white/90 text-base md:text-lg max-w-xl leading-relaxed">
-                        RedBridge helps families across Bangladesh locate verified donors by blood group and location, so urgent requests can be handled faster and safer.
+                        RedBridge helps families across Bangladesh locate verified donors by blood group and location. So urgent requests can be handled faster and safer.
                     </p>
 
                     <div className="grid gap-2 text-sm text-white/90">
@@ -44,7 +44,7 @@ const Hero = () => {
                     <div className="grid sm:grid-cols-3 gap-3 pt-2">
                         <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-3 text-sm hover:bg-white/15 transition-all duration-300 shadow-lg">
                             <p className="text-white/70 text-xs">Average Match Time</p>
-                            <p className="font-bold text-xl mt-1">15 min</p>
+                            <p className="font-bold text-xl mt-1">10 min</p>
                         </div>
                         <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-3 text-sm hover:bg-white/15 transition-all duration-300 shadow-lg">
                             <p className="text-white/70 text-xs">Active Districts</p>

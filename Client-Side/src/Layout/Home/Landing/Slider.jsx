@@ -19,14 +19,14 @@ const testimonials = [
     {
         name: 'Rafiul Islam',
         location: 'Chattogram',
-        text: 'The donor process was clear, and I could respond to a request on the same day.',
+        text: 'The donor process was clear and I could respond to a request on the same day.',
         image: '/image/Blood_donaation.png',
         fallbackImage: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=700&q=80',
     },
     {
         name: 'Nabila Sultana',
         location: 'Rajshahi',
-        text: 'Location filters and direct contact made blood coordination much easier for our family.',
+        text: 'Location filters and direct contact made blood coordination much easier when we needed it most.',
         image: '/image/blood_donation3.png',
         fallbackImage: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=700&q=80',
     },

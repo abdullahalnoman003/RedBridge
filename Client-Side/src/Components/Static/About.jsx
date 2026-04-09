@@ -48,7 +48,7 @@ const About = () => {
                         </div>
                         <h1 className="text-5xl sm:text-6xl font-black leading-tight">
                             We Connect Donors,
-                            <span className="block text-white/90 mt-2">Families, and Hope</span>
+                            <span className="block text-white/90 mt-2">Families and Hope</span>
                         </h1>
                         <p className="text-lg text-white/85 max-w-xl leading-relaxed">
                             RedBridge is a location-aware blood donor platform built to reduce emergency delays and help communities find the right donor faster.
