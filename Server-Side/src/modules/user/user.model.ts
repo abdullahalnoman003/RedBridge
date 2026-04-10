@@ -51,6 +51,10 @@ const userSchema = new Schema<IUser>(
       trim: true,
       maxlength: [500, 'Bio cannot exceed 500 characters'],
     },
+    availability: {
+      type: Boolean,
+      default: true,
+    },
     isVerified: {
       type: Boolean,
       default: false,

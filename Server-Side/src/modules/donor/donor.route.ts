@@ -11,14 +11,14 @@ import {
 
 const router = Router();
 
+// GET /api/donors/pending - Get pending donor requests (admin only) - MUST be before /:id
+router.get('/pending', adminMiddleware, validateQuery(donorListQuerySchema), DonorController.getPendingDonors);
+
 // POST /api/donors - Create donor profile (authenticated)
 router.post('/', authMiddleware, validateBody(createDonorBodySchema), DonorController.createDonor);
 
 // GET /api/donors - Public search with query filtering
 router.get('/', validateQuery(donorListQuerySchema), DonorController.getAllDonors);
-
-// GET /api/donors/pending - Get pending donor requests (admin only)
-router.get('/pending', adminMiddleware, validateQuery(donorListQuerySchema), DonorController.getPendingDonors);
 
 // GET /api/donors/:id - Get donor by ID (public)
 router.get('/:id', validateParams(donorIdParamSchema), DonorController.getDonorById);

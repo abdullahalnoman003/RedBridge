@@ -857,3 +857,91 @@ This project is distributed under the ISC License.
 - Heading hierarchy and formatting are consistent.
 - No emoji characters are used.
 - API section includes base URL, authentication, all endpoints, request and response examples, and error formats.
+
+## 13. Additional Resources & Guides
+
+This project includes comprehensive guides for various aspects:
+
+### Quick Start
+- **Demo Credentials:** See [DEMO_CREDENTIALS.md](./DEMO_CREDENTIALS.md) for testing accounts
+  - Admin account: `admin@redbridge.demo`
+  - Donor account: `donor@redbridge.demo`
+  - Run `npm run seed` to create demo data
+
+### Deployment & Production
+- **Production Deployment:** See [PRODUCTION_DEPLOYMENT.md](./PRODUCTION_DEPLOYMENT.md) for:
+  - Backend deployment (Railway, Heroku, Vercel)
+  - Frontend deployment (Vercel, Netlify, self-hosted)
+  - Database setup (MongoDB Atlas)
+  - Environment variable configuration
+  - SSL/HTTPS setup
+  - Custom domain configuration
+  - Post-deployment monitoring
+
+### Images & Media
+- **Images Guide:** See [IMAGES_GUIDE.md](./IMAGES_GUIDE.md) for:
+  - Landing page image specifications
+  - Bangladeshi image recommendations
+  - Image optimization tips
+  - Free stock photo sources
+  - Fallback image URLs
+
+## 14. Recent Updates (v1.1.0)
+
+### Features Added
+- User availability field for donors (toggle in profile)
+- Improved admin filtering for pending donors
+- Demo login credentials and seeding
+- Comprehensive production deployment guide
+- Bangladeshi image integration guide
+- Production-ready database structure
+
+### Bug Fixes
+- Fixed donor routing issue (/pending route ordering)
+- Fixed admin dashboard filtering
+- Improved Firebase authentication flow
+
+### Migration Guide
+If upgrading from v1.0.0:
+1. Stop running servers
+2. Delete existing MongoDB data or use backup
+3. Run `npm run seed` to populate with v1.1.0 data structure
+4. Update environment variables if migrating to production
+5. Redeploy frontend and backend
+
+## 15. Getting Help
+
+### Common Issues
+
+**Port already in use:**
+```bash
+# Vite (port 5173)
+npm run dev -- --port 5174
+
+# Express (port 5000)
+PORT=5001 npm run dev
+```
+
+**MongoDB connection error:**
+- Verify `MONGODB_URI` in `.env`
+- Check MongoDB service is running
+- For MongoDB Atlas: verify IP whitelist
+
+**Firebase auth not working:**
+- Verify Firebase configuration in `.env` and `firebase.init.js`
+- Enable Email/Password provider in Firebase Console
+- Check CORS settings if API calls fail
+
+**Build errors:**
+```bash
+# Clear node_modules and reinstall
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Resources
+- [Express.js Documentation](https://expressjs.com)
+- [React Documentation](https://react.dev)
+- [MongoDB Documentation](https://docs.mongodb.com)
+- [Firebase Documentation](https://firebase.google.com/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)

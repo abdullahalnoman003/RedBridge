@@ -12,6 +12,7 @@ export interface IUser extends Document {
   phone?: string | null;
   address?: string | null;
   bio?: string | null;
+  availability?: boolean;
   isVerified: boolean;
   lastLogin: Date;
   createdAt: Date;
@@ -25,6 +26,7 @@ export interface ICreateUser {
   phone?: string | null;
   address?: string | null;
   bio?: string | null;
+  availability?: boolean;
   isVerified?: boolean;
   lastLogin?: Date;
 }

@@ -12,6 +12,7 @@ export const createUserBodySchema = z.object({
   phone: z.string().trim().max(20).nullable().optional(),
   address: z.string().trim().max(300).nullable().optional(),
   bio: z.string().trim().max(500).nullable().optional(),
+  availability: z.boolean().optional(),
   isVerified: z.boolean().optional(),
   lastLogin: z.coerce.date().optional(),
 });
@@ -43,6 +44,7 @@ export const updateUserBodySchema = z
     phone: z.string().trim().max(20).nullable().optional(),
     address: z.string().trim().max(300).nullable().optional(),
     bio: z.string().trim().max(500).nullable().optional(),
+    availability: z.boolean().optional(),
     isVerified: z.boolean().optional(),
     lastLogin: z.coerce.date().optional(),
   })

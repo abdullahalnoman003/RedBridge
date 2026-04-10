@@ -1,94 +1,42 @@
 import mongoose from 'mongoose';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { config } from './config/index.js';
 import { User } from './modules/user/user.model.js';
 import { Donor } from './modules/donor/donor.model.js';
 
-// Real Bangladesh locations data
-const bangladeshLocations = [
-  {
-    division: 'Dhaka',
-    districts: [
-      { name: 'Dhaka', upazilas: ['Adabor', 'Banani', 'Dakshin Khan', 'Gulshan', 'Motilal', 'Mirpur', 'Paltan', 'Rampura', 'Sabuz Bagh', 'Shahbag', 'Mirpur', 'Kawran Bazar'] },
-      { name: 'Gazipur', upazilas: ['Gazipur Sadar', 'Kaliakair', 'Kaliganj', 'Sreepur'] },
-      { name: 'Narayanganj', upazilas: ['Narayanganj Sadar', 'Araihazar', 'Bandar', 'Rupganj', 'Sonargaon'] },
-      { name: 'Tangail', upazilas: ['Tangail Sadar', 'Basail', 'Bhuapur', 'Delduar', 'Ghatail', 'Gopalpur', 'Madhupur', 'Mirzapur', 'Nagarpur', 'Sakhipur', 'Shakhipur'] },
-      { name: 'Manikganj', upazilas: ['Manikganj Sadar', 'Dautipur', 'Ghior', 'Haripur', 'IjharPur', 'Saturia', 'Shivalaya', 'Singair'] },
-      { name: 'Munshiganj', upazilas: ['Munshiganj Sadar', 'Gajaria', 'Lohajang', 'Sirajdikhan', 'Sreen', 'Taloja'] },
-      { name: 'Rajbari', upazilas: ['Rajbari Sadar', 'Baliakandi', 'Kalukhali', 'Pangsha'] },
-      { name: 'Shariatpur', upazilas: ['Shariatpur Sadar', 'Alamdanga', 'Naria', 'Zanjira'] },
-      { name: 'Faridpur', upazilas: ['Faridpur Sadar', 'Alfadanga', 'Bhanga', 'Boalmari', 'Char Bhadrasan', 'Madaripur', 'Nagarkanda', 'Sadarpur', 'Saltha'] },
-    ]
-  },
-  {
-    division: 'Chittagong',
-    districts: [
-      { name: 'Chittagong', upazilas: ['Chittagong Sadar', 'Anwara', 'Banshkhali', 'Boalkhali', 'Chandanaish', 'Fatikchhari', 'Guichakgaon', 'Hathazari', 'Khagrachari', 'Karnaphuli', 'Lohagara', 'Mirsharai', 'Patiya', 'Rangunia', 'Raozan', 'Sadarsadar', 'Sandwip', 'Satluria'] },
-      { name: 'Cox\'s Bazar', upazilas: ['Cox\'s Bazar Sadar', 'Anchagarh', 'Baharchhara', 'Chakaria', 'Chhimchar Palong', 'Jhilongja', 'Kutubdia', 'Maheshkhali', 'Ramu', 'Teknaf', 'Ukhiya'] },
-      { name: 'Bandarban', upazilas: ['Bandarban Sadar', 'Ali Kadam', 'Belainchhari', 'Lama', 'Naikhangchari', 'Rangunia', 'Rowangchhari', 'Ruma', 'Thanchi'] },
-      { name: 'Khagrachari', upazilas: ['Khagrachari Sadar', 'Dighinala', 'Lakshmichhari', 'Mahalchhari', 'Matiranga', 'Pankhali', 'Ramgarh'] },
-      { name: 'Noakhali', upazilas: ['Noakhali Sadar', 'Begumganj', 'Chatnoaj', 'Companiganj', 'Jalalpur', 'Kabirpur', 'Sudharam', 'Senbag', 'Sonaimuri'] },
-      { name: 'Lakshmipur', upazilas: ['Lakshmipur Sadar', 'Sadarpur', 'Kamalnagar', 'Raipur'] },
-      { name: 'Cumilla', upazilas: ['Cumilla Sadar', 'Munna Bari', 'Chandpur', 'Chaugachha', 'Daganbhuiya', 'Daudkandi', 'Debidwar', 'Laksam'] },
-      { name: 'Chandpur', upazilas: ['Chandpur Sadar', 'Anwara', 'Hajiganj', 'Kachua', 'Laksam', 'Sandwip', 'Shahrasti'] },
-    ]
-  },
-  {
-    division: 'Khulna',
-    districts: [
-      { name: 'Khulna', upazilas: ['Khulna Sadar', 'Batiaghata', 'Dacope', 'Dumuria', 'Koyra', 'Phultala', 'Rupsa', 'Terokhada'] },
-      { name: 'Barisal', upazilas: ['Barisal Sadar', 'Agailjhara', 'Babuganj', 'Bakerganj', 'Bhola', 'Gournadi', 'Hizla', 'Mehendiganj', 'Muladi', 'Wazirpur'] },
-      { name: 'Jhalokati', upazilas: ['Jhalokati Sadar', 'Haluaghat', 'Jajira', 'Rajaiganj'] },
-      { name: 'Pirojpur', upazilas: ['Pirojpur Sadar', 'Bhandaria', 'Indurkani', 'Kawkhali', 'Mathbaria', 'Nazirpur', 'Zianagar'] },
-      { name: 'Patuakhali', upazilas: ['Patuakhali Sadar', 'Bauphal', 'Barishal', 'Daulkandi', 'Dumki', 'Galachipa', 'Kalapara', 'Mirzaganj', 'Rangabali'] },
-      { name: 'Bhola', upazilas: ['Bhola Sadar', 'Borhanuddin', 'Charfassion', 'Daulkandi', 'Monpura', 'Tazumuddin'] },
-      { name: 'Jessore', upazilas: ['Jessore Sadar', 'Abhaynagar', 'Chaugachha', 'Manirampur', 'Sharsha'] },
-      { name: 'Magura', upazilas: ['Magura Sadar', 'Nalchity', 'Shalikha', 'Sreepur'] },
-      { name: 'Narail', upazilas: ['Narail Sadar', 'Lohagara', 'Pungli'] },
-      { name: 'Satkhira', upazilas: ['Satkhira Sadar', 'Assasuni', 'Debhata', 'Kalaroa', 'Kaliganj', 'Rampal', 'Tala'] },
-    ]
-  },
-  {
-    division: 'Rajshahi',
-    districts: [
-      { name: 'Rajshahi', upazilas: ['Rajshahi Sadar', 'Bagha', 'Bagmara', 'Bilkosh', 'Charghat', 'Godagari', 'Mohanpur', 'Paba', 'Puthia', 'Tanore'] },
-      { name: 'Natore', upazilas: ['Natore Sadar', 'Bagatipara', 'Baraigram', 'Gurudaspur', 'Lalpur', 'Naugaon', 'Singra'] },
-      { name: 'Naogaon', upazilas: ['Naogaon Sadar', 'Atrai', 'Badalgachhi', 'Manda', 'Mohamedpur', 'Naogaon', 'Patnitala', 'Raninagar', 'Sapahar'] },
-      { name: 'Chapainawabganj', upazilas: ['Chapainawabganj Sadar', 'Bholahat', 'Gomastapur', 'Shibganj'] },
-      { name: 'Bogra', upazilas: ['Bogra Sadar', 'Adamdighi', 'Sherpur', 'Bogra', 'Dhubaura', 'Kahaloo', 'Kajahoriya', 'Nondigram', 'Santahar', 'Sariakandi', 'Sajahanpur', 'Sonatola'] },
-      { name: 'Joypurhat', upazilas: ['Joypurhat Sadar', 'Akkelpur', 'Kalijanpur', 'Khatazi', 'Panchbibi'] },
-      { name: 'Narayanganj', upazilas: ['Narayanganj Sadar', 'Araihazar', 'Bandar', 'Rupganj', 'Sonargaon'] },
-    ]
-  },
-  {
-    division: 'Sylhet',
-    districts: [
-      { name: 'Sylhet', upazilas: ['Sylhet Sadar', 'Balaganj', 'Beanibazar', 'Companiganj', 'Fenchuganj', 'Golapganj', 'Jaintiapur', 'Kanaighat', 'Korenganj', 'Osmani Nagar'] },
-      { name: 'Moulvibazar', upazilas: ['Moulvibazar Sadar', 'Barlekha', 'Juri', 'Kamolganj', 'Kulaura', 'Rajnail', 'Sreemangal'] },
-      { name: 'Habiganj', upazilas: ['Habiganj Sadar', 'Ajmiriganj', 'Bahubal', 'Baniachang', 'Chunarughat', 'Lakhai', 'Madhabpur', 'Nabiganj'] },
-      { name: 'Sunamganj', upazilas: ['Sunamganj Sadar', 'Bishniganj', 'Chhatak', 'Deoghar', 'Dharmapasha', 'Jagannathpur', 'Jaintiapur', 'Taherpur'] },
-    ]
-  },
-  {
-    division: 'Rangpur',
-    districts: [
-      { name: 'Rangpur', upazilas: ['Rangpur Sadar', 'Badarganj', 'Gangachara', 'Kaunia', 'Lingga', 'Mithapukur', 'Pirganj', 'Taraganj'] },
-      { name: 'Dinajpur', upazilas: ['Dinajpur Sadar', 'Biral', 'Birampur', 'Birganj', 'Chirirbandar', 'Fulbari', 'Ghoraghat', 'Kaharole', 'Khansama', 'Naabinagar', 'Parbatipur'] },
-      { name: 'Gaibandha', upazilas: ['Gaibandha Sadar', 'Fulchari', 'Gobindaganj', 'Palashbari', 'Sadullapur', 'Saghata', 'Suvaderganj'] },
-      { name: 'Tahkhpur', upazilas: ['Takhpur Sadar', 'Baliadangi', 'Tahirpur', 'Sombhuganj'] },
-      { name: 'Kurigram', upazilas: ['Kurigram Sadar', 'Bhurungamari', 'Charlakha', 'Dautipur', 'Halti', 'Kurigram', 'Nageshwari', 'Raiganj', 'Rouzan'] },
-      { name: 'Lalmonirhat', upazilas: ['Lalmonirhat Sadar', 'Aditmari', 'Hatibandha', 'Kamalpur', 'Patgram'] },
-    ]
-  },
-  {
-    division: 'Mymensingh',
-    districts: [
-      { name: 'Mymensingh', upazilas: ['Mymensingh Sadar', 'Ananda Nagar', 'Aurangabad', 'Bhaluka', 'Dhobaura', 'Gaffargaon', 'Gauripur', 'Haluaghat', 'Ishwarganj', 'Jamalpur', 'Muktagachha', 'Nandail', 'Phulpur'] },
-      { name: 'Jamalpur', upazilas: ['Jamalpur Sadar', 'Bakshiganj', 'Dewanganj', 'Islampur', 'Jamalpur Sadar', 'Madarganj', 'Melandah', 'Sarisidi'] },
-      { name: 'Sherpur', upazilas: ['Sherpur Sadar', 'Dhupchanchia', 'Jhenaigati', 'Nakla', 'Sherpur', 'Sreebordi'] },
-      { name: 'Kishoreganj', upazilas: ['Kishoreganj Sadar', 'Austagram', 'Bajitpur', 'Bhairab', 'Itna', 'Karimganj', 'Katiadi', 'Kishoreganj', 'Kuliarchar', 'Nikli', 'Tarail'] },
-    ]
-  },
-];
+// Get __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load actual Bangladesh locations from JSON file
+const locationJsonPath = path.join(__dirname, './data/bangladesh-locations.json');
+console.log('📂 Loading locations from:', locationJsonPath);
+
+let locationJsonData;
+try {
+  const jsonContent = fs.readFileSync(locationJsonPath, 'utf-8');
+  // Remove BOM if present
+  const cleanContent = jsonContent.replace(/^\uFEFF/, '');
+  locationJsonData = JSON.parse(cleanContent);
+  console.log('✅ JSON file loaded successfully');
+} catch (error) {
+  console.error('❌ Error loading JSON file:', error instanceof Error ? error.message : error);
+  if (error instanceof Error && error.message.includes('ENOENT')) {
+    console.error('   File not found at:', locationJsonPath);
+  }
+  process.exit(1);
+}
+
+// Process JSON to extract divisions, districts, and upazilas
+const bangladeshLocations = locationJsonData.divisions.map((division: any) => ({
+  division: division.division,
+  districts: division.districts.map((district: any) => ({
+    name: district.district,
+    upazilas: district.upazilla || [],
+  })),
+}));
 
 // Blood types
 const BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'] as const;
@@ -97,20 +45,18 @@ const DONOR_STATUSES = ['pending', 'approved', 'rejected'] as const;
 // Realistic Bangladeshi names
 const firstNames = [
   'Mohammad', 'Md', 'Ahmed', 'Rahman', 'Hassan', 'Karim', 'Ibrahim', 'Abdullah', 'Farhan', 'Rakib',
-  'Imran', 'Arif', 'Nasir', 'Samir', 'Tariq', 'Shoaib', 'Karim', 'Bilal', 'Farah', 'Mithun',
-  'Ratan', 'Rana', 'Sajib', 'Robiul', 'Rashid', 'Salman', 'Jamal', 'Saiful', 'Tuhin', 'Saiful',
+  'Imran', 'Arif', 'Nasir', 'Samir', 'Tariq', 'Shoaib', 'Bilal', 'Mithun', 'Ratan', 'Rana',
+  'Sajib', 'Robiul', 'Rashid', 'Salman', 'Jamal', 'Saiful', 'Tuhin', 'Naim', 'Rahim', 'Kadir',
 ];
 
 const lastNames = [
   'Ahmed', 'Khan', 'Hossain', 'Hassan', 'Ali', 'Uddin', 'Rahman', 'Karim', 'Sheikh', 'Roy',
   'Das', 'Saha', 'Ghosh', 'Sarkar', 'Biswas', 'Chatterjee', 'Dey', 'Bhat', 'Singh', 'Nath',
+  'Molla', 'Islam', 'Mia', 'Malik', 'Hussain', 'Akter', 'Chowdhury', 'Begum', 'Siddiqui', 'Reza',
 ];
 
 // Generate realistic Bangladeshi phone numbers
 const generatePhoneNumber = (): string => {
-  // Format: 01XXXXXXXXX where X is 0-9 (exactly 11 digits total)
-  // According to regex: /^(\+?880|0)1[0-9]{9}$/
-  // This means: 0 or +880, then 1, then exactly 9 digits = 01XXXXXXXXX
   const nineDigits = String(Math.floor(Math.random() * 1000000000)).padStart(9, '0');
   return `01${nineDigits}`;
 };
@@ -134,23 +80,24 @@ const seedDatabase = async () => {
     console.log('🗑️  Clearing existing data...');
     await User.deleteMany({});
     await Donor.deleteMany({});
-    console.log('✅ Data cleared');
+    console.log('✅ All old data cleared from database');
 
-    // Create users and donors with real Bangladesh location data
-    console.log('📊 Seeding data...');
+    // Create users and donors with real Bangladesh location data from JSON
+    console.log('\n📊 Seeding data from actual Bangladesh locations...');
     let userIndex = 1;
     let totalUsers = 0;
     let totalDonors = 0;
 
-    const users = [];
-    const donors = [];
+    const donors: any[] = [];
 
-    // Generate users and donors from Bangladesh locations
+    // Generate users and donors from actual Bangladesh locations JSON
     for (const division of bangladeshLocations) {
+      console.log(`\n📍 Processing Division: ${division.division}`);
+      
       for (const district of division.districts) {
         for (const upazila of district.upazilas) {
-          // Generate 5-8 donors per upazila
-          const donorsPerUpazila = Math.floor(Math.random() * 4) + 5;
+          // Generate 3-5 donors per upazila for more manageable data
+          const donorsPerUpazila = Math.floor(Math.random() * 3) + 3;
 
           for (let i = 0; i < donorsPerUpazila; i++) {
             const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
@@ -168,21 +115,22 @@ const seedDatabase = async () => {
               email,
               role: 'donor',
               isVerified: true,
+              availability,
+              phone,
+              address: `${upazila}, ${district.name}, ${division.division}`,
               photoURL: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`,
               lastLogin: new Date(),
             });
 
-            users.push(user);
-
-            // Create donor
+            // Create donor with exact location from JSON
             const donor = new Donor({
               userId: null, // Will be set after user is saved
               bloodType,
               location: {
-                division: division.division, // Get only the division name string
+                division: division.division,
                 district: district.name,
                 upazila,
-                area: `Area ${Math.floor(Math.random() * 100)}`,
+                area: `Area ${String(Math.floor(Math.random() * 50)).padStart(2, '0')}`,
               },
               phone,
               availability,
@@ -201,33 +149,130 @@ const seedDatabase = async () => {
       }
     }
 
-    // Save users and update donor references
+    // Save all users and donors
+    console.log('\n💾 Saving users and donors to database...');
+    let savedCount = 0;
     for (const { user, donor } of donors) {
       const savedUser = await user.save();
       donor.userId = savedUser._id;
       await donor.save();
       totalDonors++;
+      savedCount++;
+      
+      if (savedCount % 100 === 0) {
+        console.log(`   ✅ Saved ${savedCount} donors...`);
+      }
     }
 
-    console.log(`✅ Seeding completed!`);
-    console.log(`📝 Total users created: ${totalUsers}`);
-    console.log(`🩸 Total donors created: ${totalDonors}`);
-    console.log(`📍 Covered ${bangladeshLocations.length} divisions`);
+    // Create demo accounts for testing
+    console.log('\n🎭 Creating demo accounts...');
+    console.log('📌 Note: These accounts require Firebase credentials to login via frontend');
+    
+    const demoAdminUser = new User({
+      name: 'Admin Demo',
+      email: 'admin@redbridge.demo',
+      role: 'admin',
+      isVerified: true,
+      phone: '01700000001',
+      address: 'Dhaka, Dhaka Sadar, Adabor',
+      bio: 'Demo admin account for testing all features',
+      availability: true,
+      photoURL: 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin@redbridge.demo',
+      lastLogin: new Date(),
+    });
+    await demoAdminUser.save();
+    totalUsers++;
 
-    // Print summary
-    console.log('\n📊 Summary by Division:');
+    const demoDonorUser = new User({
+      name: 'Donor Demo',
+      email: 'donor@redbridge.demo',
+      role: 'donor',
+      isVerified: true,
+      phone: '01700000002',
+      address: 'Dhaka, Dhaka Sadar, Adabor',
+      bio: 'Demo donor account for testing donor features',
+      availability: true,
+      photoURL: 'https://api.dicebear.com/7.x/avataaars/svg?seed=donor@redbridge.demo',
+      lastLogin: new Date(),
+    });
+    await demoDonorUser.save();
+    totalUsers++;
+
+    // Create donor profile for demo donor
+    const demoDonor = new Donor({
+      userId: demoDonorUser._id,
+      bloodType: 'O+',
+      location: {
+        division: 'Dhaka',
+        district: 'Dhaka',
+        upazila: 'Adabor',
+        area: 'Demo Area 01',
+      },
+      phone: '01700000002',
+      availability: true,
+      status: 'approved',
+    });
+    await demoDonor.save();
+    totalDonors++;
+
+    console.log('✅ Demo accounts created:');
+    console.log('   👤 Admin Account:');
+    console.log('      Email: admin@redbridge.demo');
+    console.log('      Password: Admin@12345');
+    console.log('      Role: Admin');
+    console.log('   🩸 Donor Account:');
+    console.log('      Email: donor@redbridge.demo');
+    console.log('      Password: Donor@12345');
+    console.log('      Blood Type: O+');
+    console.log('      Status: Approved');
+
+    console.log(`\n✅ Seeding completed successfully!`);
+    console.log(`📊 Summary:`);
+    console.log(`   📝 Total users created: ${totalUsers}`);
+    console.log(`   🩸 Total donors created: ${totalDonors}`);
+    console.log(`   📍 Divisions covered: ${bangladeshLocations.length}`);
+
+    // Print detailed summary
+    console.log('\n📋 Detailed Division Summary:');
+    let totalDistricts = 0;
+    let totalUpazilas = 0;
     for (const division of bangladeshLocations) {
       const districtCount = division.districts.length;
       const upazilaCount = division.districts.reduce((sum, d) => sum + d.upazilas.length, 0);
-      console.log(`  ${division.division}: ${districtCount} districts, ${upazilaCount} upazilas`);
+      totalDistricts += districtCount;
+      totalUpazilas += upazilaCount;
+      console.log(`   ✓ ${division.division}: ${districtCount} districts, ${upazilaCount} upazilas`);
     }
+    console.log(`\n   Overall: ${totalDistricts} districts, ${totalUpazilas} upazilas in ${bangladeshLocations.length} divisions`);
+
+    console.log('\n⚠️  IMPORTANT: Firebase Setup Required');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('To login with demo accounts, you need to create these users in Firebase:');
+    console.log('\n1. Go to Firebase Console → Authentication → Users');
+    console.log('2. Create these custom auth users:');
+    console.log('\n   Admin Account:');
+    console.log('   📧 Email: admin@redbridge.demo');
+    console.log('   🔐 Password: Admin@12345');
+    console.log('\n   Donor Account:');
+    console.log('   📧 Email: donor@redbridge.demo');
+    console.log('   🔐 Password: Donor@12345');
+    console.log('\n3. Or use Firebase CLI:');
+    console.log('   firebase auth:import data.json');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
     await mongoose.connection.close();
-    console.log('\n✅ Database seeding successful!');
+    console.log('\n✅ Database seeding and connection closed successfully!');
     process.exit(0);
   } catch (error) {
     console.error('❌ Seeding failed:', error);
-    await mongoose.connection.close();
+    if (error instanceof Error) {
+      console.error('Error details:', error.message);
+    }
+    try {
+      await mongoose.connection.close();
+    } catch (closeError) {
+      console.error('Error closing connection:', closeError);
+    }
     process.exit(1);
   }
 };

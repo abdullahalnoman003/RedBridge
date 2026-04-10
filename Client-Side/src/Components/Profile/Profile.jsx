@@ -26,8 +26,8 @@ const Profile = () => {
     address: "",
     bio: "",
     role: "",
+    availability: true,
     joinDate: user?.metadata?.creationTime || "",
-    isAvailableForDonation: false,
   });
 
   // Fetch user data from backend
@@ -83,7 +83,7 @@ const Profile = () => {
         phone: userProfile.phone,
         address: userProfile.address,
         bio: userProfile.bio,
-        // isAvailableForDonation: userProfile.isAvailableForDonation,
+        availability: userProfile.availability,
       };
 
       await axiosSecure.patch(`/users/update?email=${user.email}`, updateData);
@@ -172,12 +172,12 @@ const Profile = () => {
                 {/* Donation Availability Badge - Only for donors */}
                 {userProfile.role === 'donor' && (
                   <div className={`flex items-center gap-3 p-3 rounded-xl border ${
-                    userProfile.isAvailableForDonation 
+                    userProfile.availability 
                       ? 'bg-green-50 border-green-200' 
                       : 'bg-gray-50 border-gray-200'
                   }`}>
                     <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
-                      userProfile.isAvailableForDonation 
+                      userProfile.availability 
                         ? 'bg-green-600' 
                         : 'bg-gray-400'
                     }`}>
@@ -186,11 +186,11 @@ const Profile = () => {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-gray-500">Donation Status</p>
                       <p className={`font-bold text-sm truncate ${
-                        userProfile.isAvailableForDonation 
+                        userProfile.availability 
                           ? 'text-green-700' 
                           : 'text-gray-600'
                       }`}>
-                        {userProfile.isAvailableForDonation ? 'Available' : 'Not Available'}
+                        {userProfile.availability ? 'Available' : 'Not Available'}
                       </p>
                     </div>
                   </div>
@@ -254,7 +254,7 @@ const Profile = () => {
                           <FaTint className="text-red-600" /> Available for Donation
                         </span>
                         <span className="label-text-alt text-gray-600 text-xs block">
-                          {userProfile.isAvailableForDonation 
+                          {userProfile.availability 
                             ? "You are currently available to donate blood" 
                             : "You are not available for donation right now"}
                         </span>
@@ -262,8 +262,8 @@ const Profile = () => {
                       <input
                         type="checkbox"
                         className="toggle toggle-error toggle-lg"
-                        checked={userProfile.isAvailableForDonation || false}
-                        onChange={(e) => handleInputChange('isAvailableForDonation', e.target.checked)}
+                        checked={userProfile.availability || false}
+                        onChange={(e) => handleInputChange('availability', e.target.checked)}
                         disabled={!isEditing}
                       />
                     </label>
