@@ -238,7 +238,7 @@ const seedDatabase = async () => {
     let totalUpazilas = 0;
     for (const division of bangladeshLocations) {
       const districtCount = division.districts.length;
-      const upazilaCount = division.districts.reduce((sum, d) => sum + d.upazilas.length, 0);
+      const upazilaCount = division.districts.reduce((sum: number, d: any) => sum + d.upazilas.length, 0);
       totalDistricts += districtCount;
       totalUpazilas += upazilaCount;
       console.log(`   ✓ ${division.division}: ${districtCount} districts, ${upazilaCount} upazilas`);
