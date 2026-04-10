@@ -130,6 +130,13 @@ const Login = () => {
     }
   };
 
+  const handleQuickLogin = (email, password) => {
+    setForm({ email, password });
+    setTouched({ email: true, password: true });
+    setErrors({});
+    toast.success('Credentials filled! Click Sign In to login.');
+  };
+
   const handleGoogleSignin = async () => {
     setLoading(true);
     try {
@@ -320,6 +327,47 @@ const Login = () => {
               Sign In
             </button>
           </form>
+
+          {/* Quick Login Section for Testing */}
+          <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 my-5 relative">
+            <p className="text-xs text-blue-700 font-bold uppercase tracking-wider mb-3">⚡ Quick Test Login</p>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="flex flex-col items-center">
+                <button
+                  type="button"
+                  onClick={() => handleQuickLogin('reduanahmad@gmail.com', '123456')}
+                  disabled={loading}
+                  className="w-full py-2.5 px-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white text-xs font-bold rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                >
+                  Admin
+                </button>
+              </div>
+              
+              <div className="flex flex-col items-center">
+                <button
+                  type="button"
+                  onClick={() => handleQuickLogin('user@gmail.com', '123456')}
+                  disabled={loading}
+                  className="w-full py-2.5 px-2 bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white text-xs font-bold rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                >
+                  User
+                </button>
+                
+              </div>
+
+              <div className="flex flex-col items-center">
+                <button
+                  type="button"
+                  onClick={() => handleQuickLogin('donors@gmail.com', '123456')}
+                  disabled={loading}
+                  className="w-full py-2.5 px-2 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white text-xs font-bold rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+                >
+                  Donor
+                </button>
+                <p className="text-xs text-rose-600 mt-1">donors@gmail.com</p>
+              </div>
+            </div>
+          </div>
 
           <div className="flex items-center gap-4 my-6">
             <hr className="flex-1 border-gray-300" />
