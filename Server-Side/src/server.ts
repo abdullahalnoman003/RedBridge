@@ -16,7 +16,7 @@ const shutdown = async (signal: string): Promise<void> => {
   try {
     if (server) {
       await new Promise<void>((resolve, reject) => {
-        server?.close((error) => {
+        server?.close((error?: Error) => {
           if (error) {
             reject(error);
             return;

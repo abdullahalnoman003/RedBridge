@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { randomUUID } from 'node:crypto';
-import { RequestHandler } from 'express';
+import { RequestHandler, Request, Response, NextFunction } from 'express';
 import { rateLimit } from 'express-rate-limit';
 import { config } from './config/index.js';
 import { errorMiddleware } from './middlewares/error.middleware.js';
@@ -33,7 +33,7 @@ const resolveHelmet = (): RequestHandler => {
 // ── Security Middlewares ──────────────────────────────────
 app.use(resolveHelmet());
 
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   const requestId = randomUUID();
   const start = Date.now();
 
@@ -81,7 +81,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ── Health Check ──────────────────────────────────────────
-app.get('/health', (_req, res) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     message: 'Blood Donation Finder API is running',
@@ -98,7 +98,7 @@ app.use('/api/donors', DonorRoutes);
 app.use('/api/locations', LocationRoutes);
 
 // ── 404 Handler ───────────────────────────────────────────
-app.use((_req, res) => {
+app.use((_req: Request, res: Response) => {
   res.status(ERRORS.ROUTE_NOT_FOUND.code).json({
     success: false,
     message: ERRORS.ROUTE_NOT_FOUND.msg,
