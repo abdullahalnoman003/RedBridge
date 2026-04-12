@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
 import { FiCheckCircle, FiMapPin, FiPhone, FiSearch, FiTrash2, FiXCircle } from 'react-icons/fi';
 import { LuDroplets, LuListFilter } from 'react-icons/lu';
 import useAxios from '../../Hooks/useAxios';
-import usePendingDonors from '../../Hooks/usePendingDonors';
 import getApiErrorMessage from '../../Utils/getApiErrorMessage';
 
 const PendingDonorsManagement = ({ onActionComplete }) => {
@@ -12,10 +11,32 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [bloodGroupFilter, setBloodGroupFilter] = useState('');
   const [actionLoading, setActionLoading] = useState(null);
-  const { donors, loading, error, meta, refetch } = usePendingDonors(page, 10);
+  const [allDonors, setAllDonors] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const axiosSecure = useAxios();
+  const ITEMS_PER_PAGE = 10;
 
   const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+
+  // Fetch all pending donors (without pagination)
+  const fetchAllPendingDonors = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axiosSecure.get('/donors/pending?page=1&limit=100');
+      if (response.data?.success) {
+        setAllDonors(response.data.data || []);
+      } else {
+        setError('Failed to fetch donors');
+      }
+    } catch (err) {
+      setError(err?.response?.data?.message || 'Failed to fetch donors');
+      setAllDonors([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getDonorName = (donor) => donor?.userId?.name || donor?.name || 'Unknown';
   const getDonorEmail = (donor) => donor?.userId?.email || donor?.email || 'N/A';
@@ -32,7 +53,7 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
     return [upazila, district, division, area].filter(Boolean).join(', ') || 'N/A';
   };
 
-  const filteredDonors = donors.filter((donor) => {
+  const filteredDonors = allDonors.filter((donor) => {
     const donorName = getDonorName(donor).toLowerCase();
     const donorEmail = getDonorEmail(donor).toLowerCase();
     const donorBloodType = getDonorBloodType(donor);
@@ -43,6 +64,12 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
     const matchesBloodGroup = !bloodGroupFilter || donorBloodType === bloodGroupFilter;
     return matchesSearch && matchesBloodGroup;
   });
+
+  // Calculate pagination based on filtered results
+  const totalPages = Math.ceil(filteredDonors.length / ITEMS_PER_PAGE);
+  const startIdx = (page - 1) * ITEMS_PER_PAGE;
+  const endIdx = startIdx + ITEMS_PER_PAGE;
+  const paginatedDonors = filteredDonors.slice(startIdx, endIdx);
 
   const handleApprove = async (donor) => {
     const result = await Swal.fire({
@@ -63,7 +90,7 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
       const response = await axiosSecure.patch(`/donors/${donor._id}/approve`);
       if (response.data?.success) {
         toast.success('Donor approved successfully!');
-        refetch();
+        fetchAllPendingDonors();
         onActionComplete?.();
       }
     } catch (err) {
@@ -92,7 +119,7 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
       const response = await axiosSecure.patch(`/donors/${donor._id}/reject`);
       if (response.data?.success) {
         toast.success('Donor rejected successfully!');
-        refetch();
+        fetchAllPendingDonors();
         onActionComplete?.();
       }
     } catch (err) {
@@ -125,7 +152,7 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
       const response = await axiosSecure.delete(`/donors/${donor._id}`);
       if (response.data?.success) {
         toast.success('Donor deleted successfully!');
-        refetch();
+        fetchAllPendingDonors();
         onActionComplete?.();
       }
     } catch (err) {
@@ -134,6 +161,17 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
       setActionLoading(null);
     }
   };
+
+  // Fetch donors on component mount
+  useEffect(() => {
+    fetchAllPendingDonors();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Reset page when search or filter changes
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm, bloodGroupFilter]);
 
   if (error) {
     return (
@@ -227,7 +265,7 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
                 </tr>
               </thead>
               <tbody>
-                {filteredDonors.map((donor) => (
+                {paginatedDonors.map((donor) => (
                   <tr key={donor._id} className="hover:bg-base-200/70 transition-colors">
                     <td className="font-semibold">{getDonorName(donor)}</td>
                     <td className="text-base-content/75">{getDonorEmail(donor)}</td>
@@ -302,7 +340,7 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
           </div>
 
           {/* Pagination */}
-          {meta.totalPages > 1 && (
+          {totalPages > 1 && (
             <div className="flex justify-center gap-2">
               <button
                 className="btn buttonUI btn-sm"
@@ -312,12 +350,12 @@ const PendingDonorsManagement = ({ onActionComplete }) => {
                 Previous
               </button>
               <span className="px-4 py-2 flex items-center">
-                Page {page} of {meta.totalPages}
+                Page {page} of {totalPages}
               </span>
               <button
                 className="btn buttonUI btn-sm"
-                onClick={() => setPage(Math.min(meta.totalPages, page + 1))}
-                disabled={page === meta.totalPages}
+                onClick={() => setPage(Math.min(totalPages, page + 1))}
+                disabled={page === totalPages}
               >
                 Next
               </button>
